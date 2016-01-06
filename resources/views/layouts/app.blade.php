@@ -10,13 +10,13 @@
 
 	<link href="https://fonts.googleapis.com/css?family=Raleway:300,400,500,700" rel="stylesheet" type="text/css">
 	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-	<link href="{{ asset('/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
-    <link href="{{ asset('/css/bootstrap-social.css') }}" rel="stylesheet" type="text/css">
+	<link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+	<link href="/css/bootstrap-social.css" rel="stylesheet" type="text/css">
     
-	<script src="{{ asset('/js/jquery-2.1.4.min.js') }}"></script>
-    <script src="{{ asset('/js/bootstrap.min.js') }}"></script>
+	<script src="/js/jquery-2.1.4.min.js"></script>
+	<script src="/js/bootstrap.min.js"></script>
 
-    <link href="{{ asset('/css/flocc.css') }}" rel="stylesheet" type="text/css">
+	<link href="/css/flocc.css" rel="stylesheet" type="text/css">
 
  </head>
 
