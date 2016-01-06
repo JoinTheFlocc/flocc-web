@@ -1,3 +1,4 @@
+
 body 
 {
     font-family: 'Raleway';
@@ -17,28 +18,34 @@ body
     background-color:royalblue;
     color:aliceblue;
 }
+
 .navbar-brand small {
     color:lightblue;
+}
+
+.navbar .navbar-nav > li > a,
+.navbar .navbar-nav > .active > a 
+{
+    background-color:royalblue;
+    color:aliceblue;
 }
         
 .navbar .navbar-nav > li > a:hover,
 .navbar .navbar-nav > .active > a:hover 
 {
-    background-color:royalblue;
     color:black;
 }
         
 .navbar .navbar-nav > li > a:focus,
 .navbar .navbar-nav > .active > a:focus
 {
-    background-color:royalblue;
     color:aliceblue;
     outline: none;
 }
-        
-.navbar-nav > li > a:visited 
+
+.navbar .nabar-nav > li > a:visited,
+.navbar .navbar-nav > li > .active > a:visited 
 {
-    background-color:royalblue;
     color:aliceblue;
 }
         
