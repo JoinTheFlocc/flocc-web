@@ -17,7 +17,6 @@
 	<script src="/js/bootstrap.min.js"></script>
 
 	<link href="/css/flocc.css" rel="stylesheet" type="text/css">
-
  </head>
 
 <body>
