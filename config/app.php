@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'debug' => env('APP_DEBUG', false),
+    'debug' => env('APP_DEBUG', true),
 
     /*
     |--------------------------------------------------------------------------
@@ -26,7 +26,7 @@ return [
     |
     */
 
-    'url' => 'http://localhost',
+    'url' => 'http://flocc.dev:8888',
 
     /*
     |--------------------------------------------------------------------------
@@ -78,7 +78,7 @@ return [
     |
     */
 
-    'key' => env('APP_KEY', 'SomeRandomString'),
+    'key' => env('APP_KEY', 'FcYXeI8yzh38uH4whFtlaScf1I4qP67m'),
 
     'cipher' => 'AES-256-CBC',
 
@@ -144,7 +144,7 @@ return [
         Flocc\Providers\AuthServiceProvider::class,
         Flocc\Providers\EventServiceProvider::class,
         Flocc\Providers\RouteServiceProvider::class,
-        
+
         Laravel\Socialite\SocialiteServiceProvider::class,
         SocialiteProviders\Manager\ServiceProvider::class,
         Illuminate\Html\HtmlServiceProvider::class,

@@ -42,7 +42,6 @@ function loginAjax(){
                  shakeModal(); 
             }
         });
-    */
 
 /*   Simulate error message from the server   */
      shakeModal();
