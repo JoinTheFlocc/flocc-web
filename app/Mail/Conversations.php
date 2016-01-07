@@ -38,7 +38,7 @@ class Conversations extends Model
      *
      * @param int $conversation_id
      *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return \Illuminate\Database\Eloquent\Collection|null
      */
     public function getById($conversation_id)
     {
