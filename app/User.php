@@ -45,4 +45,16 @@ class User extends Model implements AuthenticatableContract,
     {
         return $this->hasOne('Flocc\SocialProvider');
     }
+
+    /**
+     * Get user by ID
+     *
+     * @param int $user_id
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getById($user_id)
+    {
+        return self::where('id', (int) $user_id)->take(1)->first();
+    }
 }

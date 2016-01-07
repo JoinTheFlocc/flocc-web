@@ -30,17 +30,23 @@
 					<ul class="nav navbar-nav navbar-right">
 				    @if (Auth::guest())
 						<li>
-                            <a href="/auth/register"><i class="fa fa-btn fa-heart"></i>Register</a>
+                            <a href="{{ URL::route('auth.register') }}"><i class="fa fa-btn fa-heart"></i>Register</a>
                         </li>
                         <li>
-                            <a href="/auth/login"><i class="fa fa-btn fa-sign-in"></i>Login</a>     
+                            <a href="{{ URL::route('auth.login') }}"><i class="fa fa-btn fa-sign-in"></i>Login</a>
                         </li>
 				    @else
                         <li>
                             <a href="{{ url('/profile/' . Auth::user()->id) }}"><i class="fa fa-btn fa-user"></i>{{ Auth::user()->name }}</a>
                         </li>
+							<li><a href="{{ URL::route('mail') }}"><i class="fa fa-btn fa-envelope"></i>Mail</a></li>
+							<li>
+								<a href="{{ URL::route('notifications') }}">
+									<i class="fa fa-btn fa-bell"></i> Notifications <span class="label label-danger" id="notificationsCount" style="display:none">0</span>
+								</a>
+							</li>
 				        <li>
-                            <a href="/auth/logout"><i class="fa fa-btn fa-sign-out"></i>Logout</a>
+                            <a href="{{ URL::route('auth.logout') }}"><i class="fa fa-btn fa-sign-out"></i>Logout</a>
                         </li>
 				    @endif
 					</ul>
@@ -50,11 +56,7 @@
 	</div>
 
 	@yield('content')
-     
-<!--
 
-@include('layouts.footer')
-    
-//-->    
+	@include('layouts.footer')
 </body>
 </html>
