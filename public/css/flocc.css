@@ -1,8 +1,26 @@
 
 body 
 {
-    font-family: 'Raleway';
+    font-family: 'Open Sans';
+    font-weight: 300;
     padding-top: 55px;
+}
+
+.carousel-caption {
+    top: 40px;
+    bottom: auto;
+}
+
+.carousel-caption > h1 {
+    font-size: 8em; 
+    font-family: 'Pacifico';
+    text-shadow: 0.1em 0.1em 0.1em black;
+}
+.carousel-caption > p {
+    font-family: 'Signika';
+    font-size: 2em;
+    font-weight: 400;
+    text-shadow: 0.1em 0.1em 0.1em black;
 }
         
 .navbar 
@@ -15,11 +33,15 @@ body
 .navbar-brand:hover, 
 .navbar-brand:focus 
 {
+    font-family: 'Signika';
+    font-weight: 400;
     background-color:royalblue;
     color:aliceblue;
 }
 
 .navbar-brand small {
+    font-family: 'Signika';
+    font-weight: 300;
     color:lightblue;
 }
 

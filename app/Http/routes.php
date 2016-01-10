@@ -25,17 +25,24 @@ Route::get('auth/register', 'Auth\AuthController@getRegister')->name('auth.regis
 Route::post('auth/register', 'Auth\AuthController@postRegister');
 Route::get('auth/postregister', function() { return view('auth/postregister'); });
 Route::get('auth/verify/{code}', 'Auth\AuthController@verifyEmail');
+
+// Password reset
+Route::get('password/email', 'Auth\PasswordController@getEmail')->name('auth.password');
+Route::post('password/email', 'Auth\PasswordController@postEmail');
+Route::get('password/reset/{token}', 'Auth\PasswordController@getReset');
+Route::post('password/reset', 'Auth\PasswordController@postReset');
+
+// Social
 Route::get('auth/facebook', 'Auth\AuthController@redirectToProvider');
 Route::get('auth/facebook/callback', 'Auth\AuthController@handleProviderCallback');
 
-// Password reset - TEMP
-Route::get('password/email', function() { return view('tbd'); });
-
 // Profile
-Route::resource('profile', 'ProfilesController');
-Route::get('profile/{id}', 'ProfileController@show')->name('profile.display')->where('id', '[0-9]+');
+Route::resource('profile', 'ProfilesController',
+               ['except' => ['index']]);
+//Route::get('profile', 'ProfilesController@show');
+Route::get('profile/{id?}', 'ProfilesController@show')->name('profile.display');
+
 //Route::get('profile/create', 'ProfilesController@create');
-//Route::post('profile', 'ProfilesController@store');
 
 // TBD
 Route::get('/tbd', function() { return view('tbd'); });

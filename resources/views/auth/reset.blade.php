@@ -5,7 +5,7 @@
 		<div class="col-sm-offset-3 col-sm-6">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<h4>Log in</h4>
+					<h4>Password reset</h4>
 				</div>
 
 				<div class="panel-body">
@@ -17,8 +17,9 @@
                     </div>
                     @endif
                     
-                    <form id="loginForm" action="/auth/login" method="POST" class="form-horizontal">
+                    <form id="loginForm" action="/password/reset" method="POST" class="form-horizontal">
                     {{ csrf_field() }}
+                        <input type="hidden" name="token" value="{{ $token }}">
                         <!-- E-Mail Address -->
                         <div class="form-group">
                             <label for="email" class="col-sm-2 control-label"><i class="fa fa-btn fa-at"></i></label>
@@ -33,25 +34,24 @@
                                 <input type="password" name="password" class="form-control" placeholder="Password">
                             </div>
                         </div>
-                        <!-- Login Button -->
+                        <!-- Password -->
+                        <div class="form-group">
+                            <label for="password_confirmation" class="col-sm-2 control-label"><i class="fa fa-btn fa-lock"></i></label>
+                            <div class="col-sm-8">
+                                <input type="password" name="password_confirmation" class="form-control" placeholder="Password">
+                            </div>
+                        </div>
+                        <!-- Reset Button -->
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-8">
                                 <button type="submit" class="btn btn-primary pull-right">
-                                    <i class="fa fa-btn fa-sign-in"></i>Login
+                                    <i class="fa fa-btn fa-refresh"></i>Reset password
                                 </button>
-                                <p>
-                                    <small><a href="{{ url('/password/email') }}">Forgot your password?</a></small>
-                                </p>
 							</div>
                         </div>
                     </form>
-                    @include('auth._partials.social')
-				</div>
-                <div class="panel-footer text-right">
-                    <span>New to Flocc? </span>
-                    <a href="/auth/register">Register</a>
                 </div>
-            </div>
+			</div>
 		</div>
 	</div>
 @endsection

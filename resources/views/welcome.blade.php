@@ -13,7 +13,7 @@
             <div class="carousel-inner" role="listbox">
                 <div class="item active">
                     <div class="carousel-caption">
-                        <h3>Flocc</h3>
+                        <h1>Flocc</h1>
                         <p>do things you like with people like you</p>
                     </div>
                     <img src="/img/carousel1.jpg" class="img-rounded" alt="Chania">

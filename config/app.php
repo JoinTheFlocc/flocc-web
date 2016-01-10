@@ -145,10 +145,13 @@ return [
         Flocc\Providers\EventServiceProvider::class,
         Flocc\Providers\RouteServiceProvider::class,
 
+        /*
+         * Addons
+         */
         Laravel\Socialite\SocialiteServiceProvider::class,
         SocialiteProviders\Manager\ServiceProvider::class,
         Illuminate\Html\HtmlServiceProvider::class,
-
+        
     ],
 
     /*
