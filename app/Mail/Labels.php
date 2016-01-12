@@ -2,6 +2,7 @@
 
 namespace Flocc\Mail;
 
+use Flocc\User;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -61,12 +62,38 @@ class Labels extends Model
      *
      * @param int $user_id
      *
-     * @return int|null
+     * @return int
+     *
+     * @throws \Exception
      */
     public function getUserInboxID($user_id)
     {
         $get = $this->getLabelByUserIdAndType($user_id, self::TYPE_INBOX);
 
-        return ($get === null) ? null : (int) $get->label_id;
+        if($get === null) {
+            throw new \Exception('Wrong User ID');
+        }
+
+        return (int) $get->label_id;
+    }
+
+    /**
+     * Create defaults labels
+     *
+     * @param int $user_id
+     *
+     * @return bool
+     */
+    public function createDefaultLabels($user_id)
+    {
+        $i = 0;
+
+        if((new User())->getById($user_id) !== null) {
+            $i += self::create(['user_id' => (int) $user_id, 'name' => 'Inbox', 'type' => 'inbox']);
+            $i += self::create(['user_id' => (int) $user_id, 'name' => 'Trash', 'type' => 'trash']);
+            $i += self::create(['user_id' => (int) $user_id, 'name' => 'Archive', 'type' => 'archive']);
+        }
+
+        return ($i == 3);
     }
 }

@@ -17,10 +17,14 @@ class NotificationsController extends Controller
      */
     public function getNotifications()
     {
-        $notifications  = new Notifications();
-        $data           = $notifications->getByUserId(\Auth::user()->id);
+        if(\Auth::user()) {
+            $notifications  = new Notifications();
+            $data           = $notifications->getByUserId(\Auth::user()->id);
 
-        return response()->json($data->toArray());
+            return response()->json($data->toArray());
+        }
+
+        return response()->json([]);
     }
 
     /**
