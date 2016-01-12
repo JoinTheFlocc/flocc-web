@@ -2,6 +2,7 @@
 
 namespace Flocc\Http\Controllers\Auth;
 
+use Flocc\Mail\Labels;
 use Flocc\User;
 use Flocc\Profile;
 use Flocc\SocialProvider;
@@ -71,6 +72,12 @@ class AuthController extends Controller
             'password' => bcrypt($data['password']),
             'activation_code' => $activation_code,
         ]);
+
+        /**
+         * mail_labels
+         */
+        (new Labels())->createDefaultLabels($user->id);
+
         return $user;
     }
     
@@ -135,6 +142,11 @@ class AuthController extends Controller
             'email' => $facebookUser->email,
             'active' => 1,
         ]);
+
+        /**
+         * mail_labels
+         */
+        (new Labels())->createDefaultLabels($user->id);
 
         $profile = Profile::create([
             'firstname' => $facebookUser->user['first_name'],

@@ -69,4 +69,22 @@ class Labels extends Model
 
         return ($get === null) ? null : (int) $get->label_id;
     }
+
+    /**
+     * Create defaults labels
+     *
+     * @param int $user_id
+     *
+     * @return bool
+     */
+    public function createDefaultLabels($user_id)
+    {
+        $i = 0;
+
+        $i += self::create(['user_id' => (int) $user_id, 'name' => 'Inbox', 'type' => 'inbox']);
+        $i += self::create(['user_id' => (int) $user_id, 'name' => 'Trash', 'type' => 'trash']);
+        $i += self::create(['user_id' => (int) $user_id, 'name' => 'Archive', 'type' => 'archive']);
+
+        return ($i == 3);
+    }
 }
