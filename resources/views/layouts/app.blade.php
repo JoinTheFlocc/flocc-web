@@ -40,7 +40,7 @@
                         </li>
 				    @else
                         <li>
-                            <a href="{{ url('/profile/' . Auth::user()->id) }}"><i class="fa fa-btn fa-user"></i>{{ Auth::user()->name }}</a>
+                            <a href="{{ url('/profile/' . Auth::user()->profile->id) }}"><i class="fa fa-btn fa-user"></i>{{ Auth::user()->name }}</a>
                         </li>
 							<li><a href="{{ URL::route('mail') }}"><i class="fa fa-btn fa-envelope"></i>Mail</a></li>
 							<li>
