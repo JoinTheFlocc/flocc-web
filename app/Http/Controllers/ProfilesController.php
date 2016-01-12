@@ -65,9 +65,12 @@ class ProfilesController extends Controller
         if (!$id) {
             $id = Auth::user()->id;
         }
+
+        $id      = (int) $id;
         $profile = Profile::findOrFail($id);
+        $is_mine = ($id == (int) Auth::user()->id);
         
-        return view('dashboard', compact('profile'));
+        return view('dashboard', compact('profile', 'is_mine', 'id'));
     }
 
     /**
