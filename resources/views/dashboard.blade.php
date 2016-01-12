@@ -20,6 +20,12 @@
                         <i class="fa fa-flag"></i> <span class="badge">3</span>
                     </div>
                 </div>
+                <br>
+                @if(!$is_mine)
+                    <a href="{{ URL::route('mail.new.form', ['user_id' => $id]) }}" class="btn btn-success btn-block">
+                        <i class="fa fa-envelope"></i> Start chat
+                    </a>
+                @endif
             </div>
 
             <!-- Tags Well -->
