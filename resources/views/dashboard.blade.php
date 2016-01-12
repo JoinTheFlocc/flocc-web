@@ -22,7 +22,7 @@
                 </div>
                 <br>
                 @if(!$is_mine)
-                    <a href="{{ URL::route('mail.new.form', ['user_id' => $id]) }}" class="btn btn-success btn-block">
+                    <a href="{{ URL::route('mail.new.form', ['user_id' => $profile->user_id]) }}" class="btn btn-success btn-block">
                         <i class="fa fa-envelope"></i> Start chat
                     </a>
                 @endif

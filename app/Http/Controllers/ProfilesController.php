@@ -69,7 +69,7 @@ class ProfilesController extends Controller
         }
         $is_mine = ($profile->user_id == Auth::user()->id);
         
-        return view('dashboard', compact('profile', 'is_mine', 'id'));
+        return view('dashboard', compact('profile', 'is_mine'));
     }
 
     /**
