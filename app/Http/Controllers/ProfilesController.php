@@ -67,13 +67,7 @@ class ProfilesController extends Controller
         } else {
             $profile = Profile::findOrFail($id);
         }
-<<<<<<< HEAD
-
-        $id      = (int) $id;
-        $profile = Profile::findOrFail($id);
-        $is_mine = ($id == (int) Auth::user()->id);
-=======
->>>>>>> profile-fix
+        $is_mine = ($profile->user_id == Auth::user()->id);
         
         return view('dashboard', compact('profile', 'is_mine', 'id'));
     }
