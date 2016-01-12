@@ -90,6 +90,8 @@ class Users extends Model
     }
 
     /**
+     * User in conversation?
+     *
      * @param int $user_id
      * @param int $conversation_id
      *
