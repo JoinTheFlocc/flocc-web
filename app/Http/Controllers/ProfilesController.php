@@ -63,14 +63,13 @@ class ProfilesController extends Controller
     public function show($id = NULL)
     {
         if (!$id) {
-            $id = Auth::user()->id;
+            $profile = Profile::where('user_id', Auth::user()->id)->firstOrFail();
+        } else {
+            $profile = Profile::findOrFail($id);
         }
-
-        $id      = (int) $id;
-        $profile = Profile::findOrFail($id);
-        $is_mine = ($id == (int) Auth::user()->id);
+        $is_mine = ($profile->user_id == Auth::user()->id);
         
-        return view('dashboard', compact('profile', 'is_mine', 'id'));
+        return view('dashboard', compact('profile', 'is_mine'));
     }
 
     /**
