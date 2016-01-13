@@ -127,6 +127,7 @@ class Conversations extends Model
                 $mail_users->conversation_id    = $conversation_id;
                 $mail_users->user_id            = (int) $user_id;
                 $mail_users->label_id           = $labels->getUserInboxID($user_id);
+                $mail_users->unread_messages    = 1;
 
                 $mail_users->save();
             }

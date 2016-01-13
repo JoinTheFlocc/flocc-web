@@ -89,9 +89,17 @@ class Labels extends Model
         $i = 0;
 
         if((new User())->getById($user_id) !== null) {
-            $i += self::create(['user_id' => (int) $user_id, 'name' => 'Inbox', 'type' => 'inbox']);
-            $i += self::create(['user_id' => (int) $user_id, 'name' => 'Trash', 'type' => 'trash']);
-            $i += self::create(['user_id' => (int) $user_id, 'name' => 'Archive', 'type' => 'archive']);
+            if(self::create(['user_id' => $user_id, 'name' => 'Inbox', 'type' => 'inbox'])) {
+                ++$i;
+            }
+
+            if(self::create(['user_id' => $user_id, 'name' => 'Trash', 'type' => 'trash'])) {
+                ++$i;
+            }
+
+            if(self::create(['user_id' => $user_id, 'name' => 'Archive', 'type' => 'archive'])) {
+                ++$i;
+            }
         }
 
         return ($i == 3);

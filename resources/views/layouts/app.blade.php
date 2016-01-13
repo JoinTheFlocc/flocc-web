@@ -39,9 +39,11 @@
                             <a href="{{ URL::route('auth.login') }}"><i class="fa fa-btn fa-sign-in"></i>Login</a>
                         </li>
 				    @else
-                        <li>
-                            <a href="{{ url('/profile/' . Auth::user()->profile->id) }}"><i class="fa fa-btn fa-user"></i>{{ Auth::user()->name }}</a>
-                        </li>
+							@if(Auth::user()->profile)
+								<li>
+									<a href="{{ url('/profile/' . Auth::user()->profile->id) }}"><i class="fa fa-btn fa-user"></i>{{ Auth::user()->name }}</a>
+								</li>
+							@endif
 							<li><a href="{{ URL::route('mail') }}"><i class="fa fa-btn fa-envelope"></i>Mail</a></li>
 							<li>
 								<a href="{{ URL::route('notifications') }}">
