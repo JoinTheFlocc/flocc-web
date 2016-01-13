@@ -16,7 +16,11 @@ class ConversationsController extends Controller
     /**
      * Conversations list
      *
+     * @param null|string $label
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     *
+     * @throws \Exception
      */
     public function conversationsList($label = null)
     {

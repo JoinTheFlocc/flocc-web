@@ -206,28 +206,30 @@ class NewMessage
             }
 
             /**
+             * Save
+             */
+            if($this->conversation_id === null) {
+                $conversation_id = (new Conversations())->addNewConversation($this);
+            } else {
+                $conversation_id = (new Messages())->addNewMessage($this);
+            }
+
+            /**
              * Add notification
              */
             foreach($this->getUsers() as $user_id) {
                 if($user_id != $this->getUserId()) {
                     (new NewNotification())
                         ->setUserId($user_id)
-                        ->setUniqueKey('mail.conversation.' . $this->getConversationId())
-                        ->setCallback('/mail/' . $this->getConversationId())
+                        ->setUniqueKey('mail.conversation.' . $conversation_id)
+                        ->setCallback('/mail/' . $conversation_id)
                         ->setTypeId('mail.new')
-                        ->addVariable('name', (new User())->getById($user_id)->name)
+                        ->addVariable('name', (new User())->getById($this->getUserId())->name)
                     ->save();
                 }
             }
 
-            /**
-             * Save
-             */
-            if($this->conversation_id === null) {
-                return (new Conversations())->addNewConversation($this);
-            } else {
-                return (new Messages())->addNewMessage($this);
-            }
+            return $conversation_id;
         }
 
         return false;

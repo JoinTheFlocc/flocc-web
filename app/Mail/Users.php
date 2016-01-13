@@ -2,6 +2,7 @@
 
 namespace Flocc\Mail;
 
+use Flocc\Notifications\Notifications;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
@@ -166,6 +167,11 @@ class Users extends Model
      */
     public function markAsRead($conversation_id, $user_id)
     {
+        /**
+         * Mark notification as read
+         */
+        (new Notifications())->markAsRead('mail.conversation.' . $conversation_id, $user_id);
+
         return $this->setUnreadMessagesNum($conversation_id, $user_id, 0);
     }
 

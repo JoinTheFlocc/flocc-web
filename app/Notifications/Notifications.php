@@ -175,4 +175,17 @@ class Notifications extends Model
 
         return false;
     }
+
+    /**
+     * Mark notification as read
+     *
+     * @param string $unique_key
+     * @param int $user_id
+     *
+     * @return bool
+     */
+    public function markAsRead($unique_key, $user_id)
+    {
+        return (self::where('unique_key', md5($unique_key))->where('user_id', (int) $user_id)->update(['is_read' => '1']) == 1);
+    }
 }
