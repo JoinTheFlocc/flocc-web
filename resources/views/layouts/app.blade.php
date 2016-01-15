@@ -16,7 +16,7 @@
 	<link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css">
 	<link href="/css/bootstrap-social.css" rel="stylesheet" type="text/css">
     
-	<script src="/js/jquery-2.1.4.min.js"></script>
+	<script src="/js/jquery-2.2.0.min.js"></script>
 	<script src="/js/bootstrap.min.js"></script>
 
 	<link href="/css/flocc.css" rel="stylesheet" type="text/css">
