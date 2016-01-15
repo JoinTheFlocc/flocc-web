@@ -56,18 +56,10 @@ return [
             'driver'    => 'mysql',
 
             // Michal Molenda
-            /**
             'host'      => env('DB_HOST', 'localhost'),
             'database'  => env('DB_DATABASE', 'flocc'),
             'username'  => env('DB_USERNAME', 'root'),
             'password'  => env('DB_PASSWORD', 'root'),
-             **/
-
-            // Home.pl
-            'host'      => env('DB_HOST', 'serwer1537469.home.pl'),
-            'database'  => env('DB_DATABASE', '19087997_0000002'),
-            'username'  => env('DB_USERNAME', '19087997_0000002'),
-            'password'  => env('DB_PASSWORD', 'Parostatek2015'),
 
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
