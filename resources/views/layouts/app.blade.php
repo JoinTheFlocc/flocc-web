@@ -9,14 +9,16 @@
 	<title>Join the Flocc</title>
 
 	<link href="https://fonts.googleapis.com/css?family=Signika:300,400,600,700" rel="stylesheet" type="text/css">
-	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+    
+    
     <link href="https://fonts.googleapis.com/css?family=Pacifico:400" rel="stylesheet" type="text/css">
 
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 	<link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css">
 	<link href="/css/bootstrap-social.css" rel="stylesheet" type="text/css">
     
-	<script src="/js/jquery-2.1.4.min.js"></script>
+	<script src="/js/jquery-2.2.0.min.js"></script>
 	<script src="/js/bootstrap.min.js"></script>
 
 	<link href="/css/flocc.css" rel="stylesheet" type="text/css">
