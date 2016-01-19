@@ -59,3 +59,6 @@ Route::post('mail/new', 'Mail\MessagesController@newMessage')->name('mail.new');
 Route::get('notifications', 'Notifications\NotificationsController@index')->name('notifications');
 Route::get('notifications/{id}', 'Notifications\NotificationsController@callback')->name('notifications.callback')->where('id', '[0-9]+');;
 Route::get('notifications/get', 'Notifications\NotificationsController@getNotifications')->name('notifications.get');
+
+// Events
+Route::get('events/{id}', 'Events\EventController@index')->name('events')->where('id', '[0-9]+');
