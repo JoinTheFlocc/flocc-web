@@ -61,4 +61,4 @@ Route::get('notifications/{id}', 'Notifications\NotificationsController@callback
 Route::get('notifications/get', 'Notifications\NotificationsController@getNotifications')->name('notifications.get');
 
 // Events
-Route::get('events/{id}', 'Events\EventController@index')->name('events')->where('id', '[0-9]+');
+Route::get('events/{slug}', 'Events\EventController@index')->name('events');

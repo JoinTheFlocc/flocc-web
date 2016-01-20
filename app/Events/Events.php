@@ -419,6 +419,18 @@ class Events extends Model
      */
     public function getById($id)
     {
-        return self::where('id', (int) $id)->first();
+        return self::where('id', (int) $id)->take(1)->first();
+    }
+
+    /**
+     * Get event by slug
+     *
+     * @param string $slug
+     *
+     * @return \Flocc\Events\Events
+     */
+    public function getBySlug($slug)
+    {
+        return self::where('slug', $slug)->take(1)->first();
     }
 }

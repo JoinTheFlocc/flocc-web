@@ -15,14 +15,14 @@ class EventController extends Controller
     /**
      * Display event
      *
-     * @param int $id
+     * @param int $slug
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index($id)
+    public function index($slug)
     {
         $events = new Events();
-        $event  = $events->getById($id);
+        $event  = $events->getBySlug($slug);
 
         if($event === null) {
             die; // @TODO:
