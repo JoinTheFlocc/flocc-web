@@ -1,29 +1,30 @@
 <?php
 
-namespace Flocc;
+namespace Flocc\Events;
 
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class Places
+ * Class Messages
  *
- * @package Flocc
+ * @package Flocc\Events
  */
-class Places extends Model
+class Messages extends Model
 {
+
     /**
      * The database table used by the model.
      *
      * @var string
      */
-    protected $table = 'places';
+    protected $table = 'events_messages';
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['id', 'name'];
+    protected $fillable = ['id', 'event_id', 'message'];
 
     /**
      * Indicates if the model should be timestamped.
@@ -33,7 +34,14 @@ class Places extends Model
     public $timestamps = false;
 
     /**
-     * Set ID
+     * Sub comments
+     *
+     * @var array
+     */
+    public $comments = [];
+
+    /**
+     * Set comment ID
      *
      * @param int $id
      *
@@ -41,66 +49,66 @@ class Places extends Model
      */
     public function setId($id)
     {
-        $this->id = (int) $id;
+        $this->id = (int)$id;
 
         return $this;
     }
 
     /**
-     * Get ID
+     * Get comment ID
      *
      * @return int
      */
     public function getId()
     {
-        return (int) $this->id;
+        return $this->id;
     }
 
     /**
-     * Set parent ID
+     * Set event ID
      *
-     * @param int|null $parent_id
+     * @param int $event_id
      *
      * @return $this
      */
-    public function setParentId($parent_id)
+    public function setEventId($event_id)
     {
-        $this->parent_id = $parent_id;
+        $this->event_id = (int) $event_id;
 
         return $this;
     }
 
     /**
-     * Get parent ID
+     * Get event ID
      *
-     * @return int|null
+     * @return int
      */
-    public function getParentId()
+    public function getEventId()
     {
-        return $this->parent_id;
+        return (int) $this->event_id;
     }
 
     /**
-     * Set name
+     * Set message
      *
-     * @param string $name
+     * @param string $message
      *
      * @return $this
      */
-    public function setName($name)
+    public function setMessage($message)
     {
-        $this->name = $name;
+        $this->message = $message;
 
         return $this;
     }
 
     /**
-     * Get name
+     * Get message
      *
      * @return string
      */
-    public function getName()
+    public function getMessage()
     {
-        return $this->name;
+        return $this->message;
     }
 }

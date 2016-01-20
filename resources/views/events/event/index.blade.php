@@ -18,7 +18,7 @@
 
                 <div class="well text-center">
                     <h1>{{ $event->getTitle() }}</h1><br>
-                    <img src="{{ $event->getPhoto() }}" style="width:150px;border-radius:5px;"><br><br>
+                    <img src="{{ $event->getAvatarUrl() }}" style="width:150px;border-radius:5px;"><br><br>
                     <p>{{ $event->getDescription() }}</p><br>
 
                     <div class="row">
@@ -30,6 +30,19 @@
                             <a href="{{ URL::route('profile.display', ['id' => $event->getUserId()]) }}">
                                 {{ $event->getOwner()->getProfile()->getFirstName() }} {{ $event->getOwner()->getProfile()->getLastName() }}
                             </a>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:25px;">
+                        <div class="col-sm-6">
+                            <i class="fa fa-info"></i>
+                            @if($event->isFixed())
+                                Odbędzie się
+                            @else
+                                Planowane
+                            @endif
+                        </div>
+                        <div class="col-sm-6">
+
                         </div>
                     </div>
                 </div>
@@ -81,38 +94,10 @@
                     </div>
 
                     <div style="margin-top:50px;">
-                        <h2 style="margin-bottom: 25px;">Posty</h2>
+                        <h2 style="margin-bottom: 25px;">Time line</h2>
 
-                        @foreach($event->getComments() as $comment)
-                            <div class="media">
-                                <div class="media-left">
-                                    <a href="#">
-                                        <img class="media-object" src="http://a.deviantart.net/avatars/a/v/avatar239.jpg?2" style="border-radius: 5px;">
-                                    </a>
-                                </div>
-                                <div class="media-body">
-                                    <h4 class="media-heading">{{ $comment->getUser()->getProfile()->getFirstName() }} {{ $comment->getUser()->getProfile()->getLastName() }}</h4>
-                                    <p>{{ $comment->getComment() }}</p>
-
-                                    @if(count($comment->getComments()) > 0)
-                                        <div style="margin-top: 20px;padding-left: 40px">
-                                            @foreach($comment->getComments() as $sub_comment)
-                                                <div class="media">
-                                                    <div class="media-left">
-                                                        <a href="#">
-                                                            <img class="media-object" src="http://a.deviantart.net/avatars/a/v/avatar239.jpg?2" style="border-radius: 5px;">
-                                                        </a>
-                                                    </div>
-                                                    <div class="media-body">
-                                                        <h4 class="media-heading">{{ $sub_comment->getUser()->getProfile()->getFirstName() }} {{ $sub_comment->getUser()->getProfile()->getLastName() }}</h4>
-                                                        <p>{{ $sub_comment->getComment() }}</p>
-                                                    </div>
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    @endif
-                                </div>
-                            </div>
+                        @foreach($event->getTimeLine() as $item)
+                            @include('partials.events.time_line.' . $item->getType(), array('item' => $item))
                         @endforeach
                     </div>
                 </div>

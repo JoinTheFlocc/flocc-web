@@ -250,27 +250,23 @@ class Events extends Model
     }
 
     /**
-     * Set photo URL
-     *
-     * @param string $photo
-     *
-     * @return $this
-     */
-    public function setPhoto($photo)
-    {
-        $this->photo = $photo;
-
-        return $this;
-    }
-
-    /**
      * Get photo URL
      *
      * @return string
      */
-    public function getPhoto()
+    public function getAvatarUrl()
     {
-        return $this->photo;
+        return $this->avatar_url;
+    }
+
+    /**
+     * Is fixed?
+     *
+     * @return bool
+     */
+    public function isFixed()
+    {
+        return ($this->fixed == '1') ? true : false;
     }
 
     /**
@@ -372,42 +368,13 @@ class Events extends Model
     }
 
     /**
-     * Get event comments
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function getComments()
-    {
-        $get    = $this->hasMany('Flocc\Events\Comments', 'event_id', 'id')->get();
-        $data   = [];
-
-        foreach($get as $i => $row) {
-            if($row->getParentId() === null) {
-                $row['comments'] = [];
-
-                $data[$row->getId()] = $row;
-
-                unset($get[$i]);
-            }
-        }
-
-        foreach($get as $i => $row) {
-            $data[$row->getParentId()]->addComment($row);
-        }
-
-        return new \Illuminate\Database\Eloquent\Collection($data);
-    }
-
-    /**
      * Get event time line
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getTimeline()
+    public function getTimeLine()
     {
-        /**
-         * @TODO:
-         */
+        return (new TimeLine())->getByEventId($this->id);
     }
 
     /**
@@ -419,7 +386,13 @@ class Events extends Model
      */
     public function getById($id)
     {
-        return self::where('id', (int) $id)->take(1)->first();
+        $get = self::where('id', (int) $id)->take(1)->first();
+
+        if($get !== null) {
+            $this->updateViews($get->getId(), $get->getViews()+1);
+        }
+
+        return $get;
     }
 
     /**
@@ -431,6 +404,25 @@ class Events extends Model
      */
     public function getBySlug($slug)
     {
-        return self::where('slug', $slug)->take(1)->first();
+        $get = self::where('slug', $slug)->take(1)->first();
+
+        if($get !== null) {
+            $this->updateViews($get->getId(), $get->getViews()+1);
+        }
+
+        return $get;
+    }
+
+    /**
+     * Uodate views sum
+     *
+     * @param int $id
+     * @param int $views
+     *
+     * @return bool
+     */
+    public function updateViews($id, $views)
+    {
+        return (self::where('id', $id)->update(['views' => (int) $views]) == 1);
     }
 }

@@ -5,18 +5,18 @@ namespace Flocc;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class Places
+ * Class Intensities
  *
  * @package Flocc
  */
-class Places extends Model
+class Intensities extends Model
 {
     /**
      * The database table used by the model.
      *
      * @var string
      */
-    protected $table = 'places';
+    protected $table = 'intensities';
 
     /**
      * The attributes that are mass assignable.
@@ -54,30 +54,6 @@ class Places extends Model
     public function getId()
     {
         return (int) $this->id;
-    }
-
-    /**
-     * Set parent ID
-     *
-     * @param int|null $parent_id
-     *
-     * @return $this
-     */
-    public function setParentId($parent_id)
-    {
-        $this->parent_id = $parent_id;
-
-        return $this;
-    }
-
-    /**
-     * Get parent ID
-     *
-     * @return int|null
-     */
-    public function getParentId()
-    {
-        return $this->parent_id;
     }
 
     /**

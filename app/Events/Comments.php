@@ -34,13 +34,6 @@ class Comments extends Model
     public $timestamps = false;
 
     /**
-     * Sub comments
-     *
-     * @var array
-     */
-    public $comments = [];
-
-    /**
      * Set comment ID
      *
      * @param int $id
@@ -192,29 +185,5 @@ class Comments extends Model
     public function getUser()
     {
         return $this->hasOne('Flocc\User', 'id', 'user_id')->first();
-    }
-
-    /**
-     * Add new sub comment
-     *
-     * @param array $comment
-     *
-     * @return $this
-     */
-    public function addComment($comment)
-    {
-        $this->comments[] = $comment;
-
-        return $this;
-    }
-
-    /**
-     * Get subcomments
-     *
-     * @return array
-     */
-    public function getComments()
-    {
-        return $this->comments;
     }
 }
