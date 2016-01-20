@@ -16,6 +16,7 @@ class CreateEventsTimeLineTable extends Migration
         {
             $table->increments('id')->unsigned();
             $table->integer('event_id')->unsigned();
+            $table->timestamp('time')->useCurrent();
             $table->enum('type', ['message', 'comment'])->default('message');
 
             $table->integer('comment_id')->nullable()->default(null)->unsigned();

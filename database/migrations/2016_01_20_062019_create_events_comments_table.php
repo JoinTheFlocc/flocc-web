@@ -16,7 +16,7 @@ class CreateEventsCommentsTable extends Migration
         {
             $table->increments('id')->unsigned();
             $table->integer('event_id')->unsigned();
-            $table->integer('parent_id')->unsigned();
+            $table->integer('parent_id')->nullable()->default(null)->unsigned();
             $table->integer('user_id')->unsigned();
             $table->timestamp('time')->useCurrent();
             $table->longText('comment');
