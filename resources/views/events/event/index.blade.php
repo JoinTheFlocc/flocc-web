@@ -115,8 +115,12 @@
                 </ul>
                 <div class="nav" style="border-left:1px solid #ddd; border-right:1px solid #ddd; border-bottom:1px solid #ddd; padding: 20px;">
                     <div class="well">
-                        <textarea style="width:100%;height:50px;background: transparent; border: 0;" placeholder="Wpisz swój komentarz"></textarea><br>
-                        <button class="btn btn-primary btn-block">Skomentuj</button>
+                        <form method="POST" action="{{ URL::route('events.comment') }}">
+                            <textarea name="comment" style="width:100%;height:50px;background: transparent; border: 0;" placeholder="Wpisz swój komentarz"></textarea><br>
+                            <input type="hidden" name="event_id" value="{{ $event->getId() }}">
+                            {{ csrf_field() }}
+                            <button type="submit" class="btn btn-primary btn-block">Skomentuj</button>
+                        </form>
                     </div>
 
                     <div style="margin-top:50px;">

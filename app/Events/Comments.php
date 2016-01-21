@@ -186,4 +186,24 @@ class Comments extends Model
     {
         return $this->hasOne('Flocc\User', 'id', 'user_id')->first();
     }
+
+    /**
+     * Add new comment
+     *
+     * @param int $event_id
+     * @param int $user_id
+     * @param string $comment
+     *
+     * @return int|null
+     */
+    public function addNew($event_id, $user_id, $comment)
+    {
+        $insert = self::create([
+            'event_id'  => (int) $event_id,
+            'user_id'   => (int) $user_id,
+            'comment'   => $comment
+        ]);
+
+        return ($insert === null) ? null : $insert->id;
+    }
 }

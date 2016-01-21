@@ -1,6 +1,7 @@
 <?php
 
 namespace Flocc\Events\TimeLine;
+use Flocc\Events\Comments;
 use Flocc\Events\Messages;
 use Flocc\Events\TimeLine;
 
@@ -13,6 +14,7 @@ class NewLine
 {
     private $event_id, $type;
     private $message;
+    private $comment, $user_id;
 
     /**
      * Set event ID
@@ -97,6 +99,54 @@ class NewLine
     }
 
     /**
+     * Set comment text
+     *
+     * @param string $comment
+     *
+     * @return $this
+     */
+    public function setComment($comment)
+    {
+        $this->comment = $comment;
+
+        return $this;
+    }
+
+    /**
+     * Get comment text
+     *
+     * @return string
+     */
+    public function getComment()
+    {
+        return $this->comment;
+    }
+
+    /**
+     * Set user ID
+     *
+     * @param int $user_id
+     *
+     * @return $this
+     */
+    public function setUserId($user_id)
+    {
+        $this->user_id = (int) $user_id;
+
+        return $this;
+    }
+
+    /**
+     * Get user ID
+     *
+     * @return int
+     */
+    public function getUserId()
+    {
+        return (int) $this->user_id;
+    }
+
+    /**
      * Save data
      *
      * @return bool
@@ -111,6 +161,9 @@ class NewLine
         switch($this->getType()) {
             case 'message':
                 $data['message_id'] = (new Messages())->addNew($this->getEventId(), $this->getMessage());
+                break;
+            case 'comment':
+                $data['comment_id'] = (new Comments())->addNew($this->getEventId(), $this->getUserId(), $this->getComment());
                 break;
         }
 
