@@ -61,4 +61,6 @@ Route::get('notifications/{id}', 'Notifications\NotificationsController@callback
 Route::get('notifications/get', 'Notifications\NotificationsController@getNotifications')->name('notifications.get');
 
 // Events
-Route::get('events/{slug}', 'Events\EventController@index')->name('events');
+Route::get('events/{slug}', 'Events\EventController@index')->name('events.event');
+Route::get('events/{slug}/members', 'Events\EventController@members')->name('events.event.members');
+Route::get('events/{slug}/followers', 'Events\EventController@followers')->name('events.event.followers');

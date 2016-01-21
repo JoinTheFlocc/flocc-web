@@ -60,9 +60,13 @@
                         <div class="well" style="margin-top:15px;">
                             @foreach($event->getMembers() as $member)
                                 <a href="{{ URL::route('profile.display', ['id' => $member->getUserId()]) }}" title="{{ $member->getUser()->getProfile()->getFirstName() }} {{ $member->getUser()->getProfile()->getLastName() }}">
-                                    <img src="http://a.deviantart.net/avatars/a/v/avatar239.jpg?2" alt="{{ $member->getUser()->getProfile()->getFirstName() }} {{ $member->getUser()->getProfile()->getLastName() }}" style="border-radius:5px;">
+                                    <img src="{{ $member->getUser()->getProfile()->getAvatarUrl()}}" alt="{{ $member->getUser()->getProfile()->getFirstName() }} {{ $member->getUser()->getProfile()->getLastName() }}" style="border-radius:5px;">
                                 </a>
                             @endforeach
+
+                            <br>&nbsp;<br><a href="{{ URL::route('events.event.members', ['slug' => $event->getSlug()]) }}">
+                                Zobacz wszystkich
+                            </a>
                         </div>
                     </div>
                     <div class="col-sm-6">
@@ -71,9 +75,13 @@
                         <div class="well" style="margin-top:15px;">
                             @foreach($event->getFollowers() as $member)
                                 <a href="{{ URL::route('profile.display', ['id' => $member->getUserId()]) }}" title="{{ $member->getUser()->getProfile()->getFirstName() }} {{ $member->getUser()->getProfile()->getLastName() }}">
-                                    <img src="http://a.deviantart.net/avatars/a/v/avatar239.jpg?2" alt="{{ $member->getUser()->getProfile()->getFirstName() }} {{ $member->getUser()->getProfile()->getLastName() }}">
+                                    <img src="{{ $member->getUser()->getProfile()->getAvatarUrl()}}" alt="{{ $member->getUser()->getProfile()->getFirstName() }} {{ $member->getUser()->getProfile()->getLastName() }}">
                                 </a>
                             @endforeach
+
+                            <br>&nbsp;<br><a href="{{ URL::route('events.event.followers', ['slug' => $event->getSlug()]) }}">
+                                Zobacz wszystkich
+                            </a>
                         </div>
                     </div>
                 </div>

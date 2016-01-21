@@ -79,7 +79,7 @@ class Profile extends Model
      */
     public function getAvatarUrl()
     {
-        return $this->avatar_url;
+        return 'http://a.deviantart.net/avatars/a/v/avatar239.jpg?2'; //$this->avatar_url;
     }
 
     /**

@@ -270,6 +270,16 @@ class Events extends Model
     }
 
     /**
+     * Get slug
+     *
+     * @return string
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    /**
      * Set members limit
      *
      * @param int $users_limit
