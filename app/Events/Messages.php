@@ -111,4 +111,22 @@ class Messages extends Model
     {
         return $this->message;
     }
+
+    /**
+     * Add new message
+     *
+     * @param int $event_id
+     * @param string $message
+     *
+     * @return int|null
+     */
+    public function addNew($event_id, $message)
+    {
+        $insert = self::create([
+            'event_id'  => (int) $event_id,
+            'message'   => $message
+        ]);
+
+        return ($insert === null) ? null : $insert->id;
+    }
 }

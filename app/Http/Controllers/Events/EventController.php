@@ -4,7 +4,9 @@ namespace Flocc\Http\Controllers\Events;
 
 use Flocc\Events\Events;
 use Flocc\Events\Members;
+use Flocc\Events\TimeLine\NewLine;
 use Flocc\Http\Controllers\Controller;
+use Flocc\User;
 
 /**
  * Class EventController
@@ -109,9 +111,13 @@ class EventController extends Controller
     {
         $events     = new Events();
         $members    = new Members();
+        $profile    = new User();
 
         $event      = $events->getBySlug($slug);
         $user_id    = (int) \Auth::user()->id;
+        $user       = $profile->getById($user_id);
+
+        $user_name  = $user->getProfile()->getFirstName() . ' ' . $user->getProfile()->getLastName();
 
         if($event === null) {
             die; // @TODO:
@@ -122,6 +128,11 @@ class EventController extends Controller
                 switch($type) {
                     case 'follower':
                         $members->addNewFollower($event->getId(), $user_id);
+                        (new NewLine())
+                            ->setEventId($event->getId())
+                            ->setTypeAsMessage()
+                            ->setMessage($user_name . ' zaczął obserwować to wydarzenie')
+                        ->save();
                         break;
                     case 'member':
                         $members->addNewMember($event->getId(), $user_id);

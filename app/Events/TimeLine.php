@@ -65,4 +65,16 @@ class TimeLine extends Model
 
         return $time_line;
     }
+
+    /**
+     * Add new
+     *
+     * @param array $data
+     *
+     * @return \Flocc\Events\TimeLine
+     */
+    public function addNew(array $data)
+    {
+        return self::create($data);
+    }
 }
