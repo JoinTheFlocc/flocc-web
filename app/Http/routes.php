@@ -65,3 +65,4 @@ Route::get('events/{slug}', 'Events\EventController@index')->name('events.event'
 Route::get('events/{slug}/members', 'Events\EventController@members')->name('events.event.members');
 Route::get('events/{slug}/followers', 'Events\EventController@followers')->name('events.event.followers');
 Route::get('events/{slug}/cancel', 'Events\EventController@cancel')->name('events.event.cancel');
+Route::get('events/{slug}/join/{type}', 'Events\EventController@join')->name('events.event.join');

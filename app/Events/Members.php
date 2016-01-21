@@ -260,4 +260,65 @@ class Members extends Model
     {
         return $this->hasOne('Flocc\User', 'id', 'user_id')->first();
     }
+
+    /**
+     * Check user in event
+     *
+     * @param int $event_id
+     * @param int $user_id
+     *
+     * @return bool
+     */
+    public function isUserInEvent($event_id, $user_id)
+    {
+        $get = self::where('user_id', (int) $user_id)->where('event_id', (int) $event_id)->take(1)->first();
+
+        return ($get === null) ? false : true;
+    }
+
+    /**
+     * Add new member or follower
+     *
+     * @param int $event_id
+     * @param int $user_id
+     * @param string $status
+     *
+     * @return bool
+     */
+    public function addNew($event_id, $user_id, $status)
+    {
+        $insert = Members::create([
+            'event_id'  => $event_id,
+            'user_id'   => $user_id,
+            'status'    => $status
+        ]);
+
+        return ($insert === null) ? false : true;
+    }
+
+    /**
+     * Add new member
+     *
+     * @param int $event_id
+     * @param int $user_id
+     *
+     * @return bool
+     */
+    public function addNewMember($event_id, $user_id)
+    {
+        return $this->addNew($event_id, $user_id, 'awaiting');
+    }
+
+    /**
+     * Add new follower
+     *
+     * @param int $event_id
+     * @param int $user_id
+     *
+     * @return bool
+     */
+    public function addNewFollower($event_id, $user_id)
+    {
+        return $this->addNew($event_id, $user_id, 'follower');
+    }
 }

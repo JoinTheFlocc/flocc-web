@@ -3,6 +3,7 @@
 namespace Flocc\Http\Controllers\Events;
 
 use Flocc\Events\Events;
+use Flocc\Events\Members;
 use Flocc\Http\Controllers\Controller;
 
 /**
@@ -21,8 +22,8 @@ class EventController extends Controller
      */
     public function index($slug)
     {
-        $events = new Events();
-        $event  = $events->getBySlug($slug);
+        $events     = new Events();
+        $event      = $events->getBySlug($slug);
 
         if($event === null) {
             die; // @TODO:
@@ -92,6 +93,42 @@ class EventController extends Controller
         }
 
         $event->setStatusCanceled()->save();
+
+        return \Redirect::to('events/' . $slug);
+    }
+
+    /**
+     * Join to event
+     *
+     * @param string $slug
+     * @param string $type
+     *
+     * @return mixed
+     */
+    public function join($slug, $type)
+    {
+        $events     = new Events();
+        $members    = new Members();
+
+        $event      = $events->getBySlug($slug);
+        $user_id    = (int) \Auth::user()->id;
+
+        if($event === null) {
+            die; // @TODO:
+        }
+
+        if($event->isMine() === false) {
+            if($members->isUserInEvent($event->getId(), $user_id) === false) {
+                switch($type) {
+                    case 'follower':
+                        $members->addNewFollower($event->getId(), $user_id);
+                        break;
+                    case 'member':
+                        $members->addNewMember($event->getId(), $user_id);
+                        break;
+                }
+            }
+        }
 
         return \Redirect::to('events/' . $slug);
     }

@@ -5,11 +5,11 @@
         <div class="row" style="margin-top:25px;">
             <div class="col-sm-4">
                 <div class="text-center" style="margin-bottom:25px;">
-                    @if($event->isMine() and $event->isStatusActive())
-                        <a href="#" class="btn btn-success" style="width:32%">
+                    @if($event->isStatusActive())
+                        <a href="{{ URL::route('events.event.join', ['slug' => $event->getSlug(), 'type' => 'member']) }}" class="btn btn-success" style="width:32%">
                             Dołącz
                         </a>
-                        <a href="#" class="btn btn-primary" style="width:32%">
+                        <a href="{{ URL::route('events.event.join', ['slug' => $event->getSlug(), 'type' => 'follower']) }}" class="btn btn-primary" style="width:32%">
                             Obserwuj
                         </a>
                     @endif
