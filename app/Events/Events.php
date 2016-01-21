@@ -303,6 +303,35 @@ class Events extends Model
         return (int) $this->users_limit;
     }
 
+    public function setStatusActive()
+    {
+        $this->status = 'active';
+
+        return $this;
+    }
+
+    public function setStatusCanceled()
+    {
+        $this->status = 'canceled';
+
+        return $this;
+    }
+
+    public function isStatusActive()
+    {
+        return ($this->status == 'active');
+    }
+
+    public function isStatusCanceled()
+    {
+        return ($this->status == 'canceled');
+    }
+
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
     /**
      * Set place ID
      *
@@ -315,6 +344,16 @@ class Events extends Model
         $this->place_id = (int) $place_id;
 
         return $this;
+    }
+
+    /**
+     * I'm the owner?
+     *
+     * @return bool
+     */
+    public function isMine()
+    {
+        return (\Auth::user()->id == $this->getUserId());
     }
 
     /**

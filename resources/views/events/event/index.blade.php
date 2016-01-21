@@ -5,12 +5,14 @@
         <div class="row" style="margin-top:25px;">
             <div class="col-sm-4">
                 <div class="text-center" style="margin-bottom:25px;">
-                    <a href="#" class="btn btn-success" style="width:32%">
-                        Dołącz
-                    </a>
-                    <a href="#" class="btn btn-primary" style="width:32%">
-                        Obserwuj
-                    </a>
+                    @if($event->isMine() and $event->isStatusActive())
+                        <a href="#" class="btn btn-success" style="width:32%">
+                            Dołącz
+                        </a>
+                        <a href="#" class="btn btn-primary" style="width:32%">
+                            Obserwuj
+                        </a>
+                    @endif
                     <a href="{{ URL::route('mail.new.form', ['user_id' => $event->getUserId()]) }}" class="btn btn-default" style="width:32%">
                         Wiadomość
                     </a>
@@ -35,10 +37,15 @@
                     <div class="row" style="margin-top:25px;">
                         <div class="col-sm-6">
                             <i class="fa fa-info"></i>
-                            @if($event->isFixed())
-                                Odbędzie się
+
+                            @if($event->isStatusActive())
+                                @if($event->isFixed())
+                                    Odbędzie się
+                                @else
+                                    Planowane
+                                @endif
                             @else
-                                Planowane
+                                Anulowane
                             @endif
                         </div>
                         <div class="col-sm-6">
@@ -85,8 +92,19 @@
                         </div>
                     </div>
                 </div>
+
+                @if($event->isMine() and $event->isStatusActive())
+                    <a href="{{ URL::route('events.event.cancel', ['slug' => $event->getSlug()]) }}" class="btn btn-danger btn-block" onclick="return confirm('Na pewno?');">
+                        Odwołaj wydarzenie
+                    </a>
+                @endif
             </div>
             <div class="col-sm-8">
+                @if($event->isStatusCanceled())
+                    <div class="alert alert-danger" style="margin-top:58px;">
+                        To wydarzenie zostało odwołane
+                    </div>
+                @endif
                 <ul class="nav nav-tabs" style="margin-top:58px;">
                     <li class="active">
                         <a href="#">Posty</a>

@@ -61,17 +61,38 @@ class EventController extends Controller
         }
 
         switch($status) {
-            case 'members';
-                $users = $event->getMembers();
-                break;
-            case 'followers';
-                $users = $event->getFollowers();
-                break;
+            case 'members';     $users = $event->getMembers(); break;
+            case 'followers';   $users = $event->getFollowers(); break;
         }
 
         return view('events.event.users', [
             'event' => $event,
             'users' => $users
         ]);
+    }
+
+    /**
+     * Close event
+     *
+     * @param string $slug
+     *
+     * @return mixed
+     */
+    public function cancel($slug)
+    {
+        $events = new Events();
+        $event  = $events->getBySlug($slug);
+
+        if($event === null) {
+            die; // @TODO:
+        }
+
+        if($event->isMine() === false) {
+            die; // @TODO:
+        }
+
+        $event->setStatusCanceled()->save();
+
+        return \Redirect::to('events/' . $slug);
     }
 }

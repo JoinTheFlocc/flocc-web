@@ -64,3 +64,4 @@ Route::get('notifications/get', 'Notifications\NotificationsController@getNotifi
 Route::get('events/{slug}', 'Events\EventController@index')->name('events.event');
 Route::get('events/{slug}/members', 'Events\EventController@members')->name('events.event.members');
 Route::get('events/{slug}/followers', 'Events\EventController@followers')->name('events.event.followers');
+Route::get('events/{slug}/cancel', 'Events\EventController@cancel')->name('events.event.cancel');
