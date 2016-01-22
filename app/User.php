@@ -36,12 +36,23 @@ class User extends Model implements AuthenticatableContract,
      * @var array
      */
     protected $hidden = ['password', 'remember_token'];
-                                        
-    public function profile() 
+
+    /**
+     * Get user profile
+     *
+     * @return \Flocc\Profile
+     */
+    public function getProfile()
     {
-        return $this->hasOne('Flocc\Profile');
+        return $this->hasOne('Flocc\Profile')->first();
     }
-    public function socialProvider()
+
+    /**
+     * Get social provider
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function getSocialProvider()
     {
         return $this->hasOne('Flocc\SocialProvider');
     }
@@ -56,5 +67,35 @@ class User extends Model implements AuthenticatableContract,
     public function getById($user_id)
     {
         return self::where('id', (int) $user_id)->take(1)->first();
+    }
+
+    /**
+     * Get user ID
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return (int) $this->id;
+    }
+
+    /**
+     * Get user name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Get user email
+     *
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
     }
 }
