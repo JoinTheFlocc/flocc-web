@@ -109,8 +109,10 @@
                     <li class="active">
                         <a href="#">Posty</a>
                     </li>
-                    <li>
-                        <a href="#">Udostępnij wydarzenie</a>
+                    <li class="pull-right">
+                        <a href="#" style="background: #3b5998;color:#fff;" class="facebook_share" facebook-url="{{ $meta_facebook->getUrl() }}">
+                            <i class="fa fa-facebook-official"></i> Udostępnij
+                        </a>
                     </li>
                 </ul>
                 <div class="nav" style="border-left:1px solid #ddd; border-right:1px solid #ddd; border-bottom:1px solid #ddd; padding: 20px;">
@@ -127,7 +129,9 @@
                         <h2 style="margin-bottom: 25px;">Time line</h2>
 
                         @foreach($event->getTimeLine() as $item)
-                            @include('partials.events.time_line.' . $item->getType(), array('item' => $item))
+                            <div style="margin: 25px 0;">
+                                @include('partials.events.time_line.' . $item->getType(), array('item' => $item))
+                            </div>
                         @endforeach
                     </div>
                 </div>

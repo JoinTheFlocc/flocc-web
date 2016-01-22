@@ -31,8 +31,18 @@ class EventController extends Controller
             die; // @TODO:
         }
 
+        /**
+         * Facebook meta data
+         */
+        $meta_data = (new \Flocc\Social\Facebook\MetaData())
+            ->setTitle($event->getTitle())
+            ->setDescription($event->getDescription())
+            ->setImage($event->getAvatarUrl())
+        ;
+
         return view('events.event.index', [
-            'event' => $event
+            'event'             => $event,
+            'meta_facebook'     => $meta_data
         ]);
     }
 

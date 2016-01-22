@@ -22,6 +22,14 @@
 	<script src="/js/bootstrap.min.js"></script>
 
 	<link href="/css/flocc.css" rel="stylesheet" type="text/css">
+
+	@if($meta_facebook)
+		<meta property="og:url"           content="{{ $meta_facebook->getUrl() }}" />
+		<meta property="og:type"          content="{{ $meta_facebook->getType() }}" />
+		<meta property="og:title"         content="{{ $meta_facebook->getTitle() }}" />
+		<meta property="og:description"   content="{{ $meta_facebook->getDescription() }}" />
+		<meta property="og:image"         content="{{ $meta_facebook->getImage() }}" />
+	@endif
  </head>
 
 <body>
