@@ -23,7 +23,7 @@
 
 	<link href="/css/flocc.css" rel="stylesheet" type="text/css">
 
-	@if($meta_facebook)
+	@if(isset($meta_facebook))
 		<meta property="og:url"           content="{{ $meta_facebook->getUrl() }}" />
 		<meta property="og:type"          content="{{ $meta_facebook->getType() }}" />
 		<meta property="og:title"         content="{{ $meta_facebook->getTitle() }}" />

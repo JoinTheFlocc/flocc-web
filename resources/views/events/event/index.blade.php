@@ -111,7 +111,7 @@
                     </li>
                     <li class="pull-right">
                         <a href="#" style="background: #3b5998;color:#fff;" class="facebook_share" facebook-url="{{ $meta_facebook->getUrl() }}">
-                            <i class="fa fa-facebook-official"></i> Udostępnij
+                            <i class="fa fa-facebook-official"></i>
                         </a>
                     </li>
                 </ul>
