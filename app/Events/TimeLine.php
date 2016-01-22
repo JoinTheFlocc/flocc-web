@@ -49,6 +49,7 @@ class TimeLine extends Model
             ->leftjoin('events_messages', 'events_messages.id', '=', 'events_time_line.message_id')
             ->leftjoin('events_comments', 'events_comments.id', '=', 'events_time_line.comment_id')
             ->leftjoin('profiles', 'profiles.user_id', '=', 'events_comments.user_id')
+            ->groupBy('events_time_line.id')
             ->orderBy('events_time_line.id', 'desc')
         ->get();
 
