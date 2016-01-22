@@ -353,7 +353,13 @@ class Events extends Model
      */
     public function isMine()
     {
-        return (\Auth::user()->id == $this->getUserId());
+        $user_id = null;
+
+        if(\Auth::user() !== null) {
+            $user_id = \Auth::user()->id;
+        }
+        
+        return ($user_id == $this->getUserId());
     }
 
     /**
