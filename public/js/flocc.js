@@ -70,5 +70,42 @@ var Flocc = {
                 FloccThemeNotifications.Initialize(data);
             });
         }
+    },
+
+    Social : {
+        Initialize : function() {
+            Flocc.Social.Facebook.Initialize();
+
+            $('.facebook_share').click(function() {
+                Flocc.Social.Facebook.Share($(this).attr('facebook-url'));
+
+                return false;
+            });
+        },
+        Facebook : {
+            Initialize : function() {
+                window.fbAsyncInit = function() {
+                    FB.init({
+                        appId      : Flocc.Config.Get('social.facebook.app_id'),
+                        xfbml      : true,
+                        version    : 'v2.5'
+                    });
+                };
+
+                (function(d, s, id){
+                    var js, fjs = d.getElementsByTagName(s)[0];
+                    if (d.getElementById(id)) {return;}
+                    js = d.createElement(s); js.id = id;
+                    js.src = "//connect.facebook.net/en_US/sdk.js";
+                    fjs.parentNode.insertBefore(js, fjs);
+                }(document, 'script', 'facebook-jssdk'));
+            },
+            Share : function(url) {
+                FB.ui({method: 'share', href: url}, function(response) {
+                    console.log('FB RESPONSE:')
+                    console.log(response);
+                });
+            }
+        }
     }
 };
