@@ -1,63 +1,132 @@
 
-body 
-{
-    font-family: 'Lato';
-    font-weight: 300;
-    padding-top: 55px;
+html, body {
+    height: 100%;
 }
-
+body {
+    font-family: 'Open Sans';
+    font-weight: 300;
+    background-color:white;
+    color: royalblue;
+}
+.welcome {
+     height:550px;
+     max-height:550px;
+     background-image:url('/img/bg.jpg');
+     background-size:100% auto;
+     background-repeat: no-repeat;
+}
+.intro-over {
+    padding-top: 45px;
+    color: lightblue;
+}
+.intro-heading {
+    color:ivory;
+    text-align: center;
+    padding: 60px;
+}
+.intro-welcome {
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+.intro-welcome > p {
+    color: slategray;
+    font-size: 1.2em;
+}
+.intro-welcome > h3 {
+    color: indianred;
+    padding: 10px 0px;
+}
+.outro-welcome {
+    margin-top: 20px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+.outro-welcome > blockquote > p {
+    font-style: italic;
+    color: royalblue;
+    font-size: 1.6em;
+}
+.photobox {
+    padding: 15px 0;
+}
+.box-yellow {
+    background-color: #ffd740;
+}
+.box-blue {
+    background-color: #283593;
+}
+.box-green {
+    background-color: #7cb342;
+}
+.box-red {
+    background-color: #ff7043;
+}
+.mainBox {
+    padding-top: 40px;
+    background-color:azure;
+    height: 100%;
+    margin-bottom: -100px;
+}
+.mainBoxA {
+    padding-top: 40px;
+    height: 100%;
+}
 .carousel-caption {
     top: 40px;
     bottom: auto;
 }
-
-.carousel-caption > h1 {
-    font-size: 8em; 
+.carousel-caption > h1,
+.intro-heading > h1 {
+    font-size: 8em;
     font-family: 'Pacifico';
     text-shadow: 0.1em 0.1em 0.1em black;
+    color: ivory;
 }
-.carousel-caption > p {
-    font-family: 'Signika';
+.carousel-caption > p,
+.intro-heading > p {
     font-size: 2em;
     font-weight: 400;
     text-shadow: 0.1em 0.1em 0.1em black;
-}
-        
-.navbar 
-{
-    background-color:royalblue;
-    color:aliceblue;
-}
-        
-.navbar-brand, 
-.navbar-brand:hover, 
-.navbar-brand:focus 
-{
-    font-family: 'Signika';
-    font-weight: 400;
-    background-color:royalblue;
-    color:aliceblue;
+    color: ivory;
 }
 
-.navbar-brand small {
-    font-family: 'Signika';
+.navbar {
+    color:royalblue;
+    background-color:white;
+    .font-weight: 400;
+    border-bottom: 1px solid lightblue;
+}
+
+.navbar-text,
+.navbar-text:hover,
+.navbar-text:focus {
+    font-family:Signika;
+    color:royalblue;
+    font-size: 21px;
+    font-weight: 400;
+}
+
+.navbar-text small {
+    font-size: 18px;
     font-weight: 300;
-    color:lightblue;
+    color:cornflowerblue;
 }
 
 .navbar .navbar-nav > li > a,
-.navbar .navbar-nav > .active > a 
+.navbar .navbar-nav > .active > a
 {
-    background-color:royalblue;
-    color:aliceblue;
+    color:royalblue;
+    .padding: 10px;
+    font-size: 14px;
 }
-        
+
 .navbar .navbar-nav > li > a:hover,
-.navbar .navbar-nav > .active > a:hover 
+.navbar .navbar-nav > .active > a:hover
 {
-    color:black;
+    background-color: white;
+    color:cornflowerblue;
 }
-        
+
 .navbar .navbar-nav > li > a:focus,
 .navbar .navbar-nav > .active > a:focus
 {
@@ -66,11 +135,11 @@ body
 }
 
 .navbar .nabar-nav > li > a:visited,
-.navbar .navbar-nav > li > .active > a:visited 
+.navbar .navbar-nav > li > .active > a:visited
 {
     color:aliceblue;
 }
-        
+
 .fa-btn {
     margin-right: 6px;
 }
@@ -78,9 +147,8 @@ body
 .table-text div {
     padding-top: 6px;
 }
-        
+
 .jumbotron {
-    padding: 1em 1em;
     background-color: transparent;
 }
 
@@ -88,10 +156,9 @@ body
     width:70%;
     margin:20px auto;
     overflow:hidden;
-    text-align:center;   
+    text-align:center;
     line-height:1.1em;
 }
-
 .divider:before, .divider:after{
     content:"";
     vertical-align:top;
@@ -105,12 +172,62 @@ body
     margin:0 -55% 0 2%;
 }
 .loginBox {
-    margin-top: 55px;
+    margin-top: 50px;
+    padding-top: 20px;
+    color: #333;
 }
 .contentBox {
-    margin-top: 45px;   
+    margin-top: 50px;
+    padding-top: 10px;
+    color: #333;
 }
+.well {
+    background-color: azure;
+}
+
 .panel-default .panel-heading,
 .panel-default .panel-footer {
     background-color:white;
+}
+.panel-sidebar,
+.panel-sidebar .panel-heading {
+    background-color: azure;
+}
+.btn-primary {
+    background-color: royalblue;
+}
+
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+
+.list-group-item:hover,
+.list-group-item:focus {
+    border-right: 2px solid orange;
+}
+
+.footer {
+    background-color: #424242;
+    color: ivory;
+    font-weight: 300;
+    padding-top: 10px;
+}
+.legal > a {
+    color: ivory;
 }

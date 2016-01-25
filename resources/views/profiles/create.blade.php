@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-	<div class="container contentBox">
+	<div class="contentBox">
         <div class="col-sm-offset-1 col-sm-3">
             <div id="avcarousel" class="carousel slide" data-ride="carousel">
                 <div class="carousel-inner">
@@ -28,7 +28,7 @@
 				<div class="panel-body">
 					<!-- Display Validation Errors -->
 					@include('common.errors')
-                    
+
                     {!! Form::open(['route' => 'profile.store', 'class' => 'form-horizontal']) !!}
                         @include('profiles._partials.form', ['submitButton' => 'Create Profile'])
                     {!! Form::close() !!}

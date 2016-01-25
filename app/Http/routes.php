@@ -39,13 +39,25 @@ Route::get('auth/facebook/callback', 'Auth\AuthController@handleProviderCallback
 // Profile
 Route::resource('profile', 'ProfilesController',
                ['except' => ['index']]);
-//Route::get('profile', 'ProfilesController@show');
 Route::get('profile/{id?}', 'ProfilesController@show')->name('profile.display');
+Route::post('profile/upload', 'ProfilesController@upload')->name('profile.upload');
 
-//Route::get('profile/create', 'ProfilesController@create');
+// Settings
+Route::get('settings/account', function() {
+    return view('settings.account')->with('sidebarView', 1);
+})->name('settings.account');
+Route::get('settings/notifications', function() {
+    return view('settings.notifications')->with('sidebarView', 1);
+})->name('settings.notifications');
 
 // TBD
-Route::get('/tbd', function() { return view('tbd'); });
+Route::get('/tbd', function() { return view('tbd'); })->name('tbd');
+Route::get('/tbds', function() { return view('tbd')->with('sidebarView', 1); })->name('tbds');
+
+// Dashboard
+Route::get('/dashboard', function() {
+  return view('dashboard')->with('sidebarView', 1);
+});
 
 // Mail
 Route::get('mail', 'Mail\ConversationsController@conversationsList')->name('mail');

@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<div class="container-fluid mainBox">
 	<div class="loginBox container">
 		<div class="col-sm-offset-3 col-sm-6">
 			<div class="panel panel-default">
@@ -11,7 +12,7 @@
 				<div class="panel-body">
 					<!-- Display Validation Errors -->
 					@include('common.errors')
-                                        
+
                     <form id="registerForm" action="/auth/register" method="POST" class="form-horizontal">
                         {{ csrf_field() }}
                         <!-- Username -->
@@ -20,7 +21,7 @@
                             <div class="col-sm-8">
                                 <input type="name" name=" name" class="form-control" placeholder="Name">
                             </div>
-                        </div>             
+                        </div>
                         <!-- E-Mail Address -->
                         <div class="form-group">
                             <label for="email" class="col-sm-2 control-label"><i class="fa fa-btn fa-at"></i></label>
@@ -51,7 +52,7 @@
                                     <i class="fa fa-btn fa-sign-in"></i>Register
                                 </button>
                             </div>
-                        </div>    
+                        </div>
                     </form>
                     @include('auth._partials.social')
 				</div>
@@ -62,4 +63,5 @@
 			</div>
 		</div>
 	</div>
+</div>
 @endsection

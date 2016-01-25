@@ -3,11 +3,13 @@
 namespace Flocc\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Input;
+use Validator;
+use Auth;
+use URL;
 
 use Flocc\Http\Requests;
 use Flocc\Http\Controllers\Controller;
-use Auth;
-use URL;
 
 use Flocc\User;
 use Flocc\Profile;
@@ -30,7 +32,7 @@ class ProfilesController extends Controller
      */
     public function create()
     {
-        return view('profiles.create');    
+        return view('profiles.create');
     }
 
     /**
@@ -42,15 +44,15 @@ class ProfilesController extends Controller
     public function store(Request $request)
     {
         $id = Auth::user()->id;
-        
+
         $profile = new Profile($request->all());
         $profile->user_id = $id;
         $profile->avatar_url = URL::asset('img/avatar_'.$request->gender.'.png');
-        
+
         $profile->save();
-        
+
         $message = "Successfully updated";
-        
+
         return view('profiles.edit', compact('message', 'profile'));
     }
 
@@ -68,7 +70,7 @@ class ProfilesController extends Controller
             $profile = Profile::findOrFail($id);
         }
         $is_mine = ($profile->user_id == Auth::user()->id);
-        
+
         return view('dashboard', compact('profile', 'is_mine'));
     }
 
@@ -81,8 +83,9 @@ class ProfilesController extends Controller
     public function edit($id)
     {
         $profile = Profile::findOrFail($id);
+        $sidebarView = 1;
 
-        return view('profiles.edit', compact('profile'));
+        return view('profiles.edit', compact('profile', 'sidebarView'));
     }
 
     /**
@@ -95,14 +98,14 @@ class ProfilesController extends Controller
     public function update(Request $request, $id)
     {
         $profile = Profile::findOrFail($id);
-        
+
         // validation
-        
+
         $profile->fill($request->all());
         $profile->save();
-        
+
         $message = "Successfully updated";
-        
+
         return view('profiles.edit', compact('message', 'profile'));
     }
 
@@ -115,4 +118,21 @@ class ProfilesController extends Controller
     public function destroy($id)
     {
     }
+
+    public function upload()
+    {
+        $file = array('image' => Input::file('image'));
+        $rules = array('image' => 'required',);
+
+        $validator = Validator::make($file, $rules);
+        if ($validator->fails()) {
+            return Redirect::back()->withInput()->withErrors($validator);
+        }
+        else {
+            return Input::file('image') . " is valid";
+        }
+
+
+    }
+
 }
