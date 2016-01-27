@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<div class="container-fluid mainBox">
 	<div class="loginBox container">
 		<div class="col-sm-offset-3 col-sm-6">
 			<div class="panel panel-default">
@@ -16,7 +17,7 @@
                         <p class="alert alert-success">{{ $message }}</p>
                     </div>
                     @endif
-                    
+
                     <form id="loginForm" action="/auth/login" method="POST" class="form-horizontal">
                     {{ csrf_field() }}
                         <!-- E-Mail Address -->
@@ -54,4 +55,5 @@
             </div>
 		</div>
 	</div>
+</div>
 @endsection

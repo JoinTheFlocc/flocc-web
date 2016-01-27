@@ -1,7 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
+<div class="container mainBoxA">
+    <div class="contentBox">
         <div class="col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -41,4 +42,5 @@
             </div>
         </div>
     </div>
+</div>
 @endsection
