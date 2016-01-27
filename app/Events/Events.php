@@ -130,6 +130,30 @@ class Events extends Model
     }
 
     /**
+     * Set slug
+     *
+     * @param string $slug
+     *
+     * @return $this
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * Get slug
+     *
+     * @return string
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    /**
      * Set description
      *
      * @param string $description
@@ -154,75 +178,75 @@ class Events extends Model
     }
 
     /**
-     * Set date from
+     * Set event start date
      *
-     * @param string $date_from
+     * @param string|null $event_from
      *
      * @return $this
      */
-    public function setDateFrom($date_from)
+    public function setEventFrom($event_from)
     {
-        $this->date_from = $date_from;
+        $this->event_from = $event_from;
 
         return $this;
     }
 
     /**
-     * Get date from
+     * Get event start date
      *
-     * @return string
+     * @return string|null
      */
-    public function getDateFrom()
+    public function getEventFrom()
     {
-        return $this->date_from;
+        return $this->event_from;
     }
 
     /**
-     * Set date to
+     * Set event finish date
      *
-     * @param string $date_to
+     * @param string|null $event_to
      *
      * @return $this
      */
-    public function setDateTo($date_to)
+    public function setEventTo($event_to)
     {
-        $this->date_to = $date_to;
+        $this->event_to = $event_to;
 
         return $this;
     }
 
     /**
-     * Get date to
+     * Get event finish date
      *
-     * @return string
+     * @return string|null
      */
-    public function getDateTo()
+    public function getEventTo()
     {
-        return $this->date_to;
+        return $this->event_to;
     }
 
     /**
-     * Set event duration days
+     * set event span
      *
-     * @param int $duration
+     * @param null|event $event_span
      *
      * @return $this
      */
-    public function setDuration($duration)
+    public function setEventSpan($event_span)
     {
-        $this->duration = (int) $duration;
+        $this->event_span = ($event_span === null) ? null : (int) $event_span;
 
         return $this;
     }
 
     /**
-     * Get event duration days
+     * Get event span
      *
-     * @return int
+     * @return int|null
      */
-    public function getDuration()
+    public function getEventSpan()
     {
-        return (int) $this->duration;
+        return ($this->event_span === null) ? null : (int) $this->event_span;
     }
 
     /**
@@ -260,26 +284,6 @@ class Events extends Model
     }
 
     /**
-     * Is fixed?
-     *
-     * @return bool
-     */
-    public function isFixed()
-    {
-        return ($this->fixed == '1') ? true : false;
-    }
-
-    /**
-     * Get slug
-     *
-     * @return string
-     */
-    public function getSlug()
-    {
-        return $this->slug;
-    }
-
-    /**
      * Set members limit
      *
      * @param int $users_limit
@@ -303,6 +307,45 @@ class Events extends Model
         return (int) $this->users_limit;
     }
 
+    /**
+     * Set fixed as true
+     *
+     * @return $this
+     */
+    public function setAsFixed()
+    {
+        $this->fixed = '1';
+
+        return $this;
+    }
+
+    /**
+     * Set fixed as false
+     *
+     * @return $this
+     */
+    public function setAsNonFixed()
+    {
+        $this->fixed = '0';
+
+        return $this;
+    }
+
+    /**
+     * Is fixed?
+     *
+     * @return bool
+     */
+    public function isFixed()
+    {
+        return ($this->fixed == '1') ? true : false;
+    }
+
+    /**
+     * Set status as active
+     *
+     * @return $this
+     */
     public function setStatusActive()
     {
         $this->status = 'active';
@@ -310,6 +353,11 @@ class Events extends Model
         return $this;
     }
 
+    /**
+     * Set status as canceled
+     *
+     * @return $this
+     */
     public function setStatusCanceled()
     {
         $this->status = 'canceled';
@@ -317,16 +365,31 @@ class Events extends Model
         return $this;
     }
 
+    /**
+     * Is status active
+     *
+     * @return bool
+     */
     public function isStatusActive()
     {
         return ($this->status == 'active');
     }
 
+    /**
+     * Is status canceled
+     *
+     * @return bool
+     */
     public function isStatusCanceled()
     {
         return ($this->status == 'canceled');
     }
 
+    /**
+     * Get status
+     *
+     * @return string
+     */
     public function getStatus()
     {
         return $this->status;
@@ -347,22 +410,6 @@ class Events extends Model
     }
 
     /**
-     * I'm the owner?
-     *
-     * @return bool
-     */
-    public function isMine()
-    {
-        $user_id = null;
-
-        if(\Auth::user() !== null) {
-            $user_id = \Auth::user()->id;
-        }
-        
-        return ($user_id == $this->getUserId());
-    }
-
-    /**
      * Get place ID
      *
      * @return int
@@ -370,6 +417,74 @@ class Events extends Model
     public function getPlaceId()
     {
         return (int) $this->place_id;
+    }
+
+    /**
+     * Set budget ID
+     *
+     * @param int $budget_id
+     *
+     * @return $this
+     */
+    public function setBudgetId($budget_id)
+    {
+        $this->budget_id = (int) $budget_id;
+
+        return $this;
+    }
+
+    /**
+     * Get budget ID
+     *
+     * @return int
+     */
+    public function getBudgetId()
+    {
+        return (int) $this->budget_id;
+    }
+
+    /**
+     * Set intensities ID
+     *
+     * @param int $intensities_id
+     *
+     * @return $this
+     */
+    public function setIntensitiesId($intensities_id)
+    {
+        $this->intensities_id = (int) $intensities_id;
+
+        return $this;
+    }
+
+    /**
+     * Get intensities ID
+     *
+     * @return int
+     */
+    public function getIntensitiesId()
+    {
+        return (int) $this->intensities_id;
+    }
+
+    /**
+     * Get budget
+     *
+     * @return \Flocc\Budgets
+     */
+    public function getBudget()
+    {
+        return $this->hasOne('Flocc\Budgets', 'id', 'budget_id')->first();
+    }
+
+    /**
+     * Get intensities
+     *
+     * @return \Flocc\Intensities
+     */
+    public function getIntensities()
+    {
+        return $this->hasOne('Flocc\Intensities', 'id', 'intensities_id')->first();
     }
 
     /**
@@ -420,6 +535,22 @@ class Events extends Model
     public function getFollowers()
     {
         return $this->hasMany('Flocc\Events\Members', 'event_id', 'id')->where('status', 'follower')->get();
+    }
+
+    /**
+     * I'm the owner?
+     *
+     * @return bool
+     */
+    public function isMine()
+    {
+        $user_id = null;
+
+        if(\Auth::user() !== null) {
+            $user_id = \Auth::user()->id;
+        }
+
+        return ($user_id == $this->getUserId());
     }
 
     /**

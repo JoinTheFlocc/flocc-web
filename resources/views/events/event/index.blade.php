@@ -23,19 +23,22 @@
                     <img src="{{ $event->getAvatarUrl() }}" style="width:150px;border-radius:5px;"><br><br>
                     <p>{{ $event->getDescription() }}</p><br>
 
-                    <div class="row">
+                    <div class="row text-left">
                         <div class="col-sm-6">
+                            <strong>Miejsce:</strong><br>
                             <i class="fa fa-map"></i> {{ $event->getPlace()->getName() }}
                         </div>
                         <div class="col-sm-6">
+                            <strong>Organizator:</strong><br>
                             <i class="fa fa-user"></i>
                             <a href="{{ URL::route('profile.display', ['id' => $event->getUserId()]) }}">
                                 {{ $event->getOwner()->getProfile()->getFirstName() }} {{ $event->getOwner()->getProfile()->getLastName() }}
                             </a>
                         </div>
                     </div>
-                    <div class="row" style="margin-top:25px;">
+                    <div class="row text-left" style="margin-top:25px;">
                         <div class="col-sm-6">
+                            <strong>Typ:</strong><br>
                             <i class="fa fa-info"></i>
 
                             @if($event->isStatusActive())
@@ -49,7 +52,20 @@
                             @endif
                         </div>
                         <div class="col-sm-6">
+                            <strong>Data:</strong><br>
+                            {{ $event->getEventFrom() }}-{{ $event->getEventTo() }}
+                        </div>
+                    </div>
+                    <div class="row text-left" style="margin-top:25px;">
+                        <div class="col-sm-6">
+                            <strong>Budżet:</strong><br>
 
+                            {{ $event->getBudget()->getName() }}
+                        </div>
+                        <div class="col-sm-6">
+                            <strong>Intensywność:</strong><br>
+
+                            {{ $event->getIntensities()->getName() }}
                         </div>
                     </div>
                 </div>
