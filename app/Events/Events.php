@@ -342,15 +342,69 @@ class Events extends Model
     }
 
     /**
-     * Set status as active
+     * Set status as draft
      *
      * @return $this
      */
-    public function setStatusActive()
+    public function setStatusDraft()
     {
-        $this->status = 'active';
+        $this->status = 'draft';
 
         return $this;
+    }
+
+    /**
+     * Is status draft
+     *
+     * @return bool
+     */
+    public function isStatusDraft()
+    {
+        return ($this->status == 'draft');
+    }
+
+    /**
+     * Set status as open
+     *
+     * @return $this
+     */
+    public function setStatusOpen()
+    {
+        $this->status = 'open';
+
+        return $this;
+    }
+
+    /**
+     * Is status open
+     *
+     * @return bool
+     */
+    public function isStatusOpen()
+    {
+        return ($this->status == 'open');
+    }
+
+    /**
+     * Set status as private
+     *
+     * @return $this
+     */
+    public function setStatusPrivate()
+    {
+        $this->status = 'private';
+
+        return $this;
+    }
+
+    /**
+     * Is status private
+     *
+     * @return bool
+     */
+    public function isStatusPrivate()
+    {
+        return ($this->status == 'private');
     }
 
     /**
@@ -366,13 +420,25 @@ class Events extends Model
     }
 
     /**
-     * Is status active
+     * Set status as close
+     *
+     * @return $this
+     */
+    public function setStatusClose()
+    {
+        $this->status = 'close';
+
+        return $this;
+    }
+
+    /**
+     * Is status close
      *
      * @return bool
      */
-    public function isStatusActive()
+    public function isStatusClose()
     {
-        return ($this->status == 'active');
+        return ($this->status == 'close');
     }
 
     /**
@@ -383,6 +449,20 @@ class Events extends Model
     public function isStatusCanceled()
     {
         return ($this->status == 'canceled');
+    }
+
+    /**
+     * Set status
+     *
+     * @param string $status
+     *
+     * @return $this
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
     }
 
     /**
@@ -572,7 +652,7 @@ class Events extends Model
      */
     public function getById($id)
     {
-        $get = self::where('id', (int) $id)->take(1)->first();
+        $get = self::where('id', (int) $id)->where('status', '<>', 'draft')->take(1)->first();
 
         if($get !== null) {
             $this->updateViews($get->getId(), $get->getViews()+1);
@@ -590,7 +670,7 @@ class Events extends Model
      */
     public function getBySlug($slug)
     {
-        $get = self::where('slug', $slug)->take(1)->first();
+        $get = self::where('slug', $slug)->where('status', '<>', 'draft')->take(1)->first();
 
         if($get !== null) {
             $this->updateViews($get->getId(), $get->getViews()+1);

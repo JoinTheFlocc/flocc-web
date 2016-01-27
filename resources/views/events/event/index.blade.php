@@ -3,12 +3,14 @@
 @section('content')
     <div class="container">
         <div class="row" style="margin-top:25px;">
-            <div class="col-sm-4">
-                <div class="text-center" style="margin-bottom:25px;">
-                    @if($event->isStatusActive())
+            <div class="col-sm-4" style="margin-top:60px;">
+                <div class="text-center">
+                    @if($event->isStatusOpen())
                         <a href="{{ URL::route('events.event.join', ['slug' => $event->getSlug(), 'type' => 'member']) }}" class="btn btn-success" style="width:32%">
                             Dołącz
                         </a>
+                    @endif
+                    @if(!$event->isStatusCanceled())
                         <a href="{{ URL::route('events.event.join', ['slug' => $event->getSlug(), 'type' => 'follower']) }}" class="btn btn-primary" style="width:32%">
                             Obserwuj
                         </a>
@@ -16,7 +18,7 @@
                     <a href="{{ URL::route('mail.new.form', ['user_id' => $event->getUserId()]) }}" class="btn btn-default" style="width:32%">
                         Wiadomość
                     </a>
-                </div>
+                </div><br>
 
                 <div class="well text-center">
                     <h1>{{ $event->getTitle() }}</h1><br>
@@ -41,7 +43,7 @@
                             <strong>Typ:</strong><br>
                             <i class="fa fa-info"></i>
 
-                            @if($event->isStatusActive())
+                            @if(!$event->isStatusCanceled())
                                 @if($event->isFixed())
                                     Odbędzie się
                                 @else

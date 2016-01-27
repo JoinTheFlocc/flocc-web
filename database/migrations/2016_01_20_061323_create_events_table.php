@@ -27,7 +27,7 @@ class CreateEventsTable extends Migration
             $table->string('avatar_url')->nullable();
             $table->smallInteger('users_limit')->unsigned();
             $table->enum('fixed', ['0', '1'])->default('0');
-            $table->enum('status', ['active', 'canceled'])->default('active');
+            $table->enum('status', ['draft', 'open','private','close','canceled'])->default('draft');
             $table->integer('place_id')->nullable()->default(null)->unsigned();
             $table->integer('budget_id')->unsigned();
             $table->integer('intensities_id')->unsigned();
