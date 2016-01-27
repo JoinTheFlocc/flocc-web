@@ -20,8 +20,8 @@ class CreateEventsTable extends Migration
             $table->string('title');
             $table->string('slug');
             $table->text('description');
-            $table->dateTime('event_from')->nullable()->default(null);
-            $table->dateTime('event_to')->nullable()->default(null);
+            $table->date('event_from')->nullable()->default(null);
+            $table->date('event_to')->nullable()->default(null);
             $table->smallInteger('event_span')->nullable()->unsigned();
             $table->integer('views')->default(0);
             $table->string('avatar_url')->nullable();
