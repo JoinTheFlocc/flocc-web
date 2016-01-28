@@ -597,6 +597,16 @@ class Events extends Model
     }
 
     /**
+     * Get awaiting request
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getAwaitingRequests()
+    {
+        return $this->hasMany('Flocc\Events\Members', 'event_id', 'id')->where('status', 'awaiting')->get();
+    }
+
+    /**
      * Get event members
      *
      * @return \Illuminate\Database\Eloquent\Collection
@@ -614,6 +624,16 @@ class Events extends Model
     public function getFollowers()
     {
         return $this->hasMany('Flocc\Events\Members', 'event_id', 'id')->where('status', 'follower')->get();
+    }
+
+    /**
+     * Get rejected request
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getRejectedRequests()
+    {
+        return $this->hasMany('Flocc\Events\Members', 'event_id', 'id')->where('status', 'rejected')->get();
     }
 
     /**

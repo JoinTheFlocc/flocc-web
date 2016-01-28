@@ -111,7 +111,7 @@
                     </div>
                 </div>
 
-                @if($event->isMine() and $event->isStatusActive())
+                @if($event->isMine() and !$event->isStatusCanceled())
                     <a href="{{ URL::route('events.event.cancel', ['slug' => $event->getSlug()]) }}" class="btn btn-danger btn-block" onclick="return confirm('Na pewno?');">
                         Odwołaj wydarzenie
                     </a>

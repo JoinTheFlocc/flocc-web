@@ -41,6 +41,15 @@ class EditEventController extends Controller
         return $this;
     }
 
+    public function members($id)
+    {
+        $this->init($id);
+
+        return view('events.edit.members', [
+            'event' => $this->event
+        ]);
+    }
+
     public function index($id)
     {
         $this->init($id);

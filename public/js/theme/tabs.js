@@ -8,6 +8,9 @@ var FloccTabs = {
 
             FloccTabs.Init(id);
 
+            $('.nav li').removeClass('active');
+            $(this).parent().addClass('active');
+
             return false;
         });
     }
