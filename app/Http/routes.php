@@ -73,12 +73,14 @@ Route::get('notifications/{id}', 'Notifications\NotificationsController@callback
 Route::get('notifications/get', 'Notifications\NotificationsController@getNotifications')->name('notifications.get');
 
 // Events
-Route::get('events', 'Events\EventsController@index')->name('events');
+Route::get('events/{filters?}', 'Events\EventsController@index')->name('events');
 Route::get('events/new', 'Events\EventsController@newEvent')->name('events.new');
+Route::post('events/comment', 'Events\CommentController@save')->name('events.comment');
+Route::get('events/edit/{id}', 'Events\EditEventController@index')->name('events.edit');
+
+// Event
 Route::get('events/{slug}', 'Events\EventController@index')->name('events.event');
 Route::get('events/{slug}/members', 'Events\EventController@members')->name('events.event.members');
 Route::get('events/{slug}/followers', 'Events\EventController@followers')->name('events.event.followers');
 Route::get('events/{slug}/cancel', 'Events\EventController@cancel')->name('events.event.cancel');
 Route::get('events/{slug}/join/{type}', 'Events\EventController@join')->name('events.event.join');
-Route::post('events/comment', 'Events\CommentController@save')->name('events.comment');
-Route::get('events/edit/{id}', 'Events\EditEventController@index')->name('events.edit');

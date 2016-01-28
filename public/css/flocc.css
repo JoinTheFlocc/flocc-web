@@ -231,3 +231,46 @@ body {
 .legal > a {
     color: ivory;
 }
+
+ul.events {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+ul.events li {
+    display: inline-block;
+    border: 1px solid #9d9d9d;
+    border-radius: 5px;
+    padding: 20px 10px;
+    text-align: center;
+    margin-right: 5px;
+}
+
+ul.events li h2 {
+    display: block;
+    margin: 0px auto;
+    font-size: 18px;
+    color: #000;
+    margin-bottom: 20px;
+}
+
+ul.events li img {display: block;
+    margin: 0px auto;
+    border-radius: 5px;
+    width: 50%;
+    margin-bottom: 20px;
+}
+
+ul.events li .buttons a {
+    border: 1px solid #000;
+    border-radius: 5px;
+    padding: 5px 8px;
+    color: #000;
+    margin-right: 5px;
+}
+
+ul.events li .buttons a.close_event {
+    border: 1px solid red;
+    color: red;
+}

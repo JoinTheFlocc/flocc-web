@@ -3,6 +3,7 @@
 namespace Flocc\Http\Controllers\Events;
 
 use Flocc\Events\Events;
+use Flocc\Events\Search;
 use Flocc\Http\Controllers\Controller;
 
 /**
@@ -15,11 +16,36 @@ class EventsController extends Controller
     /**
      * Events list
      *
+     * @param string|array $filters
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index()
+    public function index($filters = [])
     {
-        return view('events.index');
+        $search     = new Search();
+
+        $action     = 'all';
+        $user_id    = (int) \Auth::user()->id;
+
+        if(!empty($filters)) {
+            $filters    = explode(',', $filters);
+            $action     = $filters[0];
+        }
+
+        /**
+         * Inject filters to model
+         */
+        $search->setFilters($filters);
+
+        switch($action) {
+            case 'user':
+                $events = $search->getByUserId();
+                break;
+            default:
+                $events = $search->getAll();
+        }
+
+        return view('events.index', compact('events', 'user_id'));
     }
 
     /**

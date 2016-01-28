@@ -17,6 +17,7 @@
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="{{ URL::route('events') }}"><i class="fa fa-globe"></i> Wydarzenia</a></li>
+                <li><a href="{{ URL::route('events', ['filters' => 'user,my']) }}"><i class="fa fa-globe"></i> Moje wydarzenia</a></li>
 
                 @if (Auth::guest())
                     <li>
