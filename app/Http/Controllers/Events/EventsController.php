@@ -38,9 +38,22 @@ class EventsController extends Controller
         $search->setFilters($filters);
 
         switch($action) {
+            // Wydarzenia użytkownika
             case 'user':
                 $events = $search->getByUserId();
                 break;
+
+            // Wydarzenia w których bierze udział
+            case 'member':
+                $events = $search->getByMemberId('member');
+                break;
+
+            // Wydarzenia, które obserwuje
+            case 'follower':
+                $events = $search->getByMemberId('follower');
+                break;
+
+            // Wszystkie wydarzenia
             default:
                 $events = $search->getAll();
         }

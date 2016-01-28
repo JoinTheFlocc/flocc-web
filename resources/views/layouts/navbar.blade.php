@@ -18,6 +18,8 @@
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="{{ URL::route('events') }}"><i class="fa fa-globe"></i> Wydarzenia</a></li>
                 <li><a href="{{ URL::route('events', ['filters' => 'user,my']) }}"><i class="fa fa-globe"></i> Moje wydarzenia</a></li>
+                <li><a href="{{ URL::route('events', ['filters' => 'member,my']) }}"><i class="fa fa-globe"></i> Biore udzial</a></li>
+                <li><a href="{{ URL::route('events', ['filters' => 'follower,my']) }}"><i class="fa fa-globe"></i> Obserwuje</a></li>
 
                 @if (Auth::guest())
                     <li>

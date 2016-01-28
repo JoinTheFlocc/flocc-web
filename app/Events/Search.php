@@ -44,7 +44,7 @@ class Search
      *
      * @throws \Exception
      *
-     * @return \Flocc\Events\Events
+     * @return \Illuminate\Pagination\LengthAwarePaginator
      */
     public function getByUserId()
     {
@@ -70,11 +70,48 @@ class Search
     /**
      * Get all events
      *
-     * @return \Flocc\Events\Events
+     * @return \Illuminate\Pagination\LengthAwarePaginator
      */
     public function getAll()
     {
         return Events::where('status', '<>', 'draft')
+            ->orderBy('created_at', 'desc')
+        ->paginate($this->on_page);
+    }
+
+    /**
+     * Get member and follower events
+     *
+     * @param string $status
+     *
+     * @return \Illuminate\Pagination\LengthAwarePaginator
+     *
+     * @throws \Exception
+     */
+    public function getByMemberId($status)
+    {
+        $user_id = $this->getParam(1);
+
+        if($user_id === null) {
+            throw new \Exception('Empty user ID');
+        }
+
+        /**
+         * Display my events
+         */
+        if($user_id == 'my') {
+            $user_id = (int) \Auth::user()->id;
+        }
+
+        $get_events_ids = Members::where('user_id', $user_id)->where('status', $status)->get();
+        $ids            = [];
+
+        foreach($get_events_ids as $event) {
+            $ids[] = $event->getEventId();
+        }
+
+        return Events::where('status', '<>', 'draft')
+            ->whereIn('id', $ids)
             ->orderBy('created_at', 'desc')
         ->paginate($this->on_page);
     }
