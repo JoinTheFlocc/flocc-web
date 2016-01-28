@@ -26,7 +26,7 @@
                                 @if($user_id == $event->getUserId())
                                     <!-- Moje wydarzenie -->
                                     <a href="#"><i class="fa fa-users"></i></a>
-                                    <a href="#"><i class="fa fa-pencil"></i></a>
+                                    <a href="{{ URL::route('events.edit', ['id' => $event->getId()]) }}"><i class="fa fa-pencil"></i></a>
                                     <a href="#" class="close_event"><i class="fa fa-times"></i></a>
                                 @endif
                             </div>
