@@ -6,9 +6,11 @@
             <div class="col-sm-4" style="margin-top:60px;">
                 <div class="text-center">
                     @if($event->isStatusOpen())
-                        <a href="{{ URL::route('events.event.join', ['slug' => $event->getSlug(), 'type' => 'member']) }}" class="btn btn-success" style="width:32%">
-                            Dołącz
-                        </a>
+                        @if($event->getMembers()->count() < $event->getUsersLimit())
+                            <a href="{{ URL::route('events.event.join', ['slug' => $event->getSlug(), 'type' => 'member']) }}" class="btn btn-success" style="width:32%">
+                                Dołącz
+                            </a>
+                        @endif
                     @endif
                     @if(!$event->isStatusCanceled())
                         <a href="{{ URL::route('events.event.join', ['slug' => $event->getSlug(), 'type' => 'follower']) }}" class="btn btn-primary" style="width:32%">

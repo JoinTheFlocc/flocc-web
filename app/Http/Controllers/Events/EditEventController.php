@@ -68,16 +68,35 @@ class EditEventController extends Controller
      *
      * @param int $id
      * @param int $user_id
-     * @param string $status
+     * @param int $status
      *
      * @return mixed
+     *
+     * @throws \Exception
      */
     public function status($id, $user_id, $status)
     {
         $this->init($id);
 
         if(in_array($status, ['member', 'rejected'])) {
-            (new Members())->updateStatus($user_id, $id, $status);
+            if($status == 'member') {
+                /**
+                 * Sprawdzenie limitu
+                 */
+                if($this->event->getMembers()->count() == $this->event->getUsersLimit()) {
+                    // @TODO:
+                    throw new \Exception('Przekroczony limit');
+                }
+
+                (new Members())->updateStatus($user_id, $id, $status);
+
+                /**
+                 * Po dodaniu tego jest przekroczny limit
+                 */
+                if($this->event->getUsersLimit() == $this->event->getMembers()->count()) {
+                    (new Events())->closeEvent($id);
+                }
+            }
         }
 
         return \Redirect::to('/events/edit/' . $id . '/members');

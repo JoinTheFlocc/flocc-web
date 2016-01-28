@@ -750,4 +750,16 @@ class Events extends Model
 
         return $this->getUserDraft($user_id);
     }
+
+    /**
+     * Close event
+     *
+     * @param int $id
+     *
+     * @return bool
+     */
+    public function closeEvent($id)
+    {
+        return (self::where('id', $id)->update(['status' => 'close']) == 1);
+    }
 }
