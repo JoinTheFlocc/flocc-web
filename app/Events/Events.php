@@ -647,12 +647,19 @@ class Events extends Model
      * Get event by ID
      *
      * @param int $id
+     * @param bool $allow_draft
      *
      * @return \Flocc\Events\Events
      */
-    public function getById($id)
+    public function getById($id, $allow_draft = false)
     {
-        $get = self::where('id', (int) $id)->where('status', '<>', 'draft')->take(1)->first();
+        $get = self::where('id', (int) $id);
+
+        if($allow_draft === false) {
+            $get = $get->where('status', '<>', 'draft');
+        }
+
+        $get = $get->take(1)->first();
 
         if($get !== null) {
             $this->updateViews($get->getId(), $get->getViews()+1);
@@ -665,12 +672,19 @@ class Events extends Model
      * Get event by slug
      *
      * @param string $slug
+     * @param bool $allow_draft
      *
      * @return \Flocc\Events\Events
      */
-    public function getBySlug($slug)
+    public function getBySlug($slug, $allow_draft = false)
     {
-        $get = self::where('slug', $slug)->where('status', '<>', 'draft')->take(1)->first();
+        $get = self::where('slug', $slug);
+
+        if($allow_draft === false) {
+            $get = $get->where('status', '<>', 'draft');
+        }
+
+        $get = $get->take(1)->first();
 
         if($get !== null) {
             $this->updateViews($get->getId(), $get->getViews()+1);
@@ -690,5 +704,31 @@ class Events extends Model
     public function updateViews($id, $views)
     {
         return (self::where('id', $id)->update(['views' => (int) $views]) == 1);
+    }
+
+    /**
+     * Get user draft
+     *
+     * @param int $user_id
+     *
+     * @return \Flocc\Events\Events
+     */
+    public function getUserDraft($user_id)
+    {
+        return self::where('user_id', $user_id)->where('status', 'draft')->take(1)->first();
+    }
+
+    /**
+     * Create new draft
+     *
+     * @param int $user_id
+     *
+     * @return \Flocc\Events\Events
+     */
+    public function createDraft($user_id)
+    {
+        self::create(['user_id' => $user_id]);
+
+        return $this->getUserDraft($user_id);
     }
 }

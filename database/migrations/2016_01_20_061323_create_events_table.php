@@ -29,8 +29,8 @@ class CreateEventsTable extends Migration
             $table->enum('fixed', ['0', '1'])->default('0');
             $table->enum('status', ['draft', 'open','private','close','canceled'])->default('draft');
             $table->integer('place_id')->nullable()->default(null)->unsigned();
-            $table->integer('budget_id')->unsigned();
-            $table->integer('intensities_id')->unsigned();
+            $table->integer('budget_id')->nullable()->default(null)->unsigned();
+            $table->integer('intensities_id')->nullable()->default(null)->unsigned();
 
             $table
                 ->foreign('place_id')
