@@ -5,10 +5,16 @@ namespace Flocc\Http\Controllers\Events;
 use Flocc\Activities;
 use Flocc\Budgets;
 use Flocc\Events\Events;
+use Flocc\Events\Members;
 use Flocc\Http\Controllers\Controller;
 use Flocc\Intensities;
 use Flocc\Places;
 
+/**
+ * Class EditEventController
+ *
+ * @package Flocc\Http\Controllers\Events
+ */
 class EditEventController extends Controller
 {
     /**
@@ -41,6 +47,13 @@ class EditEventController extends Controller
         return $this;
     }
 
+    /**
+     * Edit members in event
+     *
+     * @param int $id
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function members($id)
     {
         $this->init($id);
@@ -48,6 +61,26 @@ class EditEventController extends Controller
         return view('events.edit.members', [
             'event' => $this->event
         ]);
+    }
+
+    /**
+     * Update user status in event
+     *
+     * @param int $id
+     * @param int $user_id
+     * @param string $status
+     *
+     * @return mixed
+     */
+    public function status($id, $user_id, $status)
+    {
+        $this->init($id);
+
+        if(in_array($status, ['member', 'rejected'])) {
+            (new Members())->updateStatus($user_id, $id, $status);
+        }
+
+        return \Redirect::to('/events/edit/' . $id . '/members');
     }
 
     public function index($id)

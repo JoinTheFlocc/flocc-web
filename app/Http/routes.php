@@ -78,6 +78,7 @@ Route::get('events/new', 'Events\EventsController@newEvent')->name('events.new')
 Route::post('events/comment', 'Events\CommentController@save')->name('events.comment');
 Route::get('events/edit/{id}', 'Events\EditEventController@index')->name('events.edit');
 Route::get('events/edit/{id}/members', 'Events\EditEventController@members')->name('events.edit.members');
+Route::get('events/edit/{id}/{user_id}/{status}', 'Events\EditEventController@status')->name('events.edit.members.status');
 
 // Event
 Route::get('events/{slug}', 'Events\EventController@index')->name('events.event');

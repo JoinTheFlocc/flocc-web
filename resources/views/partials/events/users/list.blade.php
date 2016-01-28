@@ -3,8 +3,8 @@
     <tr>
         <th>&nbsp;</th>
         <th>Imię i nazwisko</th>
-        @if($tab == 'awaiting')
-            <th>Opcje</th>
+        @if($tab != 'followers')
+            <th class="text-center">Opcje</th>
         @endif
     </tr>
     </thead>
@@ -22,12 +22,26 @@
                 </a>
             </td>
             @if($tab == 'awaiting')
-                <td>
-                    <a href="#" class="btn btn-success">
+                <td class="text-center">
+                    <a href="{{ URL::route('events.edit.members.status', ['id' => $event->getId(), 'user_id' => $user->getUserId(), 'status' => 'member']) }}" class="btn btn-success">
                         Akceptuj
                     </a>
-                    <a href="#" class="btn btn-danger">
+                    <a href="{{ URL::route('events.edit.members.status', ['id' => $event->getId(), 'user_id' => $user->getUserId(), 'status' => 'rejected']) }}" class="btn btn-danger">
                         Odrzuć
+                    </a>
+                </td>
+            @endif
+            @if($tab == 'members')
+                <td class="text-center">
+                    <a href="{{ URL::route('events.edit.members.status', ['id' => $event->getId(), 'user_id' => $user->getUserId(), 'status' => 'rejected']) }}" class="btn btn-danger">
+                        Usuń
+                    </a>
+                </td>
+            @endif
+            @if($tab == 'rejected')
+                <td class="text-center">
+                    <a href="{{ URL::route('events.edit.members.status', ['id' => $event->getId(), 'user_id' => $user->getUserId(), 'status' => 'member']) }}" class="btn btn-success">
+                        Przywróć
                     </a>
                 </td>
             @endif
