@@ -25,7 +25,7 @@ class EventsController extends Controller
         $search     = new Search();
 
         $action     = 'all';
-        $user_id    = (int) \Auth::user()->id;
+        $user_id    = \Flocc\Auth::getUserId();
 
         if(!empty($filters)) {
             $filters    = explode(',', $filters);
@@ -70,7 +70,7 @@ class EventsController extends Controller
     {
         $events     = new Events();
 
-        $user_id    = (int) \Auth::user()->id;
+        $user_id    = \Flocc\Auth::getUserId();
         $draft      = $events->getUserDraft($user_id);
 
         if($draft === null) {

@@ -12,14 +12,16 @@
                             </a>
                         @endif
                     @endif
-                    @if(!$event->isStatusCanceled())
+                    @if(!$event->isStatusCanceled() and !Auth::guest())
                         <a href="{{ URL::route('events.event.join', ['slug' => $event->getSlug(), 'type' => 'follower']) }}" class="btn btn-primary" style="width:32%">
                             Obserwuj
                         </a>
                     @endif
-                    <a href="{{ URL::route('mail.new.form', ['user_id' => $event->getUserId()]) }}" class="btn btn-default" style="width:32%">
-                        Wiadomość
-                    </a>
+                    @if(!Auth::guest())
+                        <a href="{{ URL::route('mail.new.form', ['user_id' => $event->getUserId()]) }}" class="btn btn-default" style="width:32%">
+                            Wiadomość
+                        </a>
+                    @endif
                 </div><br>
 
                 <div class="well text-center">
@@ -140,8 +142,12 @@
                         <form method="POST" action="{{ URL::route('events.comment') }}">
                             <textarea name="comment" style="width:100%;height:50px;background: transparent; border: 0;" placeholder="Wpisz swój komentarz"></textarea><br>
                             <input type="hidden" name="event_id" value="{{ $event->getId() }}">
-                            {{ csrf_field() }}
-                            <button type="submit" class="btn btn-primary btn-block">Skomentuj</button>
+                            @if(!Auth::guest())
+                                {{ csrf_field() }}
+                                <button type="submit" class="btn btn-primary btn-block">Skomentuj</button>
+                            @else
+                                <p style="color:#ddd;text-align:center;">Prosimy się zalogować</p>
+                            @endif
                         </form>
                     </div>
 

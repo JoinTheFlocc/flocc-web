@@ -5,9 +5,11 @@
         <div class="row" style="margin:80px 0;">
             <h1>Wydarzenia</h1><br>
 
+            @if(!Auth::guest())
             <a href="{{ URL::route('events.new') }}" class="btn btn-success">
                 Utwórz nowe wydarzenie
             </a><br>&nbsp;<br>
+            @endif
 
             @if($events->count() > 0)
                 <ul class="events">

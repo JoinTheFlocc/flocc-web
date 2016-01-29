@@ -60,29 +60,29 @@ Route::get('/dashboard', function() {
 });
 
 // Mail
-Route::get('mail', 'Mail\ConversationsController@conversationsList')->name('mail');
-Route::get('mail/l/{label}', 'Mail\ConversationsController@conversationsList')->name('mail.label');
-Route::get('mail/move/{id}/{label}', 'Mail\ConversationsController@moveToLabel')->name('mail.move');
-Route::get('mail/{id}', 'Mail\MessagesController@showConversation')->name('mail.conversation')->where('id', '[0-9]+');
-Route::get('mail/new/{user_id}', 'Mail\MessagesController@newMessageForm')->name('mail.new.form')->where('user_id', '[0-9]+');
-Route::post('mail/new', 'Mail\MessagesController@newMessage')->name('mail.new');
+Route::get('mail', ['middleware' => 'auth', 'uses' => 'Mail\ConversationsController@conversationsList'])->name('mail');
+Route::get('mail/l/{label}', ['middleware' => 'auth', 'uses' => 'Mail\ConversationsController@conversationsList'])->name('mail.label');
+Route::get('mail/move/{id}/{label}', ['middleware' => 'auth', 'uses' => 'Mail\ConversationsController@moveToLabel'])->name('mail.move');
+Route::get('mail/{id}', ['middleware' => 'auth', 'uses' => 'Mail\MessagesController@showConversation'])->name('mail.conversation')->where('id', '[0-9]+');
+Route::get('mail/new/{user_id}', ['middleware' => 'auth', 'uses' => 'Mail\MessagesController@newMessageForm'])->name('mail.new.form')->where('user_id', '[0-9]+');
+Route::post('mail/new', ['middleware' => 'auth', 'uses' => 'Mail\MessagesController@newMessage'])->name('mail.new');
 
 // Notifications
-Route::get('notifications', 'Notifications\NotificationsController@index')->name('notifications');
-Route::get('notifications/{id}', 'Notifications\NotificationsController@callback')->name('notifications.callback')->where('id', '[0-9]+');;
-Route::get('notifications/get', 'Notifications\NotificationsController@getNotifications')->name('notifications.get');
+Route::get('notifications', ['middleware' => 'auth', 'uses' => 'Notifications\NotificationsController@index'])->name('notifications');
+Route::get('notifications/{id}', ['middleware' => 'auth', 'uses' => 'Notifications\NotificationsController@callback'])->name('notifications.callback')->where('id', '[0-9]+');;
+Route::get('notifications/get', ['middleware' => 'auth', 'uses' => 'Notifications\NotificationsController@getNotifications'])->name('notifications.get');
 
 // Events
-Route::get('search/{filters?}', 'Events\EventsController@index')->name('events');
-Route::get('events/new', 'Events\EventsController@newEvent')->name('events.new');
-Route::post('events/comment', 'Events\CommentController@save')->name('events.comment');
-Route::get('events/edit/{id}', 'Events\EditEventController@index')->name('events.edit');
-Route::get('events/edit/{id}/members', 'Events\EditEventController@members')->name('events.edit.members');
-Route::get('events/edit/{id}/{user_id}/{status}', 'Events\EditEventController@status')->name('events.edit.members.status');
+Route::get('search/{filters?}', ['middleware' => 'auth', 'uses' => 'Events\EventsController@index'])->name('events');
+Route::get('events/new', ['middleware' => 'auth', 'uses' => 'Events\EventsController@newEvent'])->name('events.new');
+Route::post('events/comment', ['middleware' => 'auth', 'uses' => 'Events\CommentController@save'])->name('events.comment');
+Route::get('events/edit/{id}', ['middleware' => 'auth', 'uses' => 'Events\EditEventController@index'])->name('events.edit');
+Route::get('events/edit/{id}/members', ['middleware' => 'auth', 'uses' => 'Events\EditEventController@members'])->name('events.edit.members');
+Route::get('events/edit/{id}/{user_id}/{status}', ['middleware' => 'auth', 'uses' => 'Events\EditEventController@status'])->name('events.edit.members.status');
 
 // Event
 Route::get('events/{slug}', 'Events\EventController@index')->name('events.event');
 Route::get('events/{slug}/members', 'Events\EventController@members')->name('events.event.members');
 Route::get('events/{slug}/followers', 'Events\EventController@followers')->name('events.event.followers');
-Route::get('events/{slug}/cancel', 'Events\EventController@cancel')->name('events.event.cancel');
-Route::get('events/{slug}/join/{type}', 'Events\EventController@join')->name('events.event.join');
+Route::get('events/{slug}/cancel', ['middleware' => 'auth', 'uses' => 'Events\EventController@cancel'])->name('events.event.cancel');
+Route::get('events/{slug}/join/{type}', ['middleware' => 'auth', 'uses' => 'Events\EventController@join'])->name('events.event.join');
