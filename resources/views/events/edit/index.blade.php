@@ -1,35 +1,291 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
-        <div class="row" style="margin:80px 0;">
-            <h1>Edytuj wydarzenie</h1>
+    <div id="event.edit" class="container">
+        <div class="row" style="margin:100px 0;">
+            <h1 style="text-align: center;">Edycja wydarzenia</h1>
 
-            <div class="flocc-tabs">
-                <div class="flocc-tab" tab-id="default">
-                    1<br><br>
-
-                    <a href="#" class="btn btn-primary tab-action change-tab" action-tab-id="something">Dalej</a>
+            @if (count($errors) > 0)
+                <div class="alert alert-danger" style="margin-top:50px;">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
                 </div>
-                <div class="flocc-tab" tab-id="something">
-                    2<br><br>
+            @endif
 
-                    <a href="#" class="btn btn-default tab-action change-tab" action-tab-id="default">Wstecz</a>
-                    <a href="#" class="btn btn-primary tab-action change-tab" action-tab-id="last-one">Dalej</a>
-                </div>
-                <div class="flocc-tab" tab-id="last-one">
-                    3<br><br>
+            <form class="form-horizontal" method="post" style="margin:50px 0;">
+                {{ csrf_field() }}
 
-                    <a href="#" class="tab-action change-tab" action-tab-id="something">Wstecz</a>
+                <div class="flocc-tabs">
+
+                    <!-- tab 1 -->
+                    <div class="flocc-tab" tab-id="tab1">
+                        <div class="form-group status">
+                            <label class="col-sm-3 control-label">Typ wydarzenia</label>
+                            <div class="col-sm-9">
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="status" value="open" @if($event->isStatusOpen() or $event->isStatusDraft()) checked="checked" @endif>
+                                        Publiczne
+                                    </label>
+                                </div>
+                                <p class="help-block">Każdy może zapisać się na to wydarzenie</p>
+
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="status" value="private" @if($event->isStatusPrivate()) checked="checked" @endif>
+                                        Prywatne
+                                    </label>
+                                </div>
+                                <p class="help-block">Tylko administrator może dodać nowych użytkowników</p>
+
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="status" value="close" @if($event->isStatusClose()) checked="checked" @endif>
+                                        Zamknięte
+                                    </label>
+                                </div>
+                                <p class="help-block">Nikt nie może dołączyć do wydarzenia</p>
+                            </div>
+                        </div>
+
+                        <!-- title -->
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Tytuł wydarzenia</label>
+                            <div class="col-sm-9">
+                                <input name="title" class="form-control" value="{{ $event->getTitle() }}">
+                            </div>
+                        </div>
+
+                        <!-- description -->
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Opis wydarzenia</label>
+                            <div class="col-sm-9">
+                                <textarea name="description" class="form-control" rows="4">{{ $event->getDescription() }}</textarea>
+                            </div>
+                        </div>
+
+                        <!-- dates -->
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Termin</label>
+                            <div class="col-sm-9">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class='input-group date' id='datetimepicker6'>
+                                            <input name="event_from" type="text" class="form-control" placeholder="Data od" value="{{ $event->getEventFrom() }}">
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class='input-group date' id='datetimepicker6'>
+                                            <input name="event_to" type="text" class="form-control" placeholder="Data do" value="{{ $event->getEventTo() }}">
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- event_span -->
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Ilość dni</label>
+                            <div class="col-sm-9">
+                                <input type="number" name="event_span" class="form-control" value="{{ $event->getEventSpan() }}" style="width:70px;">
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 50px;text-align:center;">
+                            <button class="btn btn-primary btn-lg tab-action change-tab" action-tab-id="tab2">Dalej</button>
+                        </div>
+                    </div>
+                    <!-- tab 1 -->
+
+                    <!-- tab 2 -->
+                    <div class="flocc-tab" tab-id="tab2">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" class="place_type" name="place_type" value="place" @if($event->isPlace()) checked="checked" @endif>
+                                            Miejsce wydarzenia
+                                        </label>
+                                    </div>
+                                    <p class="help-block">Wybierz miejsce, w którym odbędzie się to wydarzenia</p>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" class="place_type" name="place_type" value="route" @if(!$event->isPlace() and !$event->isStatusDraft()) checked="checked" @endif>
+                                            Trasa
+                                        </label>
+                                    </div>
+                                    <p class="help-block">Wybierz trasę miejsc, które obejmuje to wydarzenie</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="placePlace" class="form-group" style="display:none;">
+                            <div class="row">
+                                <h2>Miejsce wydarzenia</h2>
+
+                                <select name="place_id" class="form-control" style="margin-top: 50px;">
+                                    <option value="0">Wybierz miejsce</option>
+                                    @foreach($places as $place)
+                                        <option value="{{ $place->getId() }}" @if($event->getPlaceId() == $place->getId()) selected="selected" @endif>{{ $place->getName() }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <div id="placeRoute" class="form-group" style="display:none;">
+                            <div class="row">
+                                <h2>Trasa</h2>
+
+                                <ul id="places_route"></ul>
+                                <input type="hidden" name="route" id="route">
+
+                                <div class="add_place">
+                                    <select id="placesList" class="form-control pull-left" style="width:95%;">
+                                        <option value="0">Wybierz miejsce</option>
+                                        @foreach($places as $place)
+                                            <option value="{{ $place->getId() }}">{{ $place->getName() }}</option>
+                                        @endforeach
+                                    </select>
+                                    <i id="addPlace" class="fa fa-plus-circle pull-right"></i>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 50px;text-align: center;">
+                            <a href="#" class="btn btn-default btn-lg tab-action change-tab" action-tab-id="tab1">Wstecz</a>
+                            <a href="#" class="btn btn-primary btn-lg tab-action change-tab" action-tab-id="tab3">Dalej</a>
+                        </div>
+                    </div>
+                    <!-- tab 2 -->
+
+                    <!-- tab 3 -->
+                    <div class="flocc-tab" tab-id="tab3">
+                        <!-- users_limit -->
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Limit użytkowników</label>
+                            <div class="col-sm-9">
+                                <input type="number" name="users_limit" class="form-control" @if($event->getUsersLimit() > 0) value="{{ $event->getUsersLimit() }}" @endif style="width:70px;">
+                            </div>
+                        </div>
+
+                        <!-- activities -->
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Aktywność</label>
+                            <div class="col-sm-9">
+                                @foreach($activities as $activity)
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" name="activities[]" value="{{ $activity->getId() }}" class="activity" @if($event->isActivity($activity->getId())) checked="checked" @endif>
+                                            {{ $activity->getName() }}
+                                        </label>
+                                    </div>
+                                @endforeach
+                                <div id="newActivity" class="checkbox">
+                                    <label>
+                                        <input type="checkbox" name="activities[]" value="new" style="margin-top: 11px;">
+                                        <input type="text" class="form-control" id="new_activities" name="new_activities">
+                                    </label>
+                                </div>
+                                <div style="margin-top:15px;">
+                                    <a href="#" id="addActivity" class="btn btn-primary">
+                                        <i class="fa fa-plus-circle"></i> Dodaj nową aktywność
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- budgets -->
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Budzet</label>
+                            <div class="col-sm-9">
+                                @foreach($budgets as $budget)
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="budgets" value="{{ $budget->getId() }}" @if(is_callable($event->getBudget()) and $event->getBudget()->getId() == $budget->getId()) checked="checked" @endif>
+                                            {{ $budget->getName() }}
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <!-- intensities -->
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Intensywność</label>
+                            <div class="col-sm-9">
+                                @foreach($intensities as $intensity)
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="intensities" value="{{ $intensity->getId() }}" @if(is_callable($event->getIntensity()) and $event->getIntensity()->getId() == $intensity->getId()) checked="checked" @endif>
+                                            {{ $intensity->getName() }}
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <!-- fixed -->
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Typ wydarzenia</label>
+                            <div class="col-sm-9">
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="fixed" value="1" @if(!$event->isStatusDraft() and $event->isFixed()) checked="checked" @endif>
+                                        Odbędzie się
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="fixed" value="0" @if(!$event->isStatusDraft() and !$event->isFixed()) checked="checked" @endif>
+                                        Planowane
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 50px;text-align: center;">
+                            <a href="#" class="btn btn-default btn-lg tab-action change-tab" action-tab-id="tab2">Wstecz</a>
+                            <button type="submit" class="btn btn-success btn-lg">Zapisz</button>
+                        </div>
+                    </div>
+                    <!-- tab 3 -->
+
                 </div>
-            </div>
+
+            </form>
         </div>
     </div>
 
+    <script src="/js/theme/events/edit.js"></script>
     <script src="/js/theme/tabs.js"></script>
     <script>
         $(function() {
-            FloccTabs.Init('default');
+            FloccThemeEventsEdit.Init();
+
+            @if($event->isPlace())
+                    FloccThemeEventsEdit.Places.Place().Init();
+            @else
+                @if(!$event->isStatusDraft())
+                    @foreach($event->getRoutes() as $place)
+                    FloccThemeEventsEdit.Places.Route.Add({{ $place->getId() }}, "{{ $place->getName() }}");
+                    @endforeach
+
+                    FloccThemeEventsEdit.Places.Route.Init();
+                @endif
+            @endif
         });
     </script>
 @endsection

@@ -76,7 +76,7 @@ Route::get('notifications/get', ['middleware' => 'auth', 'uses' => 'Notification
 Route::get('search/{filters?}', ['middleware' => 'auth', 'uses' => 'Events\EventsController@index'])->name('events');
 Route::get('events/new', ['middleware' => 'auth', 'uses' => 'Events\EventsController@newEvent'])->name('events.new');
 Route::post('events/comment', ['middleware' => 'auth', 'uses' => 'Events\CommentController@save'])->name('events.comment');
-Route::get('events/edit/{id}', ['middleware' => 'auth', 'uses' => 'Events\EditEventController@index'])->name('events.edit');
+Route::match(['get', 'post'], 'events/edit/{id}', ['middleware' => 'auth', 'uses' => 'Events\EditEventController@index'])->name('events.edit');
 Route::get('events/edit/{id}/members', ['middleware' => 'auth', 'uses' => 'Events\EditEventController@members'])->name('events.edit.members');
 Route::get('events/edit/{id}/{user_id}/{status}', ['middleware' => 'auth', 'uses' => 'Events\EditEventController@status'])->name('events.edit.members.status');
 

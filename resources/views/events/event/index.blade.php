@@ -32,7 +32,7 @@
                     <div class="row text-left">
                         <div class="col-sm-6">
                             <strong>Miejsce:</strong><br>
-                            <i class="fa fa-map"></i> {{ $event->getPlace()->getName() }}
+                            miejsce lub trasa
                         </div>
                         <div class="col-sm-6">
                             <strong>Organizator:</strong><br>
@@ -71,7 +71,7 @@
                         <div class="col-sm-6">
                             <strong>Intensywność:</strong><br>
 
-                            {{ $event->getIntensities()->getName() }}
+                            {{ $event->getIntensity()->getName() }}
                         </div>
                     </div>
                 </div>

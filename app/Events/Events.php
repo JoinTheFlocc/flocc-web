@@ -2,6 +2,7 @@
 
 namespace Flocc\Events;
 
+use Flocc\Url;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -114,6 +115,11 @@ class Events extends Model
     public function setTitle($title)
     {
         $this->title = $title;
+
+        /**
+         * Set slug
+         */
+        $this->setSlug((new Url())->slug($title));
 
         return $this;
     }
@@ -477,13 +483,13 @@ class Events extends Model
     /**
      * Set place ID
      *
-     * @param int $place_id
+     * @param int|null $place_id
      *
      * @return $this
      */
     public function setPlaceId($place_id)
     {
-        $this->place_id = (int) $place_id;
+        $this->place_id = $place_id;
 
         return $this;
     }
@@ -496,6 +502,16 @@ class Events extends Model
     public function getPlaceId()
     {
         return (int) $this->place_id;
+    }
+
+    /**
+     * User check place?
+     *
+     * @return bool
+     */
+    public function isPlace()
+    {
+        return ($this->place_id === null) ? false : true;
     }
 
     /**
@@ -561,7 +577,7 @@ class Events extends Model
      *
      * @return \Flocc\Intensities
      */
-    public function getIntensities()
+    public function getIntensity()
     {
         return $this->hasOne('Flocc\Intensities', 'id', 'intensities_id')->first();
     }
@@ -587,6 +603,18 @@ class Events extends Model
     }
 
     /**
+     * Get routes
+     *
+     * @return \Flocc\Places
+     */
+    public function getRoutes()
+    {
+        return $this->hasOne('Flocc\Events\Routes', 'event_id', 'id')
+            ->join('places', 'places.id', '=', 'events_routes.place_id')
+        ->get();
+    }
+
+    /**
      * Get event activities
      *
      * @return \Illuminate\Database\Eloquent\Collection
@@ -594,6 +622,24 @@ class Events extends Model
     public function getActivities()
     {
         return $this->hasMany('Flocc\Events\Activities', 'event_id', 'id')->join('activities', 'activities.id', '=', 'events_activities.activity_id')->get();
+    }
+
+    /**
+     * Is activity is checked
+     *
+     * @param int $id
+     *
+     * @return bool
+     */
+    public function isActivity($id)
+    {
+        foreach($this->getActivities() as $activity) {
+            if($activity->getId() == $id) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -680,10 +726,6 @@ class Events extends Model
 
         $get = $get->take(1)->first();
 
-        if($get !== null) {
-            $this->updateViews($get->getId(), $get->getViews()+1);
-        }
-
         return $get;
     }
 
@@ -704,10 +746,6 @@ class Events extends Model
         }
 
         $get = $get->take(1)->first();
-
-        if($get !== null) {
-            $this->updateViews($get->getId(), $get->getViews()+1);
-        }
 
         return $get;
     }

@@ -22,8 +22,6 @@ class CommentController extends Controller
         $event_id   = (int) \Input::get('event_id', null);
         $user_id    = (int) \Auth::user()->id;
 
-
-
         $events     = new Events();
         $line       = new NewLine();
 

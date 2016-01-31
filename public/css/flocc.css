@@ -274,3 +274,38 @@ ul.events li .buttons a.close_event {
     border: 1px solid red;
     color: red;
 }
+
+ul#places_route {
+    margin: 25px 0 0 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+ul#places_route li {
+    border: 1px solid #ddd;
+    border-bottom: 0;
+    padding: 10px 20px;
+    color: #000;
+}
+
+.add_place {
+    border: 1px solid #ddd;
+    padding: 20px;
+    background: rgba(204, 204, 204, 0.12);
+}
+
+.add_place i {
+    color: green;
+    font-size: 35px;
+}
+
+ul#places_route li i {
+    color: red;
+    font-size: 20px;
+    cursor: pointer;
+    margin-right: 7px;
+}
+
+#newActivity {
+    display: none;
+}

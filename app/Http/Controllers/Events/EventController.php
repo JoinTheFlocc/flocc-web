@@ -40,6 +40,11 @@ class EventController extends Controller
             ->setImage($event->getAvatarUrl())
         ;
 
+        /**
+         * Update views
+         */
+        $events->updateViews($event->getId(), $event->getViews()+1);
+
         return view('events.event.index', [
             'event'             => $event,
             'meta_facebook'     => $meta_data
