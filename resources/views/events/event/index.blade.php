@@ -32,7 +32,17 @@
                     <div class="row text-left">
                         <div class="col-sm-6">
                             <strong>Miejsce:</strong><br>
-                            miejsce lub trasa
+                            @if($event->isPlace())
+                                {{ $event->getPlace()->getName() }}
+                            @else
+                                <ul>
+                                    @foreach($event->getRoutes() as $place)
+                                        <li>
+                                            {{ $place->getName() }}
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            @endif
                         </div>
                         <div class="col-sm-6">
                             <strong>Organizator:</strong><br>
@@ -163,5 +173,6 @@
                 </div>
             </div>
         </div>
+        <br>&nbsp;<br>
     </div>
 @endsection
