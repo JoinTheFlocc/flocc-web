@@ -46,10 +46,12 @@ class EditEvent
             'activities'        => 'required'
         ];
 
-        if($this->data['place_type'] == 'place') {
-            $rules['place_id']  = 'required';
-        } else {
-            $rules['route']     = 'required';
+        if(isset($this->data['place_type'])) {
+            if($this->data['place_type'] == 'place') {
+                $rules['place_id']  = 'required';
+            } else {
+                $rules['route']     = 'required';
+            }
         }
 
         if(isset($this->data['activities'])) {
