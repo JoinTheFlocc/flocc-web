@@ -125,17 +125,37 @@ class EditEventController extends Controller
         $routes             = new Routes();
         $events_activities  = new \Flocc\Events\Activities();
 
+        $post               = \Input::get();
+
         if($this->event->isStatusCanceled()) {
           die; // @TODO
         }
-
-        $post = \Input::get();
 
         if(!empty($post)) {
             $edit->setData($post);
 
             $validator  = \Validator::make($post, $edit->getValidationRules(), $edit->getValidationMessages());
             $errors     = $validator->errors();
+
+            $this->event
+                ->setTitle(\Input::get('title'))
+                ->setDescription(\Input::get('description'))
+                ->setEventFrom(\Input::get('event_from'))
+                ->setEventTo(\Input::get('event_to'))
+                ->setEventSpan(\Input::get('event_span'))
+                ->setUsersLimit(\Input::get('users_limit'))
+                ->setStatus(\Input::get('status'))
+                ->setBudgetId(\Input::get('budgets'))
+                ->setIntensitiesId(\Input::get('intensities'))
+                ->setPlaceId(\Input::get('place_id'));
+
+            if(isset($post['fixed'])) {
+                if($post['fixed'] == '1') {
+                    $this->event->setAsFixed();
+                } else {
+                    $this->event->setAsNonFixed();
+                }
+            }
 
             if($errors->count() == 0) {
                 if($post['place_type'] == 'place') {
@@ -177,23 +197,6 @@ class EditEventController extends Controller
                 /**
                  * Save event
                  */
-                $this->event->setTitle($post['title']);
-                $this->event->setDescription($post['description']);
-                $this->event->setEventFrom($post['event_from']);
-                $this->event->setEventTo($post['event_to']);
-                $this->event->setEventSpan($post['event_span']);
-                $this->event->setUsersLimit($post['users_limit']);
-                $this->event->setStatus($post['status']);
-                $this->event->setBudgetId($post['budgets']);
-                $this->event->setIntensitiesId($post['intensities']);
-                $this->event->setPlaceId($post['place_id']);
-
-                if($post['fixed'] == '1') {
-                    $this->event->setAsFixed();
-                } else {
-                    $this->event->setAsNonFixed();
-                }
-
                 $this->event->save();
 
                 /**
