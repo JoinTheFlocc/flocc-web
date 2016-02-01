@@ -228,6 +228,8 @@ class EditEventController extends Controller
                     ->setMessage('Utworzono wydarzenie')
                     ->setUserId(Auth::getUserId())
                 ->save();
+
+                return \Redirect::to('events/' . $this->event->getSlug());
             }
         }
 
