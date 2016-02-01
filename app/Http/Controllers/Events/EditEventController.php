@@ -126,6 +126,7 @@ class EditEventController extends Controller
         $events_activities  = new \Flocc\Events\Activities();
 
         $post               = \Input::get();
+        $is_draft           = $this->event->isStatusDraft();
 
         if($this->event->isStatusCanceled()) {
           die; // @TODO
@@ -222,12 +223,14 @@ class EditEventController extends Controller
                 /**
                  * Add new time line
                  */
-                (new TimeLine\NewLine())
-                    ->setEventId($id)
-                    ->setTypeAsMessage()
-                    ->setMessage('Utworzono wydarzenie')
-                    ->setUserId(Auth::getUserId())
-                ->save();
+                if($is_draft === true) {
+                    (new TimeLine\NewLine())
+                        ->setEventId($id)
+                        ->setTypeAsMessage()
+                        ->setMessage('Utworzono wydarzenie')
+                        ->setUserId(Auth::getUserId())
+                    ->save();
+                }
 
                 return \Redirect::to('events/' . $this->event->getSlug());
             }
