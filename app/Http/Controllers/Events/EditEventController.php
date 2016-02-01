@@ -235,6 +235,8 @@ class EditEventController extends Controller
                         ->setMessage(sprintf('[b]%s[/b] utworzył wydarzenie dnia %s o %s', $user_name, date('Y-m-d'), date('H:i')))
                         ->setUserId(Auth::getUserId())
                     ->save();
+
+                    return \Redirect::to('events/' . $this->event->getSlug() . '/share');
                 }
 
                 return \Redirect::to('events/' . $this->event->getSlug());

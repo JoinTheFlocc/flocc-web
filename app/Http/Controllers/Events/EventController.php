@@ -158,4 +158,35 @@ class EventController extends Controller
 
         return \Redirect::to('events/' . $slug);
     }
+
+    /**
+     * Share event
+     *
+     * @param string $slug
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function share($slug)
+    {
+        $events = new Events();
+        $event  = $events->getBySlug($slug);
+
+        if($event === null) {
+            die; // @TODO:
+        }
+
+        /**
+         * Facebook meta data
+         */
+        $meta_data = (new \Flocc\Social\Facebook\MetaData())
+            ->setTitle($event->getTitle())
+            ->setDescription($event->getDescription())
+            ->setImage($event->getAvatarUrl())
+        ;
+
+        return view('events.event.share', [
+            'event'             => $event,
+            'meta_facebook'     => $meta_data
+        ]);
+    }
 }

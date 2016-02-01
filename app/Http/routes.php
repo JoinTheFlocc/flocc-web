@@ -86,3 +86,4 @@ Route::get('events/{slug}/members', 'Events\EventController@members')->name('eve
 Route::get('events/{slug}/followers', 'Events\EventController@followers')->name('events.event.followers');
 Route::get('events/{slug}/cancel', ['middleware' => 'auth', 'uses' => 'Events\EventController@cancel'])->name('events.event.cancel');
 Route::get('events/{slug}/join/{type}', ['middleware' => 'auth', 'uses' => 'Events\EventController@join'])->name('events.event.join');
+Route::get('events/{slug}/share', 'Events\EventController@share')->name('events.event.share');
