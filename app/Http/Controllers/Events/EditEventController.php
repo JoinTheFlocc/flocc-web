@@ -13,6 +13,7 @@ use Flocc\Events\TimeLine;
 use Flocc\Http\Controllers\Controller;
 use Flocc\Intensities;
 use Flocc\Places;
+use Flocc\User;
 
 /**
  * Class EditEventController
@@ -124,9 +125,11 @@ class EditEventController extends Controller
         $edit               = new EditEvent();
         $routes             = new Routes();
         $events_activities  = new \Flocc\Events\Activities();
+        $users              = new User();
 
         $post               = \Input::get();
         $is_draft           = $this->event->isStatusDraft();
+        $user               = $users->getById(Auth::getUserId());
 
         if($this->event->isStatusCanceled()) {
           die; // @TODO
@@ -224,10 +227,12 @@ class EditEventController extends Controller
                  * Add new time line
                  */
                 if($is_draft === true) {
+                    $user_name = $user->getProfile()->getFirstName() . ' ' . $user->getProfile()->getLastName();
+
                     (new TimeLine\NewLine())
                         ->setEventId($id)
                         ->setTypeAsMessage()
-                        ->setMessage('Utworzono wydarzenie')
+                        ->setMessage(sprintf('[b]%s[/b] utworzył wydarzenie dnia %s o %s', $user_name, date('Y-m-d'), date('H:i')))
                         ->setUserId(Auth::getUserId())
                     ->save();
                 }
