@@ -4,25 +4,38 @@
     <div class="container">
         <div class="row" style="margin-top:25px;">
             <div class="col-sm-4" style="margin-top:60px;">
-                <div class="text-center">
-                    @if($event->isStatusOpen())
-                        @if($event->getMembers()->count() < $event->getUsersLimit())
-                            <a href="{{ URL::route('events.event.join', ['slug' => $event->getSlug(), 'type' => 'member']) }}" class="btn btn-success" style="width:32%">
-                                Dołącz
+                @if(!Auth::guest())
+                    @if($event->isMine() === false)
+                        <div class="text-center">
+                            @if($event->isStatusOpen())
+                                @if($event->getMembers()->count() < $event->getUsersLimit())
+                                    <a href="{{ URL::route('events.event.join', ['slug' => $event->getSlug(), 'type' => 'member']) }}" class="btn btn-success" style="width:32%">
+                                        Dołącz
+                                    </a>
+                                @endif
+                            @endif
+                            @if(!$event->isStatusCanceled() and !Auth::guest())
+                                <a href="{{ URL::route('events.event.join', ['slug' => $event->getSlug(), 'type' => 'follower']) }}" class="btn btn-primary" style="width:32%">
+                                    Obserwuj
+                                </a>
+                            @endif
+                            <a href="{{ URL::route('mail.new.form', ['user_id' => $event->getUserId()]) }}" class="btn btn-default" style="width:32%">
+                                Wiadomość
                             </a>
-                        @endif
+                        </div><br>
+                    @else
+                        <div class="text-center">
+                            @if(!$event->isStatusCanceled())
+                                <a href="{{ URL::route('events.event.cancel', ['slug' => $event->getSlug()]) }}" class="btn btn-danger" onclick="return confirm('Na pewno?');">
+                                    Odwołaj wydarzenie
+                                </a>
+                            @endif
+                            <a href="{{ URL::route('events.edit', ['id' => $event->getId()]) }}" class="btn btn-primary">
+                                Edytuj
+                            </a>
+                        </div><br>
                     @endif
-                    @if(!$event->isStatusCanceled() and !Auth::guest())
-                        <a href="{{ URL::route('events.event.join', ['slug' => $event->getSlug(), 'type' => 'follower']) }}" class="btn btn-primary" style="width:32%">
-                            Obserwuj
-                        </a>
-                    @endif
-                    @if(!Auth::guest())
-                        <a href="{{ URL::route('mail.new.form', ['user_id' => $event->getUserId()]) }}" class="btn btn-default" style="width:32%">
-                            Wiadomość
-                        </a>
-                    @endif
-                </div><br>
+                @endif
 
                 <div class="well text-center">
                     <h1>{{ $event->getTitle() }}</h1><br>
@@ -124,12 +137,6 @@
                         </div>
                     </div>
                 </div>
-
-                @if($event->isMine() and !$event->isStatusCanceled())
-                    <a href="{{ URL::route('events.event.cancel', ['slug' => $event->getSlug()]) }}" class="btn btn-danger btn-block" onclick="return confirm('Na pewno?');">
-                        Odwołaj wydarzenie
-                    </a>
-                @endif
             </div>
             <div class="col-sm-8">
                 @if($event->isStatusCanceled())
