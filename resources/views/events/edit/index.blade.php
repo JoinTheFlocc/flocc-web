@@ -214,7 +214,7 @@
                                 @foreach($budgets as $budget)
                                     <div class="radio">
                                         <label>
-                                            <input type="radio" name="budgets" value="{{ $budget->getId() }}" @if(is_callable($event->getBudget()) and $event->getBudget()->getId() == $budget->getId()) checked="checked" @endif>
+                                            <input type="radio" name="budgets" value="{{ $budget->getId() }}" @if($event->getBudgetId() == $budget->getId()) checked="checked" @endif>
                                             {{ $budget->getName() }}
                                         </label>
                                     </div>
@@ -229,7 +229,7 @@
                                 @foreach($intensities as $intensity)
                                     <div class="radio">
                                         <label>
-                                            <input type="radio" name="intensities" value="{{ $intensity->getId() }}" @if(is_callable($event->getIntensity()) and $event->getIntensity()->getId() == $intensity->getId()) checked="checked" @endif>
+                                            <input type="radio" name="intensities" value="{{ $intensity->getId() }}" @if($event->getIntensitiesId() == $intensity->getId()) checked="checked" @endif>
                                             {{ $intensity->getName() }}
                                         </label>
                                     </div>
