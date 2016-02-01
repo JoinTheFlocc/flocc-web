@@ -285,7 +285,7 @@ class Events extends Model
      */
     public function getAvatarUrl()
     {
-        return $this->avatar_url;
+        return ($this->avatar_url === null) ? config('events.default_avatar') : $this->avatar_url;
     }
 
     /**
