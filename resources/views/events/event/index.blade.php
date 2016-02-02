@@ -144,6 +144,13 @@
                         To wydarzenie zostało odwołane
                     </div>
                 @endif
+
+                @if (isset($message))
+                    <div class="flash-message" style="margin-top: 115px;">
+                        <p class="alert alert-info">{{ $message }}</p>
+                    </div>
+                @endif
+
                 <ul class="nav nav-tabs" style="margin-top:58px;">
                     <li class="active">
                         <a href="#">Posty</a>

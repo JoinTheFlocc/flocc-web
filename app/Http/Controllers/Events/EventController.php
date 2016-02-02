@@ -19,11 +19,12 @@ class EventController extends Controller
     /**
      * Display event
      *
+     * @param \Illuminate\Http\Request $request
      * @param int $slug
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index($slug)
+    public function index(\Illuminate\Http\Request $request, $slug)
     {
         $events     = new Events();
         $event      = $events->getBySlug($slug);
@@ -48,7 +49,8 @@ class EventController extends Controller
 
         return view('events.event.index', [
             'event'             => $event,
-            'meta_facebook'     => $meta_data
+            'meta_facebook'     => $meta_data,
+            'message'           => $request->session()->get('message')
         ]);
     }
 
@@ -118,12 +120,13 @@ class EventController extends Controller
     /**
      * Join to event
      *
+     * @param \Illuminate\Http\Request $request
      * @param string $slug
      * @param string $type
      *
      * @return mixed
      */
-    public function join($slug, $type)
+    public function join(\Illuminate\Http\Request $request, $slug, $type)
     {
         $events     = new Events();
         $members    = new Members();
@@ -160,10 +163,12 @@ class EventController extends Controller
                             ->setMessage($user_name . ' zaczął obserwować to wydarzenie')
                         ->save();
                         $notification->setCallback('/events/' . $event->getSlug());
+                        $request->session()->flash('message', 'Obserwujesz to wydarzenie');
                         break;
                     case 'member':
                         $members->addNewMember($event->getId(), $user_id);
                         $notification->setCallback('/events/edit/' . $event->getId() . '/members');
+                        $request->session()->flash('message', 'Zapisałeś się do wydarzenia. Zostaniesz poinformwany, gdy organizator Cie zaakceptuje');
                         break;
                 }
 
