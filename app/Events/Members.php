@@ -321,4 +321,21 @@ class Members extends Model
     {
         return $this->addNew($event_id, $user_id, 'follower');
     }
+
+    /**
+     * Update user status
+     *
+     * @param int $user_id
+     * @param int $event_id
+     * @param string $status
+     *
+     * @return bool
+     */
+    public function updateStatus($user_id, $event_id, $status)
+    {
+        return (self::where('user_id', (int) $user_id)->where('event_id', (int) $event_id)->update([
+            'status'                => $status,
+            'status_change_date'    => \DB::raw('CURRENT_TIMESTAMP')
+        ]) == 1) ? true : false;
+    }
 }

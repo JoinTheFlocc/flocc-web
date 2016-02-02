@@ -6,6 +6,7 @@ use Flocc\Events\Events;
 use Flocc\Events\Members;
 use Flocc\Events\TimeLine\NewLine;
 use Flocc\Http\Controllers\Controller;
+use Flocc\Notifications\NewNotification;
 use Flocc\User;
 
 /**
@@ -39,6 +40,11 @@ class EventController extends Controller
             ->setDescription($event->getDescription())
             ->setImage($event->getAvatarUrl())
         ;
+
+        /**
+         * Update views
+         */
+        $events->updateViews($event->getId(), $event->getViews()+1);
 
         return view('events.event.index', [
             'event'             => $event,
@@ -135,6 +141,16 @@ class EventController extends Controller
 
         if($event->isMine() === false) {
             if($members->isUserInEvent($event->getId(), $user_id) === false) {
+                /**
+                 * Prepare notification
+                 */
+                $notification = (new NewNotification())
+                    ->setUserId($event->getUserId())
+                    ->setUniqueKey('events.members.join.' . $type . '.' . $event->getId())
+                    ->setTypeId('events.members.join.' . $type)
+                    ->addVariable('user', $user_name)
+                    ->addVariable('event', $event->getTitle());
+
                 switch($type) {
                     case 'follower':
                         $members->addNewFollower($event->getId(), $user_id);
@@ -143,14 +159,52 @@ class EventController extends Controller
                             ->setTypeAsMessage()
                             ->setMessage($user_name . ' zaczął obserwować to wydarzenie')
                         ->save();
+                        $notification->setCallback('/events/' . $event->getSlug());
                         break;
                     case 'member':
                         $members->addNewMember($event->getId(), $user_id);
+                        $notification->setCallback('/events/edit/' . $event->getId() . '/members');
                         break;
                 }
+
+                /**
+                 * Send notification to owner
+                 */
+                $notification->save();
             }
         }
 
         return \Redirect::to('events/' . $slug);
+    }
+
+    /**
+     * Share event
+     *
+     * @param string $slug
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function share($slug)
+    {
+        $events = new Events();
+        $event  = $events->getBySlug($slug);
+
+        if($event === null) {
+            die; // @TODO:
+        }
+
+        /**
+         * Facebook meta data
+         */
+        $meta_data = (new \Flocc\Social\Facebook\MetaData())
+            ->setTitle($event->getTitle())
+            ->setDescription($event->getDescription())
+            ->setImage($event->getAvatarUrl())
+        ;
+
+        return view('events.event.share', [
+            'event'             => $event,
+            'meta_facebook'     => $meta_data
+        ]);
     }
 }

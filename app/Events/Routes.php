@@ -104,4 +104,26 @@ class Routes extends Model
     {
         return (int) $this->place_id;
     }
+
+    /**
+     * Get place name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Delete all routes
+     *
+     * @param int $event_id
+     *
+     * @return int
+     */
+    public function clear($event_id)
+    {
+        return self::where('event_id', $event_id)->delete();
+    }
 }

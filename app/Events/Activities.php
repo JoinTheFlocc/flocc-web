@@ -114,4 +114,16 @@ class Activities extends Model
     {
         return $this->name;
     }
+
+    /**
+     * Delete all activities
+     *
+     * @param int $event_id
+     *
+     * @return int
+     */
+    public function clear($event_id)
+    {
+        return self::where('event_id', $event_id)->delete();
+    }
 }

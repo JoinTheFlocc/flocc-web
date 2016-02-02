@@ -231,3 +231,84 @@ body {
 .legal > a {
     color: ivory;
 }
+
+ul.events {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+ul.events li {
+    display: block;
+    width: 200px;
+    height: 210px;
+    float: left;
+    border: 1px solid #9d9d9d;
+    border-radius: 5px;
+    padding: 20px 10px;
+    text-align: center;
+    margin-right: 5px;
+}
+
+ul.events li h2 {
+    display: block;
+    margin: 0px auto;
+    font-size: 18px;
+    color: #000;
+    margin-bottom: 20px;
+}
+
+ul.events li img {display: block;
+    margin: 0px auto;
+    border-radius: 5px;
+    width: 50%;
+    margin-bottom: 20px;
+}
+
+ul.events li .buttons a {
+    border: 1px solid #000;
+    border-radius: 5px;
+    padding: 5px 8px;
+    color: #000;
+    margin-right: 5px;
+}
+
+ul.events li .buttons a.close_event {
+    border: 1px solid red;
+    color: red;
+}
+
+ul#places_route {
+    margin: 25px 0 0 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+ul#places_route li {
+    border: 1px solid #ddd;
+    border-bottom: 0;
+    padding: 10px 20px;
+    color: #000;
+}
+
+.add_place {
+    border: 1px solid #ddd;
+    padding: 20px;
+    background: rgba(204, 204, 204, 0.12);
+}
+
+.add_place i {
+    color: green;
+    font-size: 35px;
+}
+
+ul#places_route li i {
+    color: red;
+    font-size: 20px;
+    cursor: pointer;
+    margin-right: 7px;
+}
+
+#newActivity {
+    display: none;
+}
