@@ -25,7 +25,7 @@
                             </a>
 
                             <div class="buttons">
-                                @if($user_id == $event->getUserId())
+                                @if($event->isMine())
                                     <!-- Moje wydarzenie -->
                                     <a href="{{ URL::route('events.edit.members', ['id' => $event->getId()]) }}"><i class="fa fa-users"></i></a>
                                     <a href="{{ URL::route('events.edit', ['id' => $event->getId()]) }}"><i class="fa fa-pencil"></i></a>

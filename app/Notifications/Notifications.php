@@ -44,7 +44,7 @@ class Notifications extends Model
     public function getByUserId($user_id, $unread = true)
     {
         $variables  = new Variables();
-        $get        = self::where('user_id', (int) $user_id)->orderBy('notification_id');
+        $get        = self::where('user_id', (int) $user_id)->orderBy('notification_id', 'desc');
 
         if($unread === true) {
             $get->where('is_read', '0');
@@ -123,6 +123,14 @@ class Notifications extends Model
         return \Redirect::to('notifications');
     }
 
+    /**
+     * Is exist by unix key
+     *
+     * @param string $unique_key
+     * @param int $user_id
+     *
+     * @return bool
+     */
     public function isExistsCheckByUniqueKey($unique_key, $user_id)
     {
         $notification = self::where('user_id', (int) $user_id)

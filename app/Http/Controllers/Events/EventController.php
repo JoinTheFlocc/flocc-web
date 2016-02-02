@@ -6,6 +6,7 @@ use Flocc\Events\Events;
 use Flocc\Events\Members;
 use Flocc\Events\TimeLine\NewLine;
 use Flocc\Http\Controllers\Controller;
+use Flocc\Notifications\NewNotification;
 use Flocc\User;
 
 /**
@@ -140,6 +141,16 @@ class EventController extends Controller
 
         if($event->isMine() === false) {
             if($members->isUserInEvent($event->getId(), $user_id) === false) {
+                /**
+                 * Prepare notification
+                 */
+                $notification = (new NewNotification())
+                    ->setUserId($event->getUserId())
+                    ->setUniqueKey('events.members.join.' . $type . '.' . $event->getId())
+                    ->setTypeId('events.members.join.' . $type)
+                    ->addVariable('user', $user_name)
+                    ->addVariable('event', $event->getTitle());
+
                 switch($type) {
                     case 'follower':
                         $members->addNewFollower($event->getId(), $user_id);
@@ -148,11 +159,18 @@ class EventController extends Controller
                             ->setTypeAsMessage()
                             ->setMessage($user_name . ' zaczął obserwować to wydarzenie')
                         ->save();
+                        $notification->setCallback('/events/' . $event->getSlug());
                         break;
                     case 'member':
                         $members->addNewMember($event->getId(), $user_id);
+                        $notification->setCallback('/events/edit/' . $event->getId() . '/members');
                         break;
                 }
+
+                /**
+                 * Send notification to owner
+                 */
+                $notification->save();
             }
         }
 

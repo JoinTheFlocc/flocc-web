@@ -12,6 +12,7 @@ use Flocc\Events\Routes;
 use Flocc\Events\TimeLine;
 use Flocc\Http\Controllers\Controller;
 use Flocc\Intensities;
+use Flocc\Notifications\NewNotification;
 use Flocc\Places;
 use Flocc\User;
 
@@ -93,6 +94,27 @@ class EditEventController extends Controller
                     throw new \Exception('Przekroczony limit');
                 }
 
+                /**
+                 * Powiadomienia do pozostałych uczestników
+                 *
+                 * @var $user \Flocc\Profile
+                 */
+                $user = (new User())->getById($user_id)->getProfile();
+
+                foreach($this->event->getMembers() as $member) {
+                    (new NewNotification())
+                        ->setUserId($member->getUserId())
+                        ->setUniqueKey('events.members.new.' . $id . '.' . $user_id)
+                        ->setTypeId('events.members.new')
+                        ->setCallback('/events/' . $this->event->getSlug())
+                        ->addVariable('user', $user->getFirstName() . ' ' . $user->getLastName())
+                        ->addVariable('event', $this->event->getTitle())
+                    ->save();
+                }
+
+                /**
+                 * Zmiana statusu
+                 */
                 (new Members())->updateStatus($user_id, $id, $status);
 
                 /**
@@ -237,6 +259,21 @@ class EditEventController extends Controller
                     ->save();
 
                     return \Redirect::to('events/' . $this->event->getSlug() . '/share');
+                } else {
+                    /**
+                     * Notification
+                     *
+                     * @var $member \Flocc\Events\Members
+                     */
+                    foreach($this->event->getMembers() as $member) {
+                        (new NewNotification())
+                            ->setUserId($member->getUserId())
+                            ->setUniqueKey('events.update.' . $id . '.' . date('d-m-Y'))
+                            ->setTypeId('events.update')
+                            ->setCallback('/events/' . $this->event->getSlug())
+                            ->addVariable('event', $this->event->getTitle())
+                        ->save();
+                    }
                 }
 
                 return \Redirect::to('events/' . $this->event->getSlug());

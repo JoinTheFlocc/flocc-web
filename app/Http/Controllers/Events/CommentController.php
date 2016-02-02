@@ -5,6 +5,8 @@ namespace Flocc\Http\Controllers\Events;
 use Flocc\Events\Events;
 use Flocc\Events\TimeLine\NewLine;
 use Flocc\Http\Controllers\Controller;
+use Flocc\Notifications\NewNotification;
+use Flocc\User;
 
 /**
  * Class CommentController
@@ -19,13 +21,18 @@ class CommentController extends Controller
     public function save()
     {
         $comment    = \Input::get('comment', '');
-        $event_id   = (int) \Input::get('event_id', null);
+        $event_id   = (int) \Input::get('event_id');
         $user_id    = (int) \Auth::user()->id;
 
         $events     = new Events();
         $line       = new NewLine();
 
         $event      = $events->getById($event_id);
+
+        /**
+         * @var $user \Flocc\Profile
+         */
+        $user       = (new User())->getById($user_id)->getProfile();
 
         if($event === null) {
             die; // @TODO:
@@ -38,6 +45,22 @@ class CommentController extends Controller
                 ->setUserId($user_id)
                 ->setComment($comment)
             ->save();
+
+            /**
+             * Send notifications
+             *
+             * @var $member \Flocc\Events\Members
+             */
+            foreach($event->getMembers() as $member) {
+                (new NewNotification())
+                    ->setUserId($member->getUserId())
+                    ->setUniqueKey('events.comment.' . $event->getId() . '.' . md5($comment))
+                    ->setTypeId('events.comment')
+                    ->setCallback('/events/' . $event->getSlug())
+                    ->addVariable('user', $user->getFirstName() . ' ' . $user->getLastName())
+                    ->addVariable('event', $event->getTitle())
+                ->save();
+            }
         }
 
         return \Redirect::to('events/' . $event->getSlug());
