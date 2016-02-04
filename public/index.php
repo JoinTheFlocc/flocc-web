@@ -1,5 +1,7 @@
 <?php
 
+ini_set('xdebug.max_nesting_level', 500);
+
 /**
  * Laravel - A PHP Framework For Web Artisans
  *

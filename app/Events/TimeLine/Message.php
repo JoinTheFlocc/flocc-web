@@ -18,6 +18,6 @@ class Message extends Element
      */
     public function getMessage()
     {
-        return $this->element->message;
+        return preg_replace("#\[b\](.*?)\[/b\]#si", '<strong>\\1</strong>', $this->element->message);
     }
 }

@@ -79,4 +79,30 @@ class Activities extends Model
     {
         return $this->name;
     }
+
+    /**
+     * Get by name
+     *
+     * @param string $name
+     *
+     * @return \Flocc\Activities
+     */
+    public function getByName($name)
+    {
+        return self::where('name', $name)->take(1)->first();
+    }
+
+    /**
+     * Add new activity
+     *
+     * @param string $name
+     *
+     * @return int
+     */
+    public function addNew($name)
+    {
+        self::create(['name' => $name]);
+
+        return (int) \DB::getPdo()->lastInsertId();
+    }
 }
