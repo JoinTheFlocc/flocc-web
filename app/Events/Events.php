@@ -2,6 +2,7 @@
 
 namespace Flocc\Events;
 
+use Flocc\Auth;
 use Flocc\Url;
 use Illuminate\Database\Eloquent\Model;
 
@@ -689,13 +690,7 @@ class Events extends Model
      */
     public function isMine()
     {
-        $user_id = null;
-
-        if(\Auth::user() !== null) {
-            $user_id = \Auth::user()->id;
-        }
-
-        return ($user_id == $this->getUserId());
+        return (Auth::getUserId() == $this->getUserId());
     }
 
     /**
