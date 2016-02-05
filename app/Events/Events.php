@@ -694,6 +694,28 @@ class Events extends Model
     }
 
     /**
+     * Czy jestem w tym wydarzeniu
+     *
+     * @return bool
+     */
+    public function isImIn()
+    {
+        foreach($this->getMembers() as $user) {
+            if($user->getUserId() == Auth::getUserId()) {
+                return true;
+            }
+        }
+
+        foreach($this->getFollowers() as $user) {
+            if($user->getUserId() == Auth::getUserId()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Get event time line
      *
      * @return \Illuminate\Database\Eloquent\Collection
