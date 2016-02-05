@@ -171,7 +171,7 @@ class EditEventController extends Controller
         if(!empty($post)) {
             $edit->setData($post);
 
-            $validator  = \Validator::make($post, $edit->getValidationRules(), $edit->getValidationMessages());
+            $validator  = \Validator::make($post, $edit->getValidationRules($post), $edit->getValidationMessages());
             $errors     = $validator->errors();
 
             $this->event
