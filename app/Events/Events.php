@@ -817,4 +817,16 @@ class Events extends Model
     {
         return (self::where('id', $id)->update(['status' => 'close']) == 1);
     }
+
+    /**
+     * Close events by date to
+     *
+     * @param string $date
+     *
+     * @return bool
+     */
+    public function closeAfterDate($date)
+    {
+        return (self::where('event_to', '>', $date)->update(['status' => 'close']) == 1);
+    }
 }
