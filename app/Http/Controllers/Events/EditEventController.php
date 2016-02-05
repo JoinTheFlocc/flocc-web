@@ -181,7 +181,6 @@ class EditEventController extends Controller
                 ->setEventTo(\Input::get('event_to'))
                 ->setEventSpan(\Input::get('event_span'))
                 ->setUsersLimit(\Input::get('users_limit'))
-                ->setStatus(\Input::get('status'))
                 ->setBudgetId(\Input::get('budgets'))
                 ->setIntensitiesId(\Input::get('intensities'))
                 ->setPlaceId(\Input::get('place_id'));
@@ -192,6 +191,10 @@ class EditEventController extends Controller
                 } else {
                     $this->event->setAsNonFixed();
                 }
+            }
+
+            if($this->event->isStatusDraft()) {
+                $this->event->setStatus('open');
             }
 
             if($errors->count() == 0) {
