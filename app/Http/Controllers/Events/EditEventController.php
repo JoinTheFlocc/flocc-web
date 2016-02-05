@@ -113,6 +113,17 @@ class EditEventController extends Controller
                 }
 
                 /**
+                 * Powiadomienie do usera, że został zaakceptowany
+                 */
+                (new NewNotification())
+                    ->setUserId($user_id)
+                    ->setUniqueKey('events.members.accept.' . $id)
+                    ->setTypeId('events.members.accept')
+                    ->setCallback('/events/' . $this->event->getSlug())
+                    ->addVariable('event', $this->event->getTitle())
+                ->save();
+
+                /**
                  * Zmiana statusu
                  */
                 (new Members())->updateStatus($user_id, $id, $status);
