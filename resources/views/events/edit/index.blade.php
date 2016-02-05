@@ -22,35 +22,6 @@
 
                     <!-- tab 1 -->
                     <div class="flocc-tab" tab-id="tab1">
-                        <div class="form-group status">
-                            <label class="col-sm-3 control-label">Typ wydarzenia</label>
-                            <div class="col-sm-9">
-                                <div class="radio">
-                                    <label>
-                                        <input type="radio" name="status" value="open" @if($event->isStatusOpen() or $event->isStatusDraft()) checked="checked" @endif>
-                                        Publiczne
-                                    </label>
-                                </div>
-                                <p class="help-block">Każdy może zapisać się na to wydarzenie</p>
-
-                                <div class="radio">
-                                    <label>
-                                        <input type="radio" name="status" value="private" @if($event->isStatusPrivate()) checked="checked" @endif>
-                                        Prywatne
-                                    </label>
-                                </div>
-                                <p class="help-block">Tylko administrator może dodać nowych użytkowników</p>
-
-                                <div class="radio">
-                                    <label>
-                                        <input type="radio" name="status" value="close" @if($event->isStatusClose()) checked="checked" @endif>
-                                        Zamknięte
-                                    </label>
-                                </div>
-                                <p class="help-block">Nikt nie może dołączyć do wydarzenia</p>
-                            </div>
-                        </div>
-
                         <!-- title -->
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Tytuł wydarzenia</label>
@@ -276,14 +247,20 @@
             FloccThemeEventsEdit.Init();
 
             @if($event->isPlace())
-                    FloccThemeEventsEdit.Places.Place().Init();
+                FloccThemeEventsEdit.Places.Place().Init();
             @else
                 @if(!$event->isStatusDraft())
-                    @foreach($event->getRoutes() as $place)
-                    FloccThemeEventsEdit.Places.Route.Add({{ $place->getId() }}, "{{ $place->getName() }}");
-                    @endforeach
+                    @if(count($post_routes))
+                        @foreach($post_routes as $id => $name)
+                            FloccThemeEventsEdit.Places.Route.Add({{ $id }}, "{{ $name }}");
+                        @endforeach
+                    @else
+                        @foreach($event->getRoutes() as $place)
+                            FloccThemeEventsEdit.Places.Route.Add({{ $place->getId() }}, "{{ $place->getName() }}");
+                        @endforeach
+                    @endif
 
-                    FloccThemeEventsEdit.Places.Route.Init();
+                FloccThemeEventsEdit.Places.Route.Init();
                 @endif
             @endif
         });

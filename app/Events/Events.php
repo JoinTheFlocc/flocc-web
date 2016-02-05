@@ -694,6 +694,28 @@ class Events extends Model
     }
 
     /**
+     * Czy jestem w tym wydarzeniu
+     *
+     * @return bool
+     */
+    public function isImIn()
+    {
+        foreach($this->getMembers() as $user) {
+            if($user->getUserId() == Auth::getUserId()) {
+                return true;
+            }
+        }
+
+        foreach($this->getFollowers() as $user) {
+            if($user->getUserId() == Auth::getUserId()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Get event time line
      *
      * @return \Illuminate\Database\Eloquent\Collection
@@ -794,5 +816,17 @@ class Events extends Model
     public function closeEvent($id)
     {
         return (self::where('id', $id)->update(['status' => 'close']) == 1);
+    }
+
+    /**
+     * Close events by date to
+     *
+     * @param string $date
+     *
+     * @return bool
+     */
+    public function closeAfterDate($date)
+    {
+        return (self::where('event_to', '>', $date)->update(['status' => 'close']) == 1);
     }
 }

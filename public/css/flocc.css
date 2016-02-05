@@ -240,14 +240,11 @@ ul.events {
 
 ul.events li {
     display: block;
-    width: 200px;
-    height: 210px;
-    float: left;
+    width: 100%;
     border: 1px solid #9d9d9d;
     border-radius: 5px;
     padding: 20px 10px;
-    text-align: center;
-    margin-right: 5px;
+    margin-bottom: 5px;
 }
 
 ul.events li h2 {
@@ -258,11 +255,20 @@ ul.events li h2 {
     margin-bottom: 20px;
 }
 
-ul.events li img {display: block;
-    margin: 0px auto;
+ul.events li img {
+    display: block;
+    float: left;
     border-radius: 5px;
-    width: 50%;
-    margin-bottom: 20px;
+    width: 100px;
+    margin-right: 15px;
+}
+
+ul.events li .info {
+    float: left;
+}
+
+ul.events li .buttons {
+    margin-top: 20px;
 }
 
 ul.events li .buttons a {

@@ -28,17 +28,19 @@ class EditEvent
     /**
      * Get validation rules
      *
+     * @param array $post
+     *
      * @return array
      */
-    public function getValidationRules()
+    public function getValidationRules(array $post)
     {
         $rules      = [
             'title'             => 'required',
             'description'       => 'required',
-            'event_from'        => 'required',
-            'event_to'          => 'required',
-            'event_span'        => 'required|integer',
-            'users_limit'       => 'required|integer',
+            'event_from'        => 'required|date_format:Y-m-d|after:tomorrow',
+            'event_to'          => 'required|date_format:Y-m-d|after:event_from',
+            'event_span'        => 'required|integer|min:1',
+            'users_limit'       => 'required|integer|min:1',
             'budgets'           => 'required',
             'intensities'       => 'required',
             'fixed'             => 'required',
@@ -60,6 +62,17 @@ class EditEvent
             }
         }
 
+        $valid_event_from   = date_parse_from_format('Y-m-d', $post['event_from']);
+        $valid_event_to     = date_parse_from_format('Y-m-d', $post['event_to']);
+
+        if(count($valid_event_from['errors']) == 0 and count($valid_event_to['errors']) == 0) {
+            $date1                   = new \DateTime($post['event_from']);
+            $date2                   = new \DateTime($post['event_to']);
+
+            $days                    = (int) $date2->diff($date1)->format("%a")+1;
+            $rules['event_span']    .= '|max:' . $days;
+        }
+
         return $rules;
     }
 
@@ -74,9 +87,16 @@ class EditEvent
             'title.required'            => 'Prosimy podać tytuł wydarzenia',
             'description.required'      => 'Prosimy podać opis wydarzenia',
             'event_from.required'       => 'Prosimy podać datę od',
+            'event_from.date_format'    => 'Data musi być w formacie YYYY-MM-DD',
+            'event_from.after'          => 'Data startu musi być późniejsza niż dzisiaj',
             'event_to.required'         => 'Prosimy podać datę do',
+            'event_to.date_format'      => 'Data musi być w formacie YYYY-MM-DD',
+            'event_to.after'            => 'Data zakończenia musi być późniejsza niż data rozpoczęcia',
             'event_span.required'       => 'Prosimy podać ile dni trwa wydarzenie',
+            'event_span.min'            => 'Ilość dni musi być większa od 0',
+            'event_span.max'            => 'Ilość dni nie może być większa niż podany zakres dat',
             'users_limit.required'      => 'Prosimy podać ilu osób może się zapisać',
+            'users_limit.min'           => 'Limit członków musi być większy od 0',
             'budgets.required'          => 'Prosimy wybrać budżet',
             'intensities.required'      => 'Prosimy wybrać intensywność',
             'fixed.required'            => 'Prosimy wybrać typ wydarzenia',
