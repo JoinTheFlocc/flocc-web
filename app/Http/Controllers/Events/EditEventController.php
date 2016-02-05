@@ -182,8 +182,7 @@ class EditEventController extends Controller
                 ->setEventSpan(\Input::get('event_span'))
                 ->setUsersLimit(\Input::get('users_limit'))
                 ->setBudgetId(\Input::get('budgets'))
-                ->setIntensitiesId(\Input::get('intensities'))
-                ->setPlaceId(\Input::get('place_id'));
+                ->setIntensitiesId(\Input::get('intensities'));
 
             if(isset($post['fixed'])) {
                 if($post['fixed'] == '1') {
@@ -195,6 +194,12 @@ class EditEventController extends Controller
 
             if($this->event->isStatusDraft()) {
                 $this->event->setStatus('open');
+            }
+
+            if($post['place_type'] == 'place') {
+                $this->event->setPlaceId(\Input::get('place_id'));
+            } else {
+                $this->event->setPlaceId(null);
             }
 
             if($errors->count() == 0) {
