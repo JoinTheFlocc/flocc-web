@@ -101,7 +101,7 @@ class EditEventController extends Controller
                  */
                 $user = (new User())->getById($user_id)->getProfile();
 
-                foreach($this->event->getMembers() as $member) {
+                foreach(array_merge($this->event->getMembers()->toArray(), $this->event->getFollowers()->toArray()) as $member) {
                     (new NewNotification())
                         ->setUserId($member->getUserId())
                         ->setUniqueKey('events.members.new.' . $id . '.' . $user_id)
@@ -111,6 +111,17 @@ class EditEventController extends Controller
                         ->addVariable('event', $this->event->getTitle())
                     ->save();
                 }
+
+                /**
+                 * Powiadomienie do usera, że został zaakceptowany
+                 */
+                (new NewNotification())
+                    ->setUserId($user_id)
+                    ->setUniqueKey('events.members.accept.' . $id)
+                    ->setTypeId('events.members.accept')
+                    ->setCallback('/events/' . $this->event->getSlug())
+                    ->addVariable('event', $this->event->getTitle())
+                ->save();
 
                 /**
                  * Zmiana statusu
@@ -152,6 +163,7 @@ class EditEventController extends Controller
         $post               = \Input::get();
         $is_draft           = $this->event->isStatusDraft();
         $user               = $users->getById(Auth::getUserId());
+        $post_routes        = [];
 
         if($this->event->isStatusCanceled()) {
           die; // @TODO
@@ -160,7 +172,7 @@ class EditEventController extends Controller
         if(!empty($post)) {
             $edit->setData($post);
 
-            $validator  = \Validator::make($post, $edit->getValidationRules(), $edit->getValidationMessages());
+            $validator  = \Validator::make($post, $edit->getValidationRules($post), $edit->getValidationMessages());
             $errors     = $validator->errors();
 
             $this->event
@@ -170,10 +182,8 @@ class EditEventController extends Controller
                 ->setEventTo(\Input::get('event_to'))
                 ->setEventSpan(\Input::get('event_span'))
                 ->setUsersLimit(\Input::get('users_limit'))
-                ->setStatus(\Input::get('status'))
                 ->setBudgetId(\Input::get('budgets'))
-                ->setIntensitiesId(\Input::get('intensities'))
-                ->setPlaceId(\Input::get('place_id'));
+                ->setIntensitiesId(\Input::get('intensities'));
 
             if(isset($post['fixed'])) {
                 if($post['fixed'] == '1') {
@@ -181,6 +191,16 @@ class EditEventController extends Controller
                 } else {
                     $this->event->setAsNonFixed();
                 }
+            }
+
+            if($this->event->isStatusDraft()) {
+                $this->event->setStatus('open');
+            }
+
+            if($post['place_type'] == 'place') {
+                $this->event->setPlaceId(\Input::get('place_id'));
+            } else {
+                $this->event->setPlaceId(null);
             }
 
             if($errors->count() == 0) {
@@ -277,6 +297,16 @@ class EditEventController extends Controller
                 }
 
                 return \Redirect::to('events/' . $this->event->getSlug());
+            } else {
+                if($post['place_type'] == 'place') {
+                    $this->event->setPlaceId($post['place_id']);
+                } else {
+                    foreach(explode(',', $post['route']) as $row) {
+                        if(!empty($row)) {;
+                            $post_routes[$row] = $places->getById($row)->getName();
+                        }
+                    }
+                }
             }
         }
 
@@ -287,7 +317,8 @@ class EditEventController extends Controller
             'budgets'           => $budgets->all(),
             'intensities'       => $intensities->all(),
             'places'            => $places->all(),
-            'errors'            => isset($errors) ? $errors : []
+            'errors'            => isset($errors) ? $errors : [],
+            'post_routes'       => $post_routes
         ]);
     }
 }

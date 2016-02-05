@@ -219,12 +219,17 @@ class NewMessage
              */
             foreach($this->getUsers() as $user_id) {
                 if($user_id != $this->getUserId()) {
+                    /**
+                     * @var $user \Flocc\Profile
+                     */
+                    $user = (new User())->getById($this->getUserId())->getProfile();
+
                     (new NewNotification())
                         ->setUserId($user_id)
                         ->setUniqueKey('mail.conversation.' . $conversation_id)
                         ->setCallback('/mail/' . $conversation_id)
                         ->setTypeId('mail.new')
-                        ->addVariable('name', (new User())->getById($this->getUserId())->name)
+                        ->addVariable('name', $user->getFirstName() . ' ' . $user->getLastName())
                     ->save();
                 }
             }
