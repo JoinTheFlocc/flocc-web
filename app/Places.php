@@ -103,4 +103,16 @@ class Places extends Model
     {
         return $this->name;
     }
+
+    /**
+     * Get by ID
+     *
+     * @param int $id
+     *
+     * @return \Flocc\Places
+     */
+    public function getById($id)
+    {
+        return self::where('id', $id)->take(1)->first();
+    }
 }

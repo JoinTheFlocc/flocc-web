@@ -62,11 +62,16 @@ class EditEvent
             }
         }
 
-        $date1                   = new \DateTime($post['event_from']);
-        $date2                   = new \DateTime($post['event_to']);
+        $valid_event_from   = date_parse_from_format('Y-m-d', $post['event_from']);
+        $valid_event_to     = date_parse_from_format('Y-m-d', $post['event_to']);
 
-        $days                    = (int) $date2->diff($date1)->format("%a")+1;
-        $rules['event_span']    .= '|max:' . $days;
+        if(count($valid_event_from['errors']) == 0 and count($valid_event_to['errors']) == 0) {
+            $date1                   = new \DateTime($post['event_from']);
+            $date2                   = new \DateTime($post['event_to']);
+
+            $days                    = (int) $date2->diff($date1)->format("%a")+1;
+            $rules['event_span']    .= '|max:' . $days;
+        }
 
         return $rules;
     }

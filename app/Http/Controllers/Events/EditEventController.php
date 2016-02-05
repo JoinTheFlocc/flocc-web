@@ -163,6 +163,7 @@ class EditEventController extends Controller
         $post               = \Input::get();
         $is_draft           = $this->event->isStatusDraft();
         $user               = $users->getById(Auth::getUserId());
+        $post_routes        = [];
 
         if($this->event->isStatusCanceled()) {
           die; // @TODO
@@ -296,6 +297,16 @@ class EditEventController extends Controller
                 }
 
                 return \Redirect::to('events/' . $this->event->getSlug());
+            } else {
+                if($post['place_type'] == 'place') {
+                    $this->event->setPlaceId($post['place_id']);
+                } else {
+                    foreach(explode(',', $post['route']) as $row) {
+                        if(!empty($row)) {;
+                            $post_routes[$row] = $places->getById($row)->getName();
+                        }
+                    }
+                }
             }
         }
 
@@ -306,7 +317,8 @@ class EditEventController extends Controller
             'budgets'           => $budgets->all(),
             'intensities'       => $intensities->all(),
             'places'            => $places->all(),
-            'errors'            => isset($errors) ? $errors : []
+            'errors'            => isset($errors) ? $errors : [],
+            'post_routes'       => $post_routes
         ]);
     }
 }

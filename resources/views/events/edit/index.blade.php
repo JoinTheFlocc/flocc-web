@@ -247,14 +247,20 @@
             FloccThemeEventsEdit.Init();
 
             @if($event->isPlace())
-                    FloccThemeEventsEdit.Places.Place().Init();
+                FloccThemeEventsEdit.Places.Place().Init();
             @else
                 @if(!$event->isStatusDraft())
-                    @foreach($event->getRoutes() as $place)
-                    FloccThemeEventsEdit.Places.Route.Add({{ $place->getId() }}, "{{ $place->getName() }}");
-                    @endforeach
+                    @if(count($post_routes))
+                        @foreach($post_routes as $id => $name)
+                            FloccThemeEventsEdit.Places.Route.Add({{ $id }}, "{{ $name }}");
+                        @endforeach
+                    @else
+                        @foreach($event->getRoutes() as $place)
+                            FloccThemeEventsEdit.Places.Route.Add({{ $place->getId() }}, "{{ $place->getName() }}");
+                        @endforeach
+                    @endif
 
-                    FloccThemeEventsEdit.Places.Route.Init();
+                FloccThemeEventsEdit.Places.Route.Init();
                 @endif
             @endif
         });
