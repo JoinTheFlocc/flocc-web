@@ -29,7 +29,7 @@ class AuthController extends Controller
     */
     protected $redirectPath = '/';
     protected $loginPath = '/auth/login';
-    
+
     use AuthenticatesAndRegistersUsers, ThrottlesLogins;
 
     /**
@@ -80,7 +80,7 @@ class AuthController extends Controller
 
         return $user;
     }
-    
+
     public function postRegister(Request $request)
     {
         $validator = $this->validator($request->all());
@@ -90,15 +90,15 @@ class AuthController extends Controller
                 $request, $validator
             );
         }
-        
+
         $user = $this->create($request->all());
-        
+
         Mail::send('emails.verify', ['user' => $user], function ($m) use ($user) {
             $m->from('hello@flocc.eu', 'Flocc');
             $m->to($user->email, $user->name);
             $m->subject('Flocc registration');
         });
-        
+
         $message = "Confirmation email sent. Please check your inbox.";
 
         return view('auth/login', compact('message', 'user'));
@@ -112,7 +112,7 @@ class AuthController extends Controller
             'email', 'user_birthday'
         ])->redirect();
     }
-    
+
     public function handleProviderCallback()
     {
         try {
@@ -122,24 +122,24 @@ class AuthController extends Controller
         } catch (Exception $e) {
             return redirect('auth/facebook');
         }
-        
+
         $authUser = $this->findOrCreateUser($user);
         Auth::login($authUser);
-        
-        return view('/profiles/edit', ['profile' => $authUser->profile]); 
+
+        return redirect('profile/'.$authUser->getProfile()->id);
     }
-    
-    private function findOrCreateUser($facebookUser)
+
+    private function findOrCreateUser($providerUser)
     {
-        
-        $soc = SocialProvider::where('provider_id', $facebookUser->id)->first();
+
+        $soc = SocialProvider::where('provider_id', $providerUser->id)->first();
         if ($soc && $soc->user()) {
             return $soc->user;
         }
-                     
+
         $user = User::create([
-            'name' => $facebookUser->name,
-            'email' => $facebookUser->email,
+            'name' => $providerUser->name,
+            'email' => $providerUser->email,
             'active' => 1,
         ]);
 
@@ -149,9 +149,9 @@ class AuthController extends Controller
         (new Labels())->createDefaultLabels($user->id);
 
         $profile = Profile::create([
-            'firstname' => $facebookUser->user['first_name'],
-            'lastname' => $facebookUser->user['last_name'],
-            'avatar_url' => $facebookUser->avatar_original,
+            'firstname' => $providerUser->user['first_name'],
+            'lastname' => $providerUser->user['last_name'],
+            'avatar_url' => $providerUser->avatar_original,
             'user_id' => $user->id
         ]);
         // G+ avatar
@@ -159,29 +159,29 @@ class AuthController extends Controller
 
         $social = SocialProvider::create([
             'provider' => 'facebook',
-            'provider_id' => $facebookUser->id,
+            'provider_id' => $providerUser->id,
             'user_id' => $user->id
         ]);
-        
+
         return $user;
     }
-    
+
     public function verifyEmail($code)
     {
         $verifiedUser = User::where('activation_code', $code)->first();
-        
+
         if ($verifiedUser) {
             $verifiedUser->active = 1;
             $verifiedUser->activation_code = '';
             $verifiedUser->save();
             Auth::login($verifiedUser);
-            
+
             return redirect('/profile/create');
         }
-        
+
         return redirect('auth/login');
     }
-    
+
     public function authenticated(Request $request, User $user)
     {
         $profile = Profile::where('user_id', $user->id)->first();
