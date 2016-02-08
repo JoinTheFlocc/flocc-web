@@ -7,20 +7,17 @@
                 @if(!Auth::guest())
                     @if($event->isMine() === false)
                         <div class="text-center">
-                            @if(!$event->isImIn())
-                                    @if($event->isStatusOpen())
-                                        @if($event->getMembers()->count() < $event->getUsersLimit())
-                                            <a href="{{ URL::route('events.event.join', ['slug' => $event->getSlug(), 'type' => 'member']) }}" class="btn btn-success" style="width:32%">
-                                                Dołącz
-                                            </a>
-                                        @endif
-                                    @endif
-                                    @if(!$event->isStatusCanceled() and !Auth::guest())
-                                        <a href="{{ URL::route('events.event.join', ['slug' => $event->getSlug(), 'type' => 'follower']) }}" class="btn btn-primary" style="width:32%">
-                                            Obserwuj
-                                        </a>
-                                    @endif
+                            @if($event->canJoin())
+                                <a href="{{ URL::route('events.event.join', ['slug' => $event->getSlug(), 'type' => 'member']) }}" class="btn btn-success" style="width:32%">
+                                    Dołącz
+                                </a>
                             @endif
+                            @if($event->canFollow())
+                                <a href="{{ URL::route('events.event.join', ['slug' => $event->getSlug(), 'type' => 'follower']) }}" class="btn btn-primary" style="width:32%">
+                                    Obserwuj
+                                </a>
+                            @endif
+
                             <a href="{{ URL::route('mail.new.form', ['user_id' => $event->getUserId()]) }}" class="btn btn-default" style="width:32%">
                                 Wiadomość
                             </a>

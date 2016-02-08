@@ -711,13 +711,7 @@ class Events extends Model
     public function isImIn()
     {
         foreach($this->getMembers() as $user) {
-            if($user->getUserId() == Auth::getUserId()) {
-                return true;
-            }
-        }
-
-        foreach($this->getFollowers() as $user) {
-            if($user->getUserId() == Auth::getUserId()) {
+            if ($user->getUserId() == Auth::getUserId()) {
                 return true;
             }
         }
@@ -729,6 +723,102 @@ class Events extends Model
         }
 
         return false;
+    }
+
+    /**
+     * Czy obserwuje to wydarzenie
+     *
+     * @return bool
+     */
+    public function isIFollow()
+    {
+        foreach($this->getFollowers() as $user) {
+            if($user->getUserId() == Auth::getUserId()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Czy jestem odrzucony
+     *
+     * @return bool
+     */
+    public function isImRejected()
+    {
+        foreach($this->getRejectedRequests() as $user) {
+            if($user->getUserId() == Auth::getUserId()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Can I join to event
+     *
+     * @return bool
+     */
+    public function canJoin()
+    {
+        if(Auth::getUserId() === null) {
+            return false;
+        }
+
+        if($this->isMine()) {
+            return false;
+        }
+
+        if($this->isStatusOpen() === false) {
+            return false;
+        }
+
+        if($this->isImIn()) {
+            return false;
+        }
+
+        if($this->getMembers()->count() >= $this->getUsersLimit()) {
+            return false;
+        }
+
+        if($this->isImRejected()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Can I follow event
+     *
+     * @return bool
+     */
+    public function canFollow()
+    {
+        if($this->isMine()) {
+            return false;
+        }
+
+        if($this->isStatusOpen() === false) {
+            return false;
+        }
+
+        if($this->isIFollow()) {
+            return false;
+        }
+
+        if($this->isImIn()) {
+            return false;
+        }
+
+        if($this->isImRejected()) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

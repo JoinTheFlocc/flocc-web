@@ -143,7 +143,29 @@ class EventController extends Controller
         }
 
         if($event->isMine() === false) {
-            if($members->isUserInEvent($event->getId(), $user_id) === false) {
+            $user_in_event  = $members->getUserInEvent($event->getId(), $user_id);
+            $can_add        = true;
+
+            /**
+             * If user in
+             */
+            if($user_in_event !== null) {
+                $can_add = false;
+
+                /**
+                 * Delete if follower
+                 */
+                if($type == 'member' and $user_in_event->isStatusFollower()) {
+                    $can_add = true;
+
+                    $members->deleteUserFromEvent($event->getId(), $user_id);
+                }
+            }
+
+            /**
+             * Add
+             */
+            if($can_add === true) {
                 /**
                  * Prepare notification
                  */
@@ -161,7 +183,7 @@ class EventController extends Controller
                             ->setEventId($event->getId())
                             ->setTypeAsMessage()
                             ->setMessage($user_name . ' zaczął obserwować to wydarzenie')
-                        ->save();
+                            ->save();
                         $notification->setCallback('/events/' . $event->getSlug());
                         $request->session()->flash('message', 'Obserwujesz to wydarzenie');
                         break;
