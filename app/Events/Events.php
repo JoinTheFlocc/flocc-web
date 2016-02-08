@@ -722,6 +722,12 @@ class Events extends Model
             }
         }
 
+        foreach($this->getAwaitingRequests() as $user) {
+            if($user->getUserId() == Auth::getUserId()) {
+                return true;
+            }
+        }
+
         return false;
     }
 
