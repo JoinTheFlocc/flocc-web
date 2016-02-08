@@ -24,10 +24,12 @@
                                     <a href="{{ URL::route('events.event', ['slug' => $event->getSlug()]) }}">
                                         {{ $event->getTitle() }}
                                     </a>
-                                    @if($event->getMember()->isStatusAwaiting())
-                                    <span class="label label-danger">
-                                        W oczekiwaniu na akceptacje
-                                    </span>
+                                    @if($event->getMember() !== null)
+                                        @if($event->getMember()->isStatusAwaiting())
+                                            <span class="label label-danger">
+                                                W oczekiwaniu na akceptacje
+                                            </span>
+                                        @endif
                                     @endif
                                 </h2>
 
