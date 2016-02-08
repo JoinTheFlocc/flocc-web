@@ -197,7 +197,7 @@ class EditEventController extends Controller
                 $this->event->setStatus('open');
             }
 
-            if($post['place_type'] == 'place') {
+            if(\Input::get('place_type') == 'place') {
                 $this->event->setPlaceId(\Input::get('place_id'));
             } else {
                 $this->event->setPlaceId(null);
@@ -298,7 +298,7 @@ class EditEventController extends Controller
 
                 return \Redirect::to('events/' . $this->event->getSlug());
             } else {
-                if($post['place_type'] == 'place') {
+                if(\Input::get('place_type') == 'place') {
                     $this->event->setPlaceId($post['place_id']);
                 } else {
                     foreach(explode(',', $post['route']) as $row) {
