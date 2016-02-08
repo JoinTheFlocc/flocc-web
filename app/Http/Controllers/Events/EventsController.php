@@ -45,7 +45,7 @@ class EventsController extends Controller
 
             // Wydarzenia w których bierze udział
             case 'member':
-                $events = $search->getByMemberId('member');
+                $events = $search->getByMemberId(['member', 'awaiting']);
                 break;
 
             // Wydarzenia, które obserwuje

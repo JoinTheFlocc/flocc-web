@@ -684,6 +684,16 @@ class Events extends Model
     }
 
     /**
+     * Get member by user ID
+     *
+     * @return \Flocc\Events\Members
+     */
+    public function getMember()
+    {
+        return $this->hasMany('Flocc\Events\Members', 'event_id', 'id')->where('user_id', Auth::getUserId())->take(1)->first();
+    }
+
+    /**
      * I'm the owner?
      *
      * @return bool

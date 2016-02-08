@@ -82,7 +82,7 @@ class Search
     /**
      * Get member and follower events
      *
-     * @param string $status
+     * @param string|array $status
      *
      * @return \Illuminate\Pagination\LengthAwarePaginator
      *
@@ -103,8 +103,16 @@ class Search
             $user_id = (int) \Auth::user()->id;
         }
 
-        $get_events_ids = Members::where('user_id', $user_id)->where('status', $status)->get();
-        $ids            = [];
+        $get_events_ids = Members::where('user_id', $user_id);
+
+        if(is_array($status)) {
+            $get_events_ids = $get_events_ids->whereIn('status', $status);
+        } else {
+            $get_events_ids = $get_events_ids->where('status', $status);
+        }
+
+        $get_events_ids     = $get_events_ids->get();
+        $ids                = [];
 
         foreach($get_events_ids as $event) {
             $ids[] = $event->getEventId();
