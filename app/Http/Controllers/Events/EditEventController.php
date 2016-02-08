@@ -307,6 +307,10 @@ class EditEventController extends Controller
                         }
                     }
                 }
+
+                if(in_array('new', \Input::get('activities'))) {
+                    $post_new_activity = \Input::get('new_activities');
+                }
             }
         }
 
@@ -318,7 +322,8 @@ class EditEventController extends Controller
             'intensities'       => $intensities->all(),
             'places'            => $places->all(),
             'errors'            => isset($errors) ? $errors : [],
-            'post_routes'       => $post_routes
+            'post_routes'       => $post_routes,
+            'post_new_activity' => isset($post_new_activity) ? $post_new_activity : null
         ]);
     }
 }
