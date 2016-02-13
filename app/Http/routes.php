@@ -33,8 +33,8 @@ Route::get('password/reset/{token}', 'Auth\PasswordController@getReset');
 Route::post('password/reset', 'Auth\PasswordController@postReset');
 
 // Social
-Route::get('auth/facebook', 'Auth\AuthController@redirectToProvider');
-Route::get('auth/facebook/callback', 'Auth\AuthController@handleProviderCallback');
+Route::get('auth/social/{provider}', 'Auth\AuthController@redirectToProvider')->name('social.redirect');
+Route::get('auth/social/{provider}/callback', 'Auth\AuthController@handleProviderCallback')->name('social.handle');
 
 // Profile
 Route::resource('profile', 'ProfilesController',

@@ -104,37 +104,66 @@ class AuthController extends Controller
         return view('auth/login', compact('message', 'user'));
     }
 
-    public function redirectToProvider()
+    public function redirectToProvider($provider)
     {
-        return Socialite::driver('facebook')->fields([
-            'first_name', 'last_name', 'email', 'gender', 'birthday'
-        ])->scopes([
-            'email', 'user_birthday'
-        ])->redirect();
+        $providerKey = \Config::get('services.' . $provider);
+
+        switch ($provider) {
+            case 'facebook':
+                return Socialite::with($provider)->fields([
+                    'first_name', 'last_name', 'email', 'gender', 'birthday'
+                ])->scopes([
+                    'email', 'user_birthday'
+                ])->redirect();
+                break;
+            case 'google':
+                return Socialite::with($provider)->scopes([
+                    'email', 'profile'
+                ])->redirect();
+                break;
+            case 'live':
+                return Socialite::with('live')->scopes([
+                    'wl.basic', 'wl.birthday'
+                ])->redirect();
+                break;
+            default:
+                return \Redirect::back()->with('error', 'No such provider');
+                break;
+        }
     }
 
-    public function handleProviderCallback()
+    public function handleProviderCallback($provider)
     {
         try {
-            $user = Socialite::driver('facebook')->fields([
-                'first_name', 'last_name', 'email', 'gender', 'birthday'
-            ])->user();
+            $user = Socialite::driver($provider)->user();
         } catch (Exception $e) {
-            return redirect('auth/facebook');
+            return redirect('auth.login')->with('error', 'Social login failed');
         }
 
-        $authUser = $this->findOrCreateUser($user);
+        $authUser = $this->findOrCreateUser($user, $provider);
         Auth::login($authUser);
 
         return redirect('profile/'.$authUser->getProfile()->id);
     }
 
-    private function findOrCreateUser($providerUser)
-    {
 
-        $soc = SocialProvider::where('provider_id', $providerUser->id)->first();
-        if ($soc && $soc->user()) {
-            return $soc->user;
+    private function findOrCreateUser($providerUser, $provider)
+    {
+        $user = null;
+
+        $emailCheck = User::where('email', $providerUser->email)->first();
+        if(!empty($emailCheck)) {
+            $soc = SocialProvider::where('provider_id', $providerUser->id)->where('provider', $provider)->first();
+            if ($soc && $soc->user()) {
+                return $soc->user;
+            }
+            // User email already in use, create new SocialProvider record
+            $social = SocialProvider::create([
+                'provider' => $provider,
+                'provider_id' => $providerUser->id,
+                'user_id' => $emailCheck->id
+            ]);
+            return $emailCheck;
         }
 
         $user = User::create([
@@ -148,17 +177,33 @@ class AuthController extends Controller
          */
         (new Labels())->createDefaultLabels($user->id);
 
+        $firstname = "";
+        $lastname = "";
+
+        if (!empty($providerUser->user['first_name']))
+            $firstname = $providerUser->user['first_name'];
+        if (!empty($providerUser->user['last_name']))
+            $lastname = $providerUser->user['last_name'];
+
+        $avatar = null;
+        switch ($provider) {
+            case 'facebook':
+                $avatar = preg_replace('/=[\d]*$/', '=320', $providerUser->avatar_original);
+                break;
+            case 'google':
+                $avatar = preg_replace('/\?sz=[\d]*$/', '', $providerUser->avatar);
+                break;
+        }
+
         $profile = Profile::create([
-            'firstname' => $providerUser->user['first_name'],
-            'lastname' => $providerUser->user['last_name'],
-            'avatar_url' => $providerUser->avatar_original,
+            'firstname' => $firstname,
+            'lastname' => $lastname,
+            'avatar_url' => $avatar,
             'user_id' => $user->id
         ]);
-        // G+ avatar
-        // $user->avatar = preg_replace('/\?sz=[\d]*$/', '', $userData->avatar);
 
         $social = SocialProvider::create([
-            'provider' => 'facebook',
+            'provider' => $provider,
             'provider_id' => $providerUser->id,
             'user_id' => $user->id
         ]);

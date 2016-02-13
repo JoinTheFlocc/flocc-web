@@ -148,10 +148,10 @@ return [
         /*
          * Addons
          */
-        Laravel\Socialite\SocialiteServiceProvider::class,
+        //Laravel\Socialite\SocialiteServiceProvider::class,
         SocialiteProviders\Manager\ServiceProvider::class,
         Illuminate\Html\HtmlServiceProvider::class,
-        
+
     ],
 
     /*
