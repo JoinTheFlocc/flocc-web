@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.wsidebar')
 
 @section('content')
 	<div class="contentBox">

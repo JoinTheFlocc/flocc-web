@@ -15,6 +15,9 @@
             </div>
         </div>
         <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="{{ URL::route('profile.display') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+            </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="{{ URL::route('events') }}"><i class="fa fa-globe"></i> Wydarzenia</a></li>
 

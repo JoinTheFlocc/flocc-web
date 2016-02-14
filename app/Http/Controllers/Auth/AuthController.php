@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Auth;
 use Mail;
 use Socialite;
 
+use Flocc\Helpers\ImageHelper;
+
 class AuthController extends Controller
 {
     /*
@@ -195,10 +197,14 @@ class AuthController extends Controller
                 break;
         }
 
+        $fileName = (new ImageHelper())->cloneSocial($avatar);
+        if (empty($fileName))
+            $fileName = $avatar;
+
         $profile = Profile::create([
             'firstname' => $firstname,
             'lastname' => $lastname,
-            'avatar_url' => $avatar,
+            'avatar_url' => $fileName,
             'user_id' => $user->id
         ]);
 
