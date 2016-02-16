@@ -12,3 +12,8 @@
 		</ul>
 	</div>
 @endif
+@if (!empty($error))
+<div class="flash-message">
+	<p class="alert alert-danger">{{ $error }}</p>
+</div>
+@endif

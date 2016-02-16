@@ -7,12 +7,14 @@ use Input;
 use Validator;
 use Auth;
 use URL;
+use Response;
 
 use Flocc\Http\Requests;
 use Flocc\Http\Controllers\Controller;
 
 use Flocc\User;
 use Flocc\Profile;
+use Flocc\Helpers\ImageHelper;
 
 class ProfilesController extends Controller
 {
@@ -83,9 +85,8 @@ class ProfilesController extends Controller
     public function edit($id)
     {
         $profile = Profile::findOrFail($id);
-        $sidebarView = 1;
 
-        return view('profiles.edit', compact('profile', 'sidebarView'));
+        return view('profiles.edit', compact('profile'));
     }
 
     /**
@@ -121,18 +122,25 @@ class ProfilesController extends Controller
 
     public function upload()
     {
-        $file = array('image' => Input::file('image'));
-        $rules = array('image' => 'required',);
+        $profile = Auth::user()->getProfile();
 
-        $validator = Validator::make($file, $rules);
+        $image = Input::file('image');
+
+        $validator = Validator::make(['image' => $image], ['image' => 'required']);
         if ($validator->fails()) {
             return Redirect::back()->withInput()->withErrors($validator);
         }
         else {
-            return Input::file('image') . " is valid";
+            if (Input::file('image')->isValid()) {
+                $updatedUrl = (new ImageHelper())->uploadFile($image);
+                $profile->avatar_url = $updatedUrl;
+                $profile->save();
+                return Response::json(['success' => true, 'file' => $updatedUrl]);
+            }
+            else {
+              // sending back with error message.
+              return Response::json('error', 400);
+            }
         }
-
-
     }
-
 }
