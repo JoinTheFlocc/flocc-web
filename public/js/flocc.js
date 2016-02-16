@@ -107,5 +107,27 @@ var Flocc = {
                 });
             }
         }
+    },
+
+    Profile : {
+        TimeLine : {
+            Get : function(user_id) {
+                $.ajax({
+                    dataType    : "json",
+                    url         : 'http://flocc.dev:8888/profile/time-line',
+                    data        : {'user_id' : user_id},
+
+                    success     : function(data) {
+                        $.each(data, function(i) {
+                            Flocc.Profile.TimeLine.Add(data[i]);
+                        });
+
+                    }
+                });
+            },
+            Add : function(row) {
+                console.log(row);
+            }
+        }
     }
 };

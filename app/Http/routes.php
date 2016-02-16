@@ -37,10 +37,10 @@ Route::get('auth/social/{provider}', 'Auth\AuthController@redirectToProvider')->
 Route::get('auth/social/{provider}/callback', 'Auth\AuthController@handleProviderCallback')->name('social.handle');
 
 // Profile
-Route::resource('profile', 'ProfilesController',
-               ['except' => ['index']]);
-Route::get('profile/{id?}', 'ProfilesController@show')->name('profile.display');
+Route::get('profile', 'ProfilesController@show')->name('profile.my');
 Route::post('profile/upload', 'ProfilesController@upload')->name('profile.upload');
+Route::get('profile/time-line', 'ProfilesController@timeLine')->name('profile.timeline');
+Route::get('profile/{id?}', 'ProfilesController@show')->name('profile.display');
 
 // Settings
 Route::get('settings/account', function() {

@@ -2,6 +2,7 @@
 
 namespace Flocc;
 
+use Flocc\Profile\TimeLine\TimeLine;
 use Illuminate\Database\Eloquent\Model;
 
 class Profile extends Model
@@ -90,5 +91,15 @@ class Profile extends Model
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * Get user time line
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getTimeLine()
+    {
+        return (new TimeLine())->getByUserId($this->getUserId());
     }
 }

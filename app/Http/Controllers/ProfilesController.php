@@ -19,15 +19,6 @@ use Flocc\Helpers\ImageHelper;
 class ProfilesController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-    }
-
-    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
@@ -61,19 +52,43 @@ class ProfilesController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int|null $id
+     *
      * @return \Illuminate\Http\Response
      */
-    public function show($id = NULL)
+    public function show($id = null)
     {
-        if (!$id) {
-            $profile = Profile::where('user_id', Auth::user()->id)->firstOrFail();
-        } else {
-            $profile = Profile::findOrFail($id);
+        if($id === null) {
+            $id = \Flocc\Auth::getUserId();
         }
-        $is_mine = ($profile->user_id == Auth::user()->id);
 
-        return view('dashboard', compact('profile', 'is_mine'));
+        $profile = Profile::where('user_id', $id)->firstOrFail();
+        $is_mine = ($profile->user_id == \Flocc\Auth::getUserId());
+
+        return view('dashboard', compact('profile', 'is_mine', 'id'));
+    }
+
+    public function timeLine()
+    {
+        $data   = [];
+        $id     = null;
+
+        if($id === null) {
+            $id = \Flocc\Auth::getUserId();
+        }
+
+        $profile = Profile::where('user_id', $id)->firstOrFail();
+
+        foreach($profile->getTimeLine() as $row) {
+            $data[] = [
+                'id'        => $row->getId(),
+                'type'      => $row->getType(),
+                'time'      => $row->getTime(),
+                'message'   => $row->getMessage()
+            ];
+        }
+
+        return Response::json($data);
     }
 
     /**
