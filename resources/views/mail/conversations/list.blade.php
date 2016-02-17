@@ -9,7 +9,7 @@
                     {{ $label }}
                 </div>
                 <div class="panel-body">
-                    <table class="table table-bordered">
+                    <table class="mails table table-bordered">
                         <thead>
                             <tr>
                                 <th>&nbsp;</th>
@@ -19,7 +19,7 @@
                         </thead>
                         <tbody>
                             @forelse ($conversations as $conversation)
-                                <tr>
+                                <tr class="@if($conversation->is_important == '1') important @endif">
                                     <td>
                                         <a href="{{ URL::route('mail.conversation', ['id' => $conversation->conversation_id]) }}">
                                             Conversation with {{ $conversation->users_list }}

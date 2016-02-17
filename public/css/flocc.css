@@ -337,3 +337,7 @@ ul#places_route li i {
 #time_line li:last-child {
     border-bottom: 0;
 }
+
+.mails .important td {
+    background: #ffbcb5;
+}

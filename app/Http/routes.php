@@ -66,6 +66,7 @@ Route::get('mail/move/{id}/{label}', ['middleware' => 'auth', 'uses' => 'Mail\Co
 Route::get('mail/{id}', ['middleware' => 'auth', 'uses' => 'Mail\MessagesController@showConversation'])->name('mail.conversation')->where('id', '[0-9]+');
 Route::get('mail/new/{user_id}', ['middleware' => 'auth', 'uses' => 'Mail\MessagesController@newMessageForm'])->name('mail.new.form')->where('user_id', '[0-9]+');
 Route::post('mail/new', ['middleware' => 'auth', 'uses' => 'Mail\MessagesController@newMessage'])->name('mail.new');
+Route::get('mail/important/{id}/{is_important}', ['middleware' => 'auth', 'uses' => 'Mail\ConversationsController@important'])->name('mail.important');
 
 // Notifications
 Route::get('notifications', ['middleware' => 'auth', 'uses' => 'Notifications\NotificationsController@index'])->name('notifications');
