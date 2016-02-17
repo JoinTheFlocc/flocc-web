@@ -68,23 +68,31 @@ class ProfilesController extends Controller
         return view('dashboard', compact('profile', 'is_mine', 'id'));
     }
 
+    /**
+     * Get JSON with user time line
+     *
+     * @return string
+     */
     public function timeLine()
     {
         $data   = [];
-        $id     = null;
 
-        if($id === null) {
-            $id = \Flocc\Auth::getUserId();
-        }
+        $id     = \Input::get('id', \Flocc\Auth::getUserId());
+        $type   = \Input::get('type', 'all');
+        $start  = \Input::get('start', 0);
+        $limit  = \Input::get('limit', 10);
 
         $profile = Profile::where('user_id', $id)->firstOrFail();
 
-        foreach($profile->getTimeLine() as $row) {
+        foreach($profile->getTimeLine($type, $start, $limit) as $row) {
             $data[] = [
                 'id'        => $row->getId(),
                 'type'      => $row->getType(),
                 'time'      => $row->getTime(),
-                'message'   => $row->getMessage()
+                'message'   => $row->getMessage(),
+                'html'      => view('partials.profiles.time_line.' . $row->getType(), array_merge($row->getMessage(), [
+                    'time'          => $row->getTime()
+                ]))->render()
             ];
         }
 

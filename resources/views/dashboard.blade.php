@@ -52,16 +52,34 @@
                     </div>
                     <!-- Dashboard content -->
                     <div class="col-md-9">
-                        <div id="time_line"></div>
+                        <ul class="nav nav-tabs" id="time_line_tabs">
+                            <li role="presentation" type="all" class="active"><a href="#">Wszystkie</a></li>
+                            <li role="presentation" type="owner"><a href="#">Organizuję</a></li>
+                            <li role="presentation" type="member"><a href="#">Biorę udział</a></li>
+                            <li role="presentation" type="follower"><a href="#">Obserwuje</a></li>
+                        </ul>
+
+                        <div>
+                            <ul id="time_line"></ul>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
+    <script src="/js/theme/scroll.js"></script>
     <script>
         $(function() {
-           Flocc.Profile.TimeLine.Get({{ $id }});
+            Flocc.Profile.TimeLine.Init();
+            Flocc.Profile.TimeLine.Get({{ $id }});
+            FloccThemeScroll.Init('#time_line', function(start) {
+                Flocc.Profile.TimeLine.Get({{ $id }}, Flocc.Profile.TimeLine.GetActiveType(), start, 1);
+            });
+            Flocc.Profile.TimeLine.Tabs(function(type) {
+                Flocc.Profile.TimeLine.Init();
+                Flocc.Profile.TimeLine.Get({{ $id }}, type);
+            });
         });
     </script>
 @endsection

@@ -37,92 +37,32 @@ class TimeLine extends Model
     public $timestamps = false;
 
     /**
-     * Get ID
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return (int) $this->id;
-    }
-
-    /**
-     * Get type
-     *
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
-     * Get time
-     *
-     * @return string
-     */
-    public function getTime()
-    {
-        return $this->time;
-    }
-
-    /**
-     * Get user ID
-     *
-     * @return int
-     */
-    public function getUserId()
-    {
-        return (int) $this->time_line_user_id;
-    }
-
-    /**
-     * Get user name
-     *
-     * @return string
-     */
-    public function getUserName()
-    {
-        return (string) $this->firstname . ' ' . (string) $this->lastname;
-    }
-
-    /**
-     * Get event title
-     *
-     * @return string
-     */
-    public function getEventTitle()
-    {
-        return (string) $this->title;
-    }
-
-    /**
-     * Get comment text
-     *
-     * @return string
-     */
-    public function getComment()
-    {
-        return $this->comment;
-    }
-
-    /**
      * Get by user ID
      *
      * @param int $user_id
+     * @param string $type
+     * @param int $start
+     * @param int $limit
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getByUserId($user_id)
+    public function getByUserId($user_id, $type = 'all', $start = 0, $limit = 10)
     {
         $time_line  = new \Illuminate\Database\Eloquent\Collection();
-        $get        = self::where('profile_time_line.user_id', (int) $user_id)
-            ->select('profile_time_line.id', 'profile_time_line.type', 'profile_time_line.time', 'profiles.firstname', 'profiles.lastname', 'events.title', 'events_comments.comment')
+        $get        = self::where('profile_time_line.user_id', (int) $user_id);
+
+        if($type !== 'all') {
+            $get = $get->where('event_type', $type);
+        }
+
+        $get = $get->select('profile_time_line.id', 'profile_time_line.type', 'profile_time_line.time', 'profiles.firstname', 'profiles.lastname', 'events.title', 'events_comments.comment', 'events.slug', 'profile_time_line.time_line_user_id', \DB::raw('events.id as event_id'), 'events.description')
             ->leftjoin('profiles', 'profiles.user_id', '=', 'profile_time_line.time_line_user_id')
             ->leftjoin('events_comments', 'events_comments.id', '=', 'profile_time_line.time_line_event_comment_id')
             ->leftjoin('events', 'events.id', '=', 'profile_time_line.time_line_event_id')
             ->groupBy('profile_time_line.id')
             ->orderBy('profile_time_line.id', 'desc')
+            ->take((int) $limit)
+            ->skip((int) $start)
         ->get();
 
         foreach($get as $row) {

@@ -17,7 +17,10 @@ class EditEvent extends ParentType
     public function getMessage()
     {
         return [
-            'event' => $this->getEventTitle()
+            'event'             => $this->getEventTitle(),
+            'user_id'           => $this->getTimeLineUserId(),
+            'event_slug'        => $this->getEventSlug(),
+            'user'              => $this->getUserName(),
         ];
     }
 }

@@ -17,9 +17,11 @@ class NewComment extends ParentType
     public function getMessage()
     {
         return [
-            'user'      => $this->getUserName(),
-            'comment'   => $this->getComment(),
-            'event'     => $this->getEventTitle()
+            'user'              => $this->getUserName(),
+            'comment'           => $this->getComment(),
+            'event'             => $this->getEventTitle(),
+            'user_id'           => $this->getTimeLineUserId(),
+            'event_slug'        => $this->getEventSlug()
         ];
     }
 }

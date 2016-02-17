@@ -18,6 +18,7 @@ class CreateProfileTimeLineTable extends Migration
             $table->integer('user_id')->unsigned();
             $table->timestamp('time')->useCurrent();
             $table->enum('type', ['new_member', 'new_follower', 'new_comment', 'edit_event', 'new_event'])->default('new_member');
+            $table->enum('event_type', ['owner', 'member', 'follower'])->default('owner');
 
             $table->integer('time_line_user_id')->nullable()->default(null)->unsigned();
             $table->integer('time_line_event_comment_id')->nullable()->default(null)->unsigned();

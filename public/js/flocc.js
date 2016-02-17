@@ -111,23 +111,73 @@ var Flocc = {
 
     Profile : {
         TimeLine : {
-            Get : function(user_id) {
+            Init : function() {
+                $('#time_line').html('');
+            },
+            Tabs : function(callback) {
+                $('#time_line_tabs li a').click(function() {
+                    $('#time_line_tabs').find('.active').removeClass('active');
+                    $(this).parent().addClass('active');
+                    callback($(this).parent().attr('type'));
+                });
+            },
+            Count : function(data) {
+                var count = 0;
+
+                for (var i in data) {
+                    if (data.hasOwnProperty(i)) {
+                        ++count;
+                    }
+                }
+
+                return count;
+            },
+            GetActiveType : function() {
+                return $('#time_line_tabs').find('.active').attr('type');
+            },
+            Get : function(user_id, type, start, limit) {
+                if(typeof type == 'undefined') {
+                    type = 'all';
+                }
+
+                if(typeof start == 'undefined') {
+                    start = 0;
+                }
+
+                if(typeof limit == 'undefined') {
+                    limit = 10;
+                }
+
                 $.ajax({
                     dataType    : "json",
-                    url         : 'http://flocc.dev:8888/profile/time-line',
-                    data        : {'user_id' : user_id},
+                    url         : Flocc.Config.Get('users.timeline.json'),
+                    data        : {
+                        'user_id'   : user_id,
+                        'type'      : type,
+                        'start'     : start,
+                        'limit'     : limit
+                    },
 
                     success     : function(data) {
-                        $.each(data, function(i) {
-                            Flocc.Profile.TimeLine.Add(data[i]);
-                        });
+                        if(Flocc.Profile.TimeLine.Count(data) > 0) {
+                            $.each(data, function(i) {
+                                Flocc.Profile.TimeLine.Add(data[i]);
+                            });
 
+                            FloccThemeScroll.Done();
+                        } else {
+                            FloccThemeScroll.Finish();
+                        }
+                    },
+                    error : function(a, b, c) {
+                        console.log('Error: ' + a,b,c);
                     }
                 });
             },
             Add : function(row) {
                 console.log(row);
+                $('#time_line').append('<li>' + row.html + '</li>');
             }
         }
-    }
+    },
 };

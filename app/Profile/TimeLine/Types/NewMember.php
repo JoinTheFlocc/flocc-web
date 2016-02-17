@@ -17,9 +17,11 @@ class NewMember extends ParentType
     public function getMessage()
     {
         return [
-            'user'      => $this->getUserName(),
-            'type'      => $this->getType(),
-            'event'     => $this->getEventTitle()
+            'user'          => $this->getUserName(),
+            'type'          => $this->getType(),
+            'event'         => $this->getEventTitle(),
+            'user_id'       => $this->getTimeLineUserId(),
+            'event_slug'    => $this->getEventSlug()
         ];
     }
 }

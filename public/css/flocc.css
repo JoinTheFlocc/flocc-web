@@ -318,3 +318,22 @@ ul#places_route li i {
 #newActivity {
     display: none;
 }
+
+#time_line {
+    display: block;
+    margin: 0;
+    padding: 0;
+    border: 1px solid #ddd;
+    border-top: 0;
+    margin-bottom: 25px;
+}
+
+#time_line li {
+    display: block;
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+}
+
+#time_line li:last-child {
+    border-bottom: 0;
+}

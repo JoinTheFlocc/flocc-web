@@ -96,10 +96,14 @@ class Profile extends Model
     /**
      * Get user time line
      *
+     * @param string $type
+     * @param int $start
+     * @param int $limit
+     *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getTimeLine()
+    public function getTimeLine($type = 'all', $start = 0, $limit = 10)
     {
-        return (new TimeLine())->getByUserId($this->getUserId());
+        return (new TimeLine())->getByUserId($this->getUserId(), $type, $start, $limit);
     }
 }

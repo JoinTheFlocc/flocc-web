@@ -28,7 +28,7 @@ class ParentType
      */
     public function getId()
     {
-        return (int) $this->data->getId();
+        return (int) $this->data->id;
     }
 
     /**
@@ -38,7 +38,7 @@ class ParentType
      */
     public function getType()
     {
-        return $this->data->getType();
+        return $this->data->type;
     }
 
     /**
@@ -48,7 +48,7 @@ class ParentType
      */
     public function getTime()
     {
-        return $this->data->getTime();
+        return $this->data->time;
     }
 
     /**
@@ -58,7 +58,7 @@ class ParentType
      */
     public function getUserName()
     {
-        return $this->data->getUserName();
+        return (string) $this->data->firstname . ' ' . (string) $this->data->lastname;
     }
 
     /**
@@ -68,7 +68,7 @@ class ParentType
      */
     public function getEventTitle()
     {
-        return $this->data->getEventTitle();
+        return (string) $this->data->title;
     }
 
     /**
@@ -78,6 +78,46 @@ class ParentType
      */
     public function getComment()
     {
-        return $this->data->getComment();
+        return $this->data->comment;
+    }
+
+    /**
+     * Get time line user ID
+     *
+     * @return string|null
+     */
+    public function getTimeLineUserId()
+    {
+        return $this->data->time_line_user_id;
+    }
+
+    /**
+     * Get event ID
+     *
+     * @return string|null
+     */
+    public function getEventId()
+    {
+        return $this->data->event_id;
+    }
+
+    /**
+     * Get event slug
+     *
+     * @return string|null
+     */
+    public function getEventSlug()
+    {
+        return $this->data->slug;
+    }
+
+    /**
+     * Get event description
+     *
+     * @return string|null
+     */
+    public function getEventDescription()
+    {
+        return $this->data->description;
     }
 }

@@ -17,7 +17,11 @@ class NewEvent extends ParentType
     public function getMessage()
     {
         return [
-            'event' => $this->getEventTitle()
+            'event'                 => $this->getEventTitle(),
+            'user'                  => $this->getUserName(),
+            'user_id'               => $this->getTimeLineUserId(),
+            'event_slug'            => $this->getEventSlug(),
+            'event_description'     => $this->getEventDescription()
         ];
     }
 }
