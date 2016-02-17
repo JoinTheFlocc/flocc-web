@@ -77,7 +77,7 @@ class ProfilesController extends Controller
     {
         $data   = [];
 
-        $id     = \Input::get('id', \Flocc\Auth::getUserId());
+        $id     = \Input::get('user_id', \Flocc\Auth::getUserId());
         $type   = \Input::get('type', 'all');
         $start  = \Input::get('start', 0);
         $limit  = \Input::get('limit', 10);
