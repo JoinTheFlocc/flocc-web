@@ -822,6 +822,36 @@ class Events extends Model
     }
 
     /**
+     * Can I un follow
+     *
+     * @return bool
+     */
+    public function canUnFollow()
+    {
+        if($this->isIFollow()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Can i resign
+     *
+     * @return bool
+     */
+    public function canUnJoin()
+    {
+        foreach($this->getMembers() as $user) {
+            if ($user->getUserId() == Auth::getUserId()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Get event time line
      *
      * @return \Illuminate\Database\Eloquent\Collection

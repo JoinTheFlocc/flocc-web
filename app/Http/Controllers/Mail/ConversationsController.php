@@ -91,7 +91,7 @@ class ConversationsController extends Controller
 
     /**
      * Select as important / not
-     * 
+     *
      * @param int $id
      * @param int $is
      *

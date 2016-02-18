@@ -2,6 +2,7 @@
 
 namespace Flocc\Http\Controllers\Events;
 
+use Flocc\Auth;
 use Flocc\Events\Events;
 use Flocc\Events\Members;
 use Flocc\Events\TimeLine\NewLine;
@@ -233,5 +234,26 @@ class EventController extends Controller
             'event'             => $event,
             'meta_facebook'     => $meta_data
         ]);
+    }
+
+    /**
+     * Resign
+     *
+     * @param string $slug
+     *
+     * @return mixed
+     */
+    public function resign($slug)
+    {
+        $events = new Events();
+        $event  = $events->getBySlug($slug);
+
+        if($event === null) {
+            die; // @TODO:
+        }
+
+        Members::where('event_id', $event->getId())->where('user_id', Auth::getUserId())->delete();
+
+        return \Redirect::to('events/' . $slug);
     }
 }

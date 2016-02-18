@@ -12,9 +12,20 @@
                                     Dołącz
                                 </a>
                             @endif
+                            @if($event->canUnJoin())
+                                <a href="{{ URL::route('events.event.resign', ['slug' => $event->getSlug()]) }}" class="btn btn-danger">
+                                    Zrezygnuj
+                                </a>
+                            @endif
+
                             @if($event->canFollow())
                                 <a href="{{ URL::route('events.event.join', ['slug' => $event->getSlug(), 'type' => 'follower']) }}" class="btn btn-primary" style="width:32%">
                                     Obserwuj
+                                </a>
+                            @endif
+                            @if($event->canUnFollow())
+                                <a href="{{ URL::route('events.event.resign', ['slug' => $event->getSlug()]) }}" class="btn btn-danger">
+                                    Nie obserwuj
                                 </a>
                             @endif
 

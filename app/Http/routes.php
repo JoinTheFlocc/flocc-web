@@ -40,7 +40,7 @@ Route::get('auth/social/{provider}/callback', 'Auth\AuthController@handleProvide
 Route::get('profile', 'ProfilesController@show')->name('profile.my');
 Route::post('profile/upload', 'ProfilesController@upload')->name('profile.upload');
 Route::get('profile/time-line', 'ProfilesController@timeLine')->name('profile.timeline');
-Route::get('profile/{id?}', 'ProfilesController@show')->name('profile.display');
+Route::get('profile/{id?}', 'ProfilesController@show')->name('profile.display')->where('id', '[0-9]+');
 
 // Settings
 Route::get('settings/account', function() {
@@ -87,4 +87,5 @@ Route::get('events/{slug}/members', 'Events\EventController@members')->name('eve
 Route::get('events/{slug}/followers', 'Events\EventController@followers')->name('events.event.followers');
 Route::get('events/{slug}/cancel', ['middleware' => 'auth', 'uses' => 'Events\EventController@cancel'])->name('events.event.cancel');
 Route::get('events/{slug}/join/{type}', ['middleware' => 'auth', 'uses' => 'Events\EventController@join'])->name('events.event.join');
+Route::get('events/{slug}/resign', ['middleware' => 'auth', 'uses' => 'Events\EventController@resign'])->name('events.event.resign');
 Route::get('events/{slug}/share', 'Events\EventController@share')->name('events.event.share');
