@@ -273,7 +273,7 @@ class EventController extends Controller
 
                 (new NewNotification())
                     ->setUserId($user_id)
-                    ->setUniqueKey('mail.resign.' . Auth::getUserId())
+                    ->setUniqueKey('events.resign.' . Auth::getUserId())
                     ->setCallback('/events/' . $event->getSlug())
                     ->setTypeId('events.resign')
                     ->addVariable('user', $user->getFirstName() . ' ' . $user->getLastName())

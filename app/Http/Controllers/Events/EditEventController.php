@@ -133,6 +133,19 @@ class EditEventController extends Controller
                  */
                 if($this->event->getUsersLimit() == $this->event->getMembers()->count()) {
                     (new Events())->closeEvent($id);
+
+                    /**
+                     * Wysłanie powiadomienia do użytkowników
+                     */
+                    foreach($this->event->getMembers() as $member) {
+                        (new NewNotification())
+                            ->setUserId($member->getUserId())
+                            ->setUniqueKey('events.limit.' . $this->event->getId())
+                            ->setCallback('/events/' . $this->event->getSlug())
+                            ->setTypeId('events.limit')
+                            ->addVariable('event', $this->event->getTitle())
+                        ->save();
+                    }
                 }
             }
         }
