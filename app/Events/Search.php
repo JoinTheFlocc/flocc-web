@@ -21,6 +21,12 @@ class Search
      */
     public function setFilters(array $filters)
     {
+        if(isset($filters[0])) {
+            if($filters[0] == 'by') {
+                $filters = array_merge($filters, unserialize(base64_decode($filters[1])));
+            }
+        }
+
         $this->filters = $filters;
 
         return $this;
@@ -36,7 +42,7 @@ class Search
      */
     public function getParam($i, $default = null)
     {
-        return isset($this->filters[(int) $i]) ? $this->filters[(int) $i] : $default;
+        return isset($this->filters[$i]) ? $this->filters[$i] : $default;
     }
 
     /**
@@ -77,6 +83,50 @@ class Search
         return Events::where('status', '<>', 'draft')
             ->orderBy('created_at', 'desc')
         ->paginate($this->on_page);
+    }
+
+    /**
+     * Get all events with criterias
+     *
+     * @return \Illuminate\Pagination\LengthAwarePaginator
+     */
+    public function search()
+    {
+        $query = Events::select('events.*');
+        $query = $query->leftjoin('events_activities', 'events.id', '=', 'events_activities.event_id');
+
+        if($this->getParam('place_id') !== null) {
+            $query = $query->leftjoin('events_routes', function ($join) {
+                $join->on('events.id', '=', 'events_routes.event_id');
+                $join->on('events_routes.place_id', '=', \DB::raw($this->getParam('place_id')));
+            });
+        }
+
+        $query = $query->where('status', 'open');
+
+        if ($this->getParam('activity_id') !== null) {
+            $query = $query->where('activity_id', (int) $this->getParam('activity_id'));
+        }
+
+        if ($this->getParam('place_id') !== null) {
+            $query = $query->where(function($query) {
+                $query->where('events.place_id', '=', $this->getParam('place_id'));
+                $query->orWhere('events_routes.place_id', '=', $this->getParam('place_id'));
+            });
+        }
+
+        if($this->getParam('event_from') !== null) {
+            $query = $query->where('event_from', '>=', $this->getParam('event_from'));
+        }
+
+        if($this->getParam('event_to') !== null) {
+            $query = $query->where('event_to', '<=', $this->getParam('event_to'));
+        }
+
+        $query = $query->orderBy('created_at', 'desc');
+        $query = $query->groupBy('events.id');
+
+        return $query->paginate($this->on_page);
     }
 
     /**

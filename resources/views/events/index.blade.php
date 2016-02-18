@@ -3,69 +3,126 @@
 @section('content')
     <div class="container">
         <div class="row" style="margin:80px 0;">
-            <h1>Wydarzenia</h1><br>
-
             @if(!Auth::guest())
-            <a href="{{ URL::route('events.new') }}" class="btn btn-success">
-                Utwórz nowe wydarzenie
-            </a><br>&nbsp;<br>
+                <a href="{{ URL::route('events.new') }}" class="btn btn-success pull-right">
+                    Utwórz nowe wydarzenie
+                </a><br>&nbsp;<br>
             @endif
 
-            @if($events->count() > 0)
-                <ul class="events">
-                    @foreach($events as $event)
-                        <li>
-                            <a href="{{ URL::route('events.event', ['slug' => $event->getSlug()]) }}">
-                                <img src="{{ $event->getAvatarUrl() }}">
-                            </a>
+            <div class="row">
+                <div class="col-md-4">
+                    <h2>Wyszukaj</h2><br>
 
-                            <div class="info">
-                                <h2>
+                    <form class="form-horizontal" method="post">
+                        <div class="form-group">
+                            <div class="well">
+                                <strong>Aktywność</strong><br>&nbsp;
+
+                                <select name="activity_id" class="form-control">
+                                    <option value="">Wybierz</option>
+                                    @foreach($activities as $activity)
+                                        <option value="{{ $activity->getId() }}" @if(isset($form_data['activity_id']) and $form_data['activity_id'] == $activity->getId()) selected="selected" @endif>{{ $activity->getName() }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+
+                            <div class="well">
+                                <strong>Gdzie</strong><br>&nbsp;
+
+                                <select name="place_id" class="form-control">
+                                    <option value="">Wybierz</option>
+                                    @foreach($places as $place)
+                                        <option value="{{ $place->getId() }}" @if(isset($form_data['place_id']) and $form_data['place_id'] == $place->getId()) selected="selected" @endif>{{ $place->getName() }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+
+                            <div class="well">
+                                <strong>Kiedy</strong><br>&nbsp;
+
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <input name="event_from" class="form-control" placeholder="Od" @if(isset($form_data['event_from'])) value="{{ $form_data['event_from'] }}" @endif>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input name="event_to" class="form-control" placeholder="Do" @if(isset($form_data['event_to'])) value="{{ $form_data['event_to'] }}" @endif>
+                                    </div>
+                                </div>
+
+                                <br>&nbsp;<br>
+
+                                <strong>Ilość dni</strong><br>&nbsp;
+                                <input name="event_span" class="form-control" placeholder="Od" @if(isset($form_data['event_span'])) value="{{ $form_data['event_span'] }}" @endif>
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                            {{ csrf_field() }}
+                            <button class="btn btn-success btn-lg">Szukaj</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-8">
+                    <h2>Wyniki</h2><br>
+                    @if($events->count() > 0)
+                        <ul class="events">
+                            @foreach($events as $event)
+                                <li>
                                     <a href="{{ URL::route('events.event', ['slug' => $event->getSlug()]) }}">
-                                        {{ $event->getTitle() }}
+                                        <img src="{{ $event->getAvatarUrl() }}">
                                     </a>
-                                    @if($event->getMember() !== null)
-                                        @if($event->getMember()->isStatusAwaiting())
-                                            <span class="label label-danger">
+
+                                    <div class="info">
+                                        <h2>
+                                            <a href="{{ URL::route('events.event', ['slug' => $event->getSlug()]) }}">
+                                                {{ $event->getTitle() }}
+                                            </a>
+                                            @if($event->getMember() !== null)
+                                                @if($event->getMember()->isStatusAwaiting())
+                                                    <span class="label label-danger">
                                                 W oczekiwaniu na akceptacje
                                             </span>
-                                        @endif
-                                    @endif
-                                </h2>
+                                                @endif
+                                            @endif
+                                        </h2>
 
-                                <p>{{ $event->getDescription() }}</p>
+                                        <p>{{ $event->getDescription() }}</p>
 
-                                <div class="well">
-                                    Członków: <strong>{{ $event->getMembers()->count() }}</strong> |
-                                    Obserwujących: <strong>{{ $event->getFollowers()->count() }}</strong> |
-                                    Data: <strong>{{ $event->getEventFrom() }}-{{ $event->getEventTo() }} ({{ $event->getEventSpan() }} dni)</strong> |
-                                    @if($event->isPlace())
-                                        Miejsce: <strong>{{ $event->getPlace()->getName() }}</strong>
-                                    @else
-                                        Miejsce: <strong>@foreach($event->getRoutes() as $place) {{ $place->getName() }} > @endforeach</strong>
-                                    @endif
-                                </div>
+                                        <div class="well">
+                                            Członków: <strong>{{ $event->getMembers()->count() }}</strong> |
+                                            Obserwujących: <strong>{{ $event->getFollowers()->count() }}</strong> |
+                                            Data: <strong>{{ $event->getEventFrom() }}-{{ $event->getEventTo() }} ({{ $event->getEventSpan() }} dni)</strong> |
+                                            @if($event->isPlace())
+                                                Miejsce: <strong>{{ $event->getPlace()->getName() }}</strong>
+                                            @else
+                                                Miejsce: <strong>@foreach($event->getRoutes() as $place) {{ $place->getName() }} > @endforeach</strong>
+                                            @endif
+                                        </div>
 
-                                <div class="buttons">
-                                    @if($event->isMine())
-                                            <!-- Moje wydarzenie -->
-                                        <a href="{{ URL::route('events.edit.members', ['id' => $event->getId()]) }}"><i class="fa fa-users"></i></a>
-                                        <a href="{{ URL::route('events.edit', ['id' => $event->getId()]) }}"><i class="fa fa-pencil"></i></a>
-                                        <a href="{{ URL::route('events.event.cancel', ['slug' => $event->getSlug()]) }}" class="close_event"><i class="fa fa-times"></i></a>
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="clearfix"></div>
-                        </li>
-                    @endforeach
-                </ul>
+                                        <div class="buttons">
+                                            @if($event->isMine())
+                                                    <!-- Moje wydarzenie -->
+                                            <a href="{{ URL::route('events.edit.members', ['id' => $event->getId()]) }}"><i class="fa fa-users"></i></a>
+                                            <a href="{{ URL::route('events.edit', ['id' => $event->getId()]) }}"><i class="fa fa-pencil"></i></a>
+                                            <a href="{{ URL::route('events.event.cancel', ['slug' => $event->getSlug()]) }}" class="close_event"><i class="fa fa-times"></i></a>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </li>
+                            @endforeach
+                        </ul>
 
-                {!! $events->render() !!}
-            @else
-                <div class="alert alert-info">
-                    Brak wydarzeń pasujących do podanych kryteriów
+                        {!! $events->render() !!}
+                    @else
+                        <div class="alert alert-info">
+                            Brak wydarzeń pasujących do podanych kryteriów
+                        </div>
+                    @endif
                 </div>
-            @endif
+            </div>
         </div>
     </div>
 @endsection

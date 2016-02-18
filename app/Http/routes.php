@@ -74,7 +74,7 @@ Route::get('notifications/{id}', ['middleware' => 'auth', 'uses' => 'Notificatio
 Route::get('notifications/get', ['middleware' => 'auth', 'uses' => 'Notifications\NotificationsController@getNotifications'])->name('notifications.get');
 
 // Events
-Route::get('search/{filters?}', ['middleware' => 'auth', 'uses' => 'Events\EventsController@index'])->name('events');
+Route::match(['get', 'post'], 'search/{filters?}', ['middleware' => 'auth', 'uses' => 'Events\EventsController@index'])->name('events');
 Route::get('events/new', ['middleware' => 'auth', 'uses' => 'Events\EventsController@newEvent'])->name('events.new');
 Route::post('events/comment', ['middleware' => 'auth', 'uses' => 'Events\CommentController@save'])->name('events.comment');
 Route::match(['get', 'post'], 'events/edit/{id}', ['middleware' => 'auth', 'uses' => 'Events\EditEventController@index'])->name('events.edit');
@@ -89,3 +89,12 @@ Route::get('events/{slug}/cancel', ['middleware' => 'auth', 'uses' => 'Events\Ev
 Route::get('events/{slug}/join/{type}', ['middleware' => 'auth', 'uses' => 'Events\EventController@join'])->name('events.event.join');
 Route::get('events/{slug}/resign', ['middleware' => 'auth', 'uses' => 'Events\EventController@resign'])->name('events.event.resign');
 Route::get('events/{slug}/share', 'Events\EventController@share')->name('events.event.share');
+
+/**
+ * Set true if you want debug all queries
+ */
+if(false) {
+    Event::listen('illuminate.query',function($query){
+        var_dump($query);
+    });
+}
