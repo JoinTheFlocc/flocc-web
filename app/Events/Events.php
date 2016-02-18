@@ -3,6 +3,7 @@
 namespace Flocc\Events;
 
 use Flocc\Auth;
+use Flocc\Notifications\NewNotification;
 use Flocc\Url;
 use Illuminate\Database\Eloquent\Model;
 
@@ -964,5 +965,71 @@ class Events extends Model
     public function closeAfterDate($date)
     {
         return (self::where('event_to', '>', $date)->update(['status' => 'close']) == 1);
+    }
+
+    /**
+     * Get events starting from today
+     *
+     * @return \Flocc\Events\Events
+     */
+    public function getEventsStartingToday()
+    {
+        return self::where('event_from', date('Y-m-d'))
+            ->where('status', 'open')
+        ->get();
+    }
+
+    /**
+     * Get events ending from today
+     *
+     * @return \Flocc\Events\Events
+     */
+    public function getEventsEndingToday()
+    {
+        return self::where('event_to', date('Y-m-d'))
+            ->where('status', 'open')
+        ->get();
+    }
+
+    /**
+     * Send notifications to starting & ending events
+     */
+    public function sendStartingAndEndingEventsNotifications()
+    {
+        /**
+         * @var $event \Flocc\Events\Events
+         */
+        foreach($this->getEventsStartingToday() as $event) {
+            /**
+             * @var $member \Flocc\Events\Members
+             */
+            foreach($event->getMembers() as $member) {
+                (new NewNotification())
+                    ->setUserId($member->getUserId())
+                    ->setUniqueKey('events.starting.' . $event->getId())
+                    ->setCallback('/events/' . $event->getSlug())
+                    ->setTypeId('events.starting')
+                    ->addVariable('event', $event->getTitle())
+                ->save();
+            }
+        }
+
+        /**
+         * @var $event \Flocc\Events\Events
+         */
+        foreach($this->getEventsEndingToday() as $event) {
+            /**
+             * @var $member \Flocc\Events\Members
+             */
+            foreach($event->getMembers() as $member) {
+                (new NewNotification())
+                    ->setUserId($member->getUserId())
+                    ->setUniqueKey('events.ending.' . $event->getId())
+                    ->setCallback('/events/' . $event->getSlug())
+                    ->setTypeId('events.ending')
+                    ->addVariable('event', $event->getTitle())
+                ->save();
+            }
+        }
     }
 }
