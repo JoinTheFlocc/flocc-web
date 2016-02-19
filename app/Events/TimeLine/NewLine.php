@@ -15,6 +15,7 @@ class NewLine
     private $event_id, $type;
     private $message;
     private $comment, $user_id;
+    private $data;
 
     /**
      * Set event ID
@@ -167,6 +168,18 @@ class NewLine
                 break;
         }
 
+        $this->data = $data;
+
         return ((new TimeLine())->addNew($data) === null) ? false : true;
+    }
+
+    /**
+     * Get comment ID after insert
+     *
+     * @return null|int
+     */
+    public function getLastInsertCommentId()
+    {
+        return isset($this->data['comment_id']) ? (int) $this->data['comment_id'] : null;
     }
 }

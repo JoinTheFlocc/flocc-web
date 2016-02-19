@@ -665,6 +665,26 @@ class Events extends Model
     }
 
     /**
+     * Return owner, members and followers ID's
+     *
+     * @return array
+     */
+    public function getMembersAndFollowersIds()
+    {
+        $ids = [$this->getUserId()];
+
+        foreach($this->getMembers() as $member) {
+            $ids[] = $member->getUserId();
+        }
+
+        foreach($this->getFollowers() as $member) {
+            $ids[] = $member->getUserId();
+        }
+
+        return $ids;
+    }
+
+    /**
      * Get event followers
      *
      * @return \Illuminate\Database\Eloquent\Collection

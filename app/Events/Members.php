@@ -317,7 +317,9 @@ class Members extends Model
      */
     public function addNewFollower($event_id, $user_id)
     {
-        return $this->addNew($event_id, $user_id, 'follower');
+        $status = $this->addNew($event_id, $user_id, 'follower');
+
+        return $status;
     }
 
     /**

@@ -124,6 +124,16 @@ class EditEventController extends Controller
                 ->save();
 
                 /**
+                 * Powiadomienie na tablicy członkow wydarzenia
+                 */
+                (new \Flocc\Profile\TimeLine\NewTimeLine())
+                    ->setUserId($this->event->getMembersAndFollowersIds())
+                    ->setType('new_member')
+                    ->setTimeLineUserId($user_id)
+                    ->setTimeLineEventId($this->event->getId())
+                ->save();
+
+                /**
                  * Zmiana statusu
                  */
                 (new Members())->updateStatus($user_id, $id, $status);
@@ -290,8 +300,6 @@ class EditEventController extends Controller
                         ->setMessage(sprintf('[b]%s[/b] utworzył wydarzenie dnia %s o %s', $user_name, date('Y-m-d'), date('H:i')))
                         ->setUserId(Auth::getUserId())
                     ->save();
-
-                    return \Redirect::to('events/' . $this->event->getSlug() . '/share');
                 } else {
                     /**
                      * Notification
@@ -309,6 +317,22 @@ class EditEventController extends Controller
                     }
                 }
 
+                /**
+                 * Powiadomienie na tablicy członkow wydarzenia o edycji
+                 */
+                foreach(User::all() as $user) {
+                    (new \Flocc\Profile\TimeLine\NewTimeLine())
+                        ->setUserId($user->getId())
+                        ->setType(($is_draft === true) ? 'new_event' : 'edit_event')
+                        ->setTimeLineUserId(Auth::getUserId())
+                        ->setTimeLineEventId($id)
+                    ->save();
+                }
+
+                if($is_draft === true) {
+                    return \Redirect::to('events/' . $this->event->getSlug() . '/share');
+                }
+
                 return \Redirect::to('events/' . $this->event->getSlug());
             } else {
                 if(\Input::get('place_type') == 'place') {
@@ -321,7 +345,7 @@ class EditEventController extends Controller
                     }
                 }
 
-                if(in_array('new', \Input::get('activities'))) {
+                if(in_array('new', \Input::get('activities', []))) {
                     $post_new_activity = \Input::get('new_activities');
                 }
             }

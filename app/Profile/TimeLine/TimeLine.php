@@ -85,4 +85,31 @@ class TimeLine extends Model
 
         return $time_line;
     }
+
+    /**
+     * Add new time line
+     *
+     * @param \Flocc\Profile\TimeLine\NewTimeLine $line
+     *
+     * @return bool
+     */
+    public function addNew(\Flocc\Profile\TimeLine\NewTimeLine $line)
+    {
+        $i = 0;
+
+        foreach($line->getUsers() as $user_id) {
+            self::create([
+                'user_id'                       => $user_id,
+                'type'                          => $line->getType(),
+                'event_type'                    => $line->getEventType(),
+                'time_line_user_id'             => $line->getTimeLineUserId(),
+                'time_line_event_id'            => $line->getTimeLineEventId(),
+                'time_line_event_comment_id'    => $line->getTimeLineEventCommentId()
+            ]);
+
+            ++$i;
+        }
+
+        return ($i == count($line->getUsers()));
+    }
 }
