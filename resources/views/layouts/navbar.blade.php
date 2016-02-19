@@ -7,7 +7,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">
+            <a class="navbar-brand" href="{{ Auth::guest() ? '/' : URL::route('profile.display') }}">
                 <img src="/img/logo_min.png" class="img-responsive" style="inline: block">
             </a>
             <div class="navbar-text">
@@ -15,9 +15,6 @@
             </div>
         </div>
         <div class="collapse navbar-collapse">
-            <ul class="nav navbar-nav">
-                <li><a href="{{ URL::route('profile.display') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="{{ URL::route('events') }}"><i class="fa fa-globe"></i> Wydarzenia</a></li>
 
@@ -38,10 +35,12 @@
                           <a href="{{ url('/profile/' . Auth::user()->profile->id) }}"><i class="fa fa-btn fa-user"></i>{{ Auth::user()->name }}</a>
                         </li>
                       @endif
-                      <li><a href="{{ URL::route('mail') }}"><i class="fa fa-btn fa-envelope"></i>Mail</a></li>
+                      <li>
+                          <a href="{{ URL::route('mail') }}"><i class="fa fa-btn fa-lg fa-commenting"></i></a>
+                      </li>
                       <li>
                         <a href="{{ URL::route('notifications') }}">
-                          <i class="fa fa-btn fa-bell"></i> Notifications <span class="label label-danger" id="notificationsCount" style="display:none">0</span>
+                          <i class="fa fa-btn fa-lg fa-flag"></i> <span class="label label-danger" id="notificationsCount" style="display:none">0</span>
                         </a>
                       </li>
                       <li>
