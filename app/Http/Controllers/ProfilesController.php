@@ -158,11 +158,11 @@ class ProfilesController extends Controller
                 $updatedUrl = (new ImageHelper())->uploadFile($image);
                 $profile->avatar_url = $updatedUrl;
                 $profile->save();
-                return Response::json(['success' => true, 'file' => $updatedUrl]);
+                return view('profiles.edit', compact('profile'));
             }
             else {
-              // sending back with error message.
-              return Response::json('error', 400);
+                // sending back with error message.
+                return view('profiles.edit', compact('profile'))->withErrors('error', 'Upload failed');
             }
         }
     }

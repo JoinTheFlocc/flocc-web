@@ -14,7 +14,8 @@
         "illuminate/html": "^5.0",
         "twbs/bootstrap": "3.3.6",
         "intervention/image": "^2.3",
-        "league/flysystem-aws-s3-v3": "^1.0"
+        "league/flysystem-aws-s3-v3": "^1.0",
+	"ext-gd": "*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

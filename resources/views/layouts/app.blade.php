@@ -49,8 +49,21 @@
 	@else
 		@yield('content')
 	@endif
-	<footer class="navbar-default navbar-static-bottom">
+	<footer class="navbar-default navbar-static-bottom grad">
 		@include('layouts.footer')
 	</footer>
+
+	<script type="text/javascript">
+  (function(e,t,n,r){function i(e,n){e=t.createElement("script");e.async=1;e.src=r;n=t.getElementsByTagName("script")[0];n.parentNode.insertBefore(e,n)}e[n]=e[n]||function(){(e[n].q=e[n].q||[]).push(arguments)};e.attachEvent?e.attachEvent("onload",i):e.addEventListener("load",i,false)})(window,document,"_castle","//d2t77mnxyo7adj.cloudfront.net/v1/c.js")
+  _castle('setAppId', '988356266816382');
+</script>
+<script type="text/javascript">
+  (function(e,t,n,r){function i(e,n){e=t.createElement("script");e.async=1;e.src=r;n=t.getElementsByTagName("script")[0];n.parentNode.insertBefore(e,n)}e[n]=e[n]||function(){(e[n].q=e[n].q||[]).push(arguments)};e.attachEvent?e.attachEvent("onload",i):e.addEventListener("load",i,false)})(window,document,"_castle","//d2t77mnxyo7adj.cloudfront.net/v1/c.js")
+  _castle('setAppId', '988356266816382');
+  _castle('identify', '1234', {  // 1234 is this user's id in your database
+    name: 'Jane Doe', // optional
+    email: 'jane@doe.io' // optional
+  });
+</script>
 </body>
 </html>
