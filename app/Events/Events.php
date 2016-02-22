@@ -3,6 +3,7 @@
 namespace Flocc\Events;
 
 use Flocc\Auth;
+use Flocc\Notifications\NewNotification;
 use Flocc\Url;
 use Illuminate\Database\Eloquent\Model;
 
@@ -664,6 +665,26 @@ class Events extends Model
     }
 
     /**
+     * Return owner, members and followers ID's
+     *
+     * @return array
+     */
+    public function getMembersAndFollowersIds()
+    {
+        $ids = [$this->getUserId()];
+
+        foreach($this->getMembers() as $member) {
+            $ids[] = $member->getUserId();
+        }
+
+        foreach($this->getFollowers() as $member) {
+            $ids[] = $member->getUserId();
+        }
+
+        return $ids;
+    }
+
+    /**
      * Get event followers
      *
      * @return \Illuminate\Database\Eloquent\Collection
@@ -684,6 +705,16 @@ class Events extends Model
     }
 
     /**
+     * Get member by user ID
+     *
+     * @return \Flocc\Events\Members
+     */
+    public function getMember()
+    {
+        return $this->hasMany('Flocc\Events\Members', 'event_id', 'id')->where('user_id', Auth::getUserId())->take(1)->first();
+    }
+
+    /**
      * I'm the owner?
      *
      * @return bool
@@ -701,13 +732,139 @@ class Events extends Model
     public function isImIn()
     {
         foreach($this->getMembers() as $user) {
+            if ($user->getUserId() == Auth::getUserId()) {
+                return true;
+            }
+        }
+
+        foreach($this->getAwaitingRequests() as $user) {
             if($user->getUserId() == Auth::getUserId()) {
                 return true;
             }
         }
 
+        return false;
+    }
+
+    /**
+     * Czy obserwuje to wydarzenie
+     *
+     * @return bool
+     */
+    public function isIFollow()
+    {
         foreach($this->getFollowers() as $user) {
             if($user->getUserId() == Auth::getUserId()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Czy jestem odrzucony
+     *
+     * @return bool
+     */
+    public function isImRejected()
+    {
+        foreach($this->getRejectedRequests() as $user) {
+            if($user->getUserId() == Auth::getUserId()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Can I join to event
+     *
+     * @return bool
+     */
+    public function canJoin()
+    {
+        if(Auth::getUserId() === null) {
+            return false;
+        }
+
+        if($this->isMine()) {
+            return false;
+        }
+
+        if($this->isStatusOpen() === false) {
+            return false;
+        }
+
+        if($this->isImIn()) {
+            return false;
+        }
+
+        if($this->getMembers()->count() >= $this->getUsersLimit()) {
+            return false;
+        }
+
+        if($this->isImRejected()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Can I follow event
+     *
+     * @return bool
+     */
+    public function canFollow()
+    {
+        if($this->isMine()) {
+            return false;
+        }
+
+        if($this->isStatusOpen() === false) {
+            return false;
+        }
+
+        if($this->isIFollow()) {
+            return false;
+        }
+
+        if($this->isImIn()) {
+            return false;
+        }
+
+        if($this->isImRejected()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Can I un follow
+     *
+     * @return bool
+     */
+    public function canUnFollow()
+    {
+        if($this->isIFollow()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Can i resign
+     *
+     * @return bool
+     */
+    public function canUnJoin()
+    {
+        foreach($this->getMembers() as $user) {
+            if ($user->getUserId() == Auth::getUserId()) {
                 return true;
             }
         }
@@ -828,5 +985,71 @@ class Events extends Model
     public function closeAfterDate($date)
     {
         return (self::where('event_to', '>', $date)->update(['status' => 'close']) == 1);
+    }
+
+    /**
+     * Get events starting from today
+     *
+     * @return \Flocc\Events\Events
+     */
+    public function getEventsStartingToday()
+    {
+        return self::where('event_from', date('Y-m-d'))
+            ->where('status', 'open')
+        ->get();
+    }
+
+    /**
+     * Get events ending from today
+     *
+     * @return \Flocc\Events\Events
+     */
+    public function getEventsEndingToday()
+    {
+        return self::where('event_to', date('Y-m-d'))
+            ->where('status', 'open')
+        ->get();
+    }
+
+    /**
+     * Send notifications to starting & ending events
+     */
+    public function sendStartingAndEndingEventsNotifications()
+    {
+        /**
+         * @var $event \Flocc\Events\Events
+         */
+        foreach($this->getEventsStartingToday() as $event) {
+            /**
+             * @var $member \Flocc\Events\Members
+             */
+            foreach($event->getMembers() as $member) {
+                (new NewNotification())
+                    ->setUserId($member->getUserId())
+                    ->setUniqueKey('events.starting.' . $event->getId())
+                    ->setCallback('/events/' . $event->getSlug())
+                    ->setTypeId('events.starting')
+                    ->addVariable('event', $event->getTitle())
+                ->save();
+            }
+        }
+
+        /**
+         * @var $event \Flocc\Events\Events
+         */
+        foreach($this->getEventsEndingToday() as $event) {
+            /**
+             * @var $member \Flocc\Events\Members
+             */
+            foreach($event->getMembers() as $member) {
+                (new NewNotification())
+                    ->setUserId($member->getUserId())
+                    ->setUniqueKey('events.ending.' . $event->getId())
+                    ->setCallback('/events/' . $event->getSlug())
+                    ->setTypeId('events.ending')
+                    ->addVariable('event', $event->getTitle())
+                ->save();
+            }
+        }
     }
 }

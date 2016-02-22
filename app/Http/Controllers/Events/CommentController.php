@@ -46,6 +46,8 @@ class CommentController extends Controller
                 ->setComment($comment)
             ->save();
 
+            $comment_id = $line->getLastInsertCommentId();
+
             /**
              * Send notifications
              *
@@ -61,6 +63,17 @@ class CommentController extends Controller
                     ->addVariable('event', $event->getTitle())
                 ->save();
             }
+
+            /**
+             * Powiadomienie na tablicy członkow wydarzenia
+             */
+            (new \Flocc\Profile\TimeLine\NewTimeLine())
+                ->setUserId($event->getMembersAndFollowersIds())
+                ->setType('new_comment')
+                ->setTimeLineUserId($user_id)
+                ->setTimeLineEventId($event->getId())
+                ->setTimeLineEventCommentId($comment_id)
+            ->save();
         }
 
         return \Redirect::to('events/' . $event->getSlug());

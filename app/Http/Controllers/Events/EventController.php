@@ -2,11 +2,13 @@
 
 namespace Flocc\Http\Controllers\Events;
 
+use Flocc\Auth;
 use Flocc\Events\Events;
 use Flocc\Events\Members;
 use Flocc\Events\TimeLine\NewLine;
 use Flocc\Http\Controllers\Controller;
 use Flocc\Notifications\NewNotification;
+use Flocc\Profile\TimeLine\NewTimeLine;
 use Flocc\User;
 
 /**
@@ -143,7 +145,29 @@ class EventController extends Controller
         }
 
         if($event->isMine() === false) {
-            if($members->isUserInEvent($event->getId(), $user_id) === false) {
+            $user_in_event  = $members->getUserInEvent($event->getId(), $user_id);
+            $can_add        = true;
+
+            /**
+             * If user in
+             */
+            if($user_in_event !== null) {
+                $can_add = false;
+
+                /**
+                 * Delete if follower
+                 */
+                if($type == 'member' and $user_in_event->isStatusFollower()) {
+                    $can_add = true;
+
+                    $members->deleteUserFromEvent($event->getId(), $user_id);
+                }
+            }
+
+            /**
+             * Add
+             */
+            if($can_add === true) {
                 /**
                  * Prepare notification
                  */
@@ -157,11 +181,22 @@ class EventController extends Controller
                 switch($type) {
                     case 'follower':
                         $members->addNewFollower($event->getId(), $user_id);
+
+                        // New line on event time line
                         (new NewLine())
                             ->setEventId($event->getId())
                             ->setTypeAsMessage()
                             ->setMessage($user_name . ' zaczął obserwować to wydarzenie')
                         ->save();
+
+                        // New line on user time line
+                        (new NewTimeLine())
+                            ->setUserId($event->getMembersAndFollowersIds())
+                            ->setType('new_follower')
+                            ->setTimeLineUserId($user_id)
+                            ->setTimeLineEventId($event->getId())
+                        ->save();
+
                         $notification->setCallback('/events/' . $event->getSlug());
                         $request->session()->flash('message', 'Obserwujesz to wydarzenie');
                         break;
@@ -211,5 +246,58 @@ class EventController extends Controller
             'event'             => $event,
             'meta_facebook'     => $meta_data
         ]);
+    }
+
+    /**
+     * Resign
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param string $slug
+     *
+     * @return mixed
+     */
+    public function resign(\Illuminate\Http\Request $request, $slug)
+    {
+        $events     = new Events();
+        $members    = new Members();
+
+        $event      = $events->getBySlug($slug);
+        $member     = $members->where('event_id', $event->getId())->where('user_id', Auth::getUserId())->first();
+
+        if($event === null) {
+            die; // @TODO:
+        }
+
+        if($member->status == 'member') {
+            $ids = [$event->getUserId()];
+
+            foreach($event->getMembers() as $user) {
+                if($user->getUserId() !== Auth::getUserId()) {
+                    $ids[] = $user->getUserId();
+                }
+            }
+
+            foreach($ids as $user_id) {
+                /**
+                 * @var $user \Flocc\Profile
+                 */
+                $user = (new User())->getById(Auth::getUserId())->getProfile();
+
+                (new NewNotification())
+                    ->setUserId($user_id)
+                    ->setUniqueKey('events.resign.' . Auth::getUserId())
+                    ->setCallback('/events/' . $event->getSlug())
+                    ->setTypeId('events.resign')
+                    ->addVariable('user', $user->getFirstName() . ' ' . $user->getLastName())
+                    ->addVariable('event', $event->getTitle())
+                ->save();
+            }
+        }
+
+        $member->delete();
+
+        $request->session()->flash('message', 'Wypisałeś się z wydarzenia');
+
+        return \Redirect::to('events/' . $slug);
     }
 }

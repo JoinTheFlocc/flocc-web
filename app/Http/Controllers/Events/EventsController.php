@@ -2,9 +2,11 @@
 
 namespace Flocc\Http\Controllers\Events;
 
+use Flocc\Activities;
 use Flocc\Events\Events;
 use Flocc\Events\Search;
 use Flocc\Http\Controllers\Controller;
+use Flocc\Places;
 
 /**
  * Class EventsController
@@ -16,20 +18,35 @@ class EventsController extends Controller
     /**
      * Events list
      *
+     * @param \Illuminate\Http\Request $request
      * @param string|array $filters
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index($filters = [])
+    public function index(\Illuminate\Http\Request $request, $filters = [])
     {
         $search     = new Search();
 
         $action     = 'all';
         $user_id    = \Flocc\Auth::getUserId();
+        $form_data  = [];
 
         if(!empty($filters)) {
             $filters    = explode(',', $filters);
             $action     = $filters[0];
+        }
+
+        /**
+         * Search criteria
+         */
+        if($request->isMethod('post')) {
+            $post = $request->all();
+
+            unset($post['_token']);
+
+            return \Redirect::to('/search/by,' . base64_encode(serialize(array_filter($post, function($value) {
+                return !empty($value);
+            }))));
         }
 
         /**
@@ -45,7 +62,7 @@ class EventsController extends Controller
 
             // Wydarzenia w których bierze udział
             case 'member':
-                $events = $search->getByMemberId('member');
+                $events = $search->getByMemberId(['member', 'awaiting']);
                 break;
 
             // Wydarzenia, które obserwuje
@@ -53,12 +70,21 @@ class EventsController extends Controller
                 $events = $search->getByMemberId('follower');
                 break;
 
+            // Filtrowanie wiadomości
+            case 'by':
+                $form_data  = unserialize(base64_decode($filters[1]));
+                $events     = $search->search();
+                break;
+
             // Wszystkie wydarzenia
             default:
                 $events = $search->getAll();
         }
 
-        return view('events.index', compact('events', 'user_id'));
+        $activities = (new Activities())->get();
+        $places     = (new Places())->get();
+
+        return view('events.index', compact('events', 'user_id', 'activities', 'places', 'form_data'));
     }
 
     /**

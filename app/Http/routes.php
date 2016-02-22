@@ -37,10 +37,10 @@ Route::get('auth/social/{provider}', 'Auth\AuthController@redirectToProvider')->
 Route::get('auth/social/{provider}/callback', 'Auth\AuthController@handleProviderCallback')->name('social.handle');
 
 // Profile
-Route::resource('profile', 'ProfilesController',
-               ['except' => ['index']]);
-Route::get('profile/{id?}', 'ProfilesController@show')->name('profile.display');
+Route::get('profile', 'ProfilesController@show')->name('profile.my');
 Route::post('profile/upload', 'ProfilesController@upload')->name('profile.upload');
+Route::get('profile/time-line', 'ProfilesController@timeLine')->name('profile.timeline');
+Route::get('profile/{id?}', 'ProfilesController@show')->name('profile.display')->where('id', '[0-9]+');
 
 // Settings
 Route::get('settings/account', function() {
@@ -66,6 +66,7 @@ Route::get('mail/move/{id}/{label}', ['middleware' => 'auth', 'uses' => 'Mail\Co
 Route::get('mail/{id}', ['middleware' => 'auth', 'uses' => 'Mail\MessagesController@showConversation'])->name('mail.conversation')->where('id', '[0-9]+');
 Route::get('mail/new/{user_id}', ['middleware' => 'auth', 'uses' => 'Mail\MessagesController@newMessageForm'])->name('mail.new.form')->where('user_id', '[0-9]+');
 Route::post('mail/new', ['middleware' => 'auth', 'uses' => 'Mail\MessagesController@newMessage'])->name('mail.new');
+Route::get('mail/important/{id}/{is_important}', ['middleware' => 'auth', 'uses' => 'Mail\ConversationsController@important'])->name('mail.important');
 
 // Notifications
 Route::get('notifications', ['middleware' => 'auth', 'uses' => 'Notifications\NotificationsController@index'])->name('notifications');
@@ -73,11 +74,12 @@ Route::get('notifications/{id}', ['middleware' => 'auth', 'uses' => 'Notificatio
 Route::get('notifications/get', ['middleware' => 'auth', 'uses' => 'Notifications\NotificationsController@getNotifications'])->name('notifications.get');
 
 // Events
-Route::get('search/{filters?}', ['middleware' => 'auth', 'uses' => 'Events\EventsController@index'])->name('events');
+Route::match(['get', 'post'], 'search/{filters?}', ['middleware' => 'auth', 'uses' => 'Events\EventsController@index'])->name('events');
 Route::get('events/new', ['middleware' => 'auth', 'uses' => 'Events\EventsController@newEvent'])->name('events.new');
 Route::post('events/comment', ['middleware' => 'auth', 'uses' => 'Events\CommentController@save'])->name('events.comment');
 Route::match(['get', 'post'], 'events/edit/{id}', ['middleware' => 'auth', 'uses' => 'Events\EditEventController@index'])->name('events.edit');
 Route::get('events/edit/{id}/members', ['middleware' => 'auth', 'uses' => 'Events\EditEventController@members'])->name('events.edit.members');
+Route::match(['get', 'post'], 'events/edit/{id}/photo', ['middleware' => 'auth', 'uses' => 'Events\EditEventController@photo'])->name('events.edit.photo');
 Route::get('events/edit/{id}/{user_id}/{status}', ['middleware' => 'auth', 'uses' => 'Events\EditEventController@status'])->name('events.edit.members.status');
 
 // Event
@@ -86,4 +88,14 @@ Route::get('events/{slug}/members', 'Events\EventController@members')->name('eve
 Route::get('events/{slug}/followers', 'Events\EventController@followers')->name('events.event.followers');
 Route::get('events/{slug}/cancel', ['middleware' => 'auth', 'uses' => 'Events\EventController@cancel'])->name('events.event.cancel');
 Route::get('events/{slug}/join/{type}', ['middleware' => 'auth', 'uses' => 'Events\EventController@join'])->name('events.event.join');
+Route::get('events/{slug}/resign', ['middleware' => 'auth', 'uses' => 'Events\EventController@resign'])->name('events.event.resign');
 Route::get('events/{slug}/share', 'Events\EventController@share')->name('events.event.share');
+
+/**
+ * Set true if you want debug all queries
+ */
+if(false) {
+    Event::listen('illuminate.query',function($query){
+        var_dump($query);
+    });
+}

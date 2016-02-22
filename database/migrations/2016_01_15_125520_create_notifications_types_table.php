@@ -29,5 +29,9 @@ class CreateNotificationsTypesTable extends Migration
         DB::table('notifications_types')->insert(['type_id' => 'events.members.join.follower', 'name' => '{{ $user }} obserwuje wydarzenie {{ $event }}', 'action' => 'redirect']);
         DB::table('notifications_types')->insert(['type_id' => 'events.comment', 'name' => '{{ $user }} dodał komentarz do wydarzenia {{ $event }}', 'action' => 'redirect']);
         DB::table('notifications_types')->insert(['type_id' => 'events.members.accept', 'name' => 'Zostałeś dodany do wydarzenia {{ $event }}', 'action' => 'redirect']);
+        DB::table('notifications_types')->insert(['type_id' => 'events.resign', 'name' => '{{ $user }} zrezygnował z wydarzenia {{ $event }}', 'action' => 'redirect']);
+        DB::table('notifications_types')->insert(['type_id' => 'events.limit', 'name' => 'Wydarzenie {{ $event }} ma komplet użytkowników', 'action' => 'redirect']);
+        DB::table('notifications_types')->insert(['type_id' => 'events.starting', 'name' => 'Wydarzenie {{ $event }} zaczęło się dzisiaj', 'action' => 'redirect']);
+        DB::table('notifications_types')->insert(['type_id' => 'events.ending', 'name' => 'Wydarzenie {{ $event }} skończyło się dzisiaj', 'action' => 'redirect']);
     }
 }

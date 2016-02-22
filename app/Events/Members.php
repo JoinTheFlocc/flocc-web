@@ -267,13 +267,11 @@ class Members extends Model
      * @param int $event_id
      * @param int $user_id
      *
-     * @return bool
+     * @return false|\Flocc\Events\Members
      */
-    public function isUserInEvent($event_id, $user_id)
+    public function getUserInEvent($event_id, $user_id)
     {
-        $get = self::where('user_id', (int) $user_id)->where('event_id', (int) $event_id)->take(1)->first();
-
-        return ($get === null) ? false : true;
+        return self::where('user_id', (int) $user_id)->where('event_id', (int) $event_id)->take(1)->first();
     }
 
     /**
@@ -319,7 +317,9 @@ class Members extends Model
      */
     public function addNewFollower($event_id, $user_id)
     {
-        return $this->addNew($event_id, $user_id, 'follower');
+        $status = $this->addNew($event_id, $user_id, 'follower');
+
+        return $status;
     }
 
     /**
@@ -337,5 +337,18 @@ class Members extends Model
             'status'                => $status,
             'status_change_date'    => \DB::raw('CURRENT_TIMESTAMP')
         ]) == 1) ? true : false;
+    }
+
+    /**
+     * Delete user from event
+     *
+     * @param int $event_id
+     * @param int $user_id
+     *
+     * @return bool
+     */
+    public function deleteUserFromEvent($event_id, $user_id)
+    {
+        return (self::where('user_id', (int) $user_id)->where('event_id', (int) $event_id)->delete() == 1);
     }
 }

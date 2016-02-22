@@ -2,6 +2,7 @@
 
 namespace Flocc\Mail;
 
+use Flocc\Auth;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -50,6 +51,18 @@ class Conversations extends Model
         }
 
         return $conversation;
+    }
+
+    /**
+     * Is important?
+     *
+     * @return bool
+     */
+    public function isImportant()
+    {
+        $get = Users::where('conversation_id', $this->conversation_id)->where('user_id', Auth::getUserId())->first();
+
+        return ($get->is_important == 1);
     }
 
     /**

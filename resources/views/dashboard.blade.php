@@ -1,117 +1,85 @@
 @extends('layouts.app')
 @section('content')
-<section id="main">
-    <div class="container mainBoxA">
-        <div class="contentBox">
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="well">
-                        <img src="{{ $profile->avatar_url }}" class="img-thumbnail">
-                        <h4 style="color: royalblue;">{{ $profile->firstname . " " . $profile->lastname }}</h4>
-                        <p><i class="fa fa-map-marker"></i> Poland</p>
-                        <p>{{ $profile->description }}</p>
-                        <br>
-                        @if(!$is_mine)
-                        <a href="{{ URL::route('mail.new.form', ['user_id' => $profile->user_id]) }}" class="btn btn-success btn-block">
-                            <i class="fa fa-envelope"></i> Start chat
-                        </a>
-                        @else
-                        <a href="{{ URL::route('profile.edit', $profile->id) }}" class="btn btn-success btn-block">
-                            <i class="fa fa-edit"></i> Edit profile
-                        </a>
-                        @endif
-                    </div>
-
-                    <!-- Tags Well -->
-                    <div class="well">
-                        <h4>Character Cloud </h4>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <ul class="list-unstyled">
-                                    <li class="label label-info"><i class="fa fa-hashtag"></i> CharacterTag
-                                    </li>
-                                    <li class="label label-info"><i class="fa fa-hashtag"></i> CharacterTag
-                                    </li>
-                                    <li class="label label-info"><i class="fa fa-hashtag"></i> CharacterTag
-                                    </li>
-                                    <li class="label label-info"><i class="fa fa-hashtag"></i> CharacterTag
-                                    </li>
-                                </ul>
-                            </div>
-                            <!-- /.col-md-6 -->
-                            <div class="col-md-6">
-                                <ul class="list-unstyled">
-                                    <li class="label label-success"><i class="fa fa-hashtag"></i> HobbyTag
-                                    </li>
-                                    <li class="label label-success"><i class="fa fa-hashtag"></i> HobbyTag
-                                    </li>
-                                    <li class="label label-success"><i class="fa fa-hashtag"></i> HobbyTag
-                                    </li>
-                                </ul>
-                            </div>
-                            <!-- /.col-md-6 -->
+    <section id="main">
+        <div class="container mainBoxA">
+            <div class="contentBox">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="well">
+                            <img src="{{ $profile->avatar_url }}" class="img-thumbnail">
+                            <h4 style="color: royalblue;">{{ $profile->firstname . " " . $profile->lastname }}</h4>
+                            <p><i class="fa fa-map-marker"></i> Poland</p>
+                            <p>{{ $profile->description }}</p>
+                            <br>
+                            @if(!$is_mine)
+                                <a href="{{ URL::route('mail.new.form', ['user_id' => $profile->user_id]) }}" class="btn btn-success btn-block">
+                                    <i class="fa fa-envelope"></i> Start chat
+                                </a>
+                            @endif
                         </div>
-                        <!-- /.row -->
+
+                        <!-- Tags Well -->
+                        <div class="well">
+                            <h4>Character Cloud </h4>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <ul class="list-unstyled">
+                                        <li class="label label-info"><i class="fa fa-hashtag"></i> CharacterTag
+                                        </li>
+                                        <li class="label label-info"><i class="fa fa-hashtag"></i> CharacterTag
+                                        </li>
+                                        <li class="label label-info"><i class="fa fa-hashtag"></i> CharacterTag
+                                        </li>
+                                        <li class="label label-info"><i class="fa fa-hashtag"></i> CharacterTag
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!-- /.col-md-6 -->
+                                <div class="col-md-6">
+                                    <ul class="list-unstyled">
+                                        <li class="label label-success"><i class="fa fa-hashtag"></i> HobbyTag
+                                        </li>
+                                        <li class="label label-success"><i class="fa fa-hashtag"></i> HobbyTag
+                                        </li>
+                                        <li class="label label-success"><i class="fa fa-hashtag"></i> HobbyTag
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!-- /.col-md-6 -->
+                            </div>
+                            <!-- /.row -->
+                        </div>
                     </div>
-                </div>
-                <!-- Dashboard content -->
-                <div class="col-md-9">
-                    <ul class="nav nav-tabs">
-                        <li class="active"><a href="#">All</a>
-                        </li>
-                        <li><a href="#">My Events</a>
-                        </li>
-                        <li><a href="#">Notifications</a>
-                        </li>
-                    </ul>
-                    <hr>
-                    <h4>
-                        <i class="fa fa-user-plus"></i> <a href="#">New member: Sailing trip around Crete</a>
-                    </h4>
-                    <p>
-                        <a href="index.php">Jane Noname</a> joined
-                    </p>
-                    <p><span class="glyphicon glyphicon-time"></span> Jan 4, 2015 at 03:15 AM</p>
-                    <a class="btn btn-primary" href="#">Check Event <span class="glyphicon glyphicon-chevron-right"></span></a>
+                    <!-- Dashboard content -->
+                    <div class="col-md-9">
+                        <ul class="nav nav-tabs" id="time_line_tabs">
+                            <li role="presentation" type="all" class="active"><a href="#">Wszystkie</a></li>
+                            <li role="presentation" type="owner"><a href="#">Organizuję</a></li>
+                            <li role="presentation" type="member"><a href="#">Biorę udział</a></li>
+                            <li role="presentation" type="follower"><a href="#">Obserwuje</a></li>
+                        </ul>
 
-                    <hr>
-
-                    <h4>
-                        <i class="fa fa-map-o"></i> <a href="#">New event: Baikal Kayaking</a>
-                    </h4>
-                    <p>
-                        Added by <a href="#">Flocc</a>
-                    </p>
-                    <p><span class="glyphicon glyphicon-time"></span> Jan 2, 2016 at 10:00 PM</p>
-                    <img class="img-responsive" src="/img/lake-baikal.jpg" alt="">
-                    <p>&nbsp;</p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolore, veritatis, tempora, necessitatibus inventore nisi quam quia repellat ut tempore laborum possimus eum dicta id animi corrupti debitis ipsum officiis rerum.</p>
-                    <a class="btn btn-primary" href="#">Check Event      <span class="glyphicon glyphicon-chevron-right"></span></a>
-
-                    <hr>
-
-                    <h4>
-                        <i class="fa fa-comment-o"></i> <a href="#">New comment: Thailand semi-pro backpacking</a>
-                    </h4>
-                    <p>Posted by <a href="#">Joe Sixpack</a></p>
-                    <p><span class="glyphicon glyphicon-time"></span> Dec 28, 2016 at 10:45 AM</p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quibusdam, quasi, fugiat, asperiores harum voluptatum tenetur a possimus nesciunt quod accusamus saepe tempora ipsam distinctio minima dolorum perferendis labore impedit voluptates!</p>
-                    <a class="btn btn-primary" href="#">Check Event <span class="glyphicon glyphicon-chevron-right"></span></a>
-
-                    <hr>
-
-                    <!-- Pager -->
-                    <ul class="pager">
-                        <li class="previous">
-                            <a href="#">&larr; Older</a>
-                        </li>
-                        <li class="next">
-                            <a href="#">Newer &rarr;</a>
-                        </li>
-                    </ul>
+                        <div>
+                            <ul id="time_line"></ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+
+    <script src="/js/theme/scroll.js"></script>
+    <script>
+        $(function() {
+            Flocc.Profile.TimeLine.Init();
+            Flocc.Profile.TimeLine.Get({{ $id }});
+            FloccThemeScroll.Init('#time_line', function(start) {
+                Flocc.Profile.TimeLine.Get({{ $id }}, Flocc.Profile.TimeLine.GetActiveType(), start, 1);
+            });
+            Flocc.Profile.TimeLine.Tabs(function(type) {
+                Flocc.Profile.TimeLine.Init();
+                Flocc.Profile.TimeLine.Get({{ $id }}, type);
+            });
+        });
+    </script>
 @endsection

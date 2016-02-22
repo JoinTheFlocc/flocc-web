@@ -164,17 +164,19 @@
                                         </label>
                                     </div>
                                 @endforeach
-                                <div id="newActivity" class="checkbox">
+                                <div id="newActivity" class="checkbox" @if($post_new_activity !== null) style="display:block!important;" @endif>
                                     <label>
-                                        <input type="checkbox" name="activities[]" value="new" style="margin-top: 11px;">
-                                        <input type="text" class="form-control" id="new_activities" name="new_activities">
+                                        <input type="checkbox" name="activities[]" value="new" style="margin-top: 11px;" @if($post_new_activity !== null) checked="checked" @endif>
+                                        <input type="text" class="form-control" id="new_activities" name="new_activities" @if($post_new_activity !== null) value="{{ $post_new_activity }}" @endif>
                                     </label>
                                 </div>
-                                <div style="margin-top:15px;">
-                                    <a href="#" id="addActivity" class="btn btn-primary">
-                                        <i class="fa fa-plus-circle"></i> Dodaj nową aktywność
-                                    </a>
-                                </div>
+                                @if($post_new_activity == null)
+                                    <div style="margin-top:15px;">
+                                        <a href="#" id="addActivity" class="btn btn-primary">
+                                            <i class="fa fa-plus-circle"></i> Dodaj nową aktywność
+                                        </a>
+                                    </div>
+                                @endif
                             </div>
                         </div>
 

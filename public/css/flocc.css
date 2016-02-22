@@ -319,6 +319,43 @@ ul#places_route li i {
     display: none;
 }
 
+#time_line {
+    display: block;
+    margin: 0;
+    padding: 0;
+    border: 1px solid #ddd;
+    border-top: 0;
+    margin-bottom: 25px;
+}
+
+#time_line li {
+    display: block;
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+}
+
+#time_line li:last-child {
+    border-bottom: 0;
+}
+
+.mails .important td {
+    background: #ffbcb5;
+}
+
+.event-photo {
+    margin: 0px auto;
+    width: 150px;
+    height: 150px;
+    border-radius: 5px;
+}
+
+.edit-event-photo {
+    background: #000;
+    color: #fff;
+    border-radius: 5px;
+    padding: 5px 8px;
+}
+
 .grad {
   background: #424242; /* For browsers that do not support gradients */
   background: -webkit-linear-gradient(left top, #424242, royalblue); /* For Safari 5.1 to 6.0 */

@@ -79,8 +79,11 @@ class ImageHelper
                 break;
         }
 
-        $img = Image::make($file->getRealPath());
-        $ext = $file->getClientOriginalExtension();
+        include_once base_path() . '/vendor/intervention/image/src/intervention/image/ImageManager.php';
+
+        $image  = new \Intervention\Image\ImageManager();
+        $img    = $image->make($file->getRealPath());
+        $ext    = $file->getClientOriginalExtension();
 
         $img->resize($w, $h, function($constraint) {
             $constraint->aspectRatio();
@@ -92,10 +95,10 @@ class ImageHelper
 
         switch (config('filesystems.default')) {
             case 'local':
-                Storage::put("$prefix/$fname", $img);
+                Storage::put($prefix . "/" . $fname, $img);
                 break;
             case 's3':
-                Storage::put("$prefix/$fname", $img->stream()->__toString());
+                Storage::put($prefix . "/" . $fname, $img->stream()->__toString());
                 break;
         }
 
@@ -103,6 +106,7 @@ class ImageHelper
         // Storage facade does not return the path to remote file, hence for now - fixed one
 
         $path = "https://s3.eu-central-1.amazonaws.com/flocc";
-        return "$path/$prefix/$fname";
+
+        return $path . "/" . $prefix . "/" . $fname;
     }
 }

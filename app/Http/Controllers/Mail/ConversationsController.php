@@ -2,6 +2,7 @@
 
 namespace Flocc\Http\Controllers\Mail;
 
+use Flocc\Auth;
 use Flocc\Http\Controllers\Controller;
 use Flocc\Mail\Labels;
 use Flocc\Mail\Users;
@@ -86,5 +87,22 @@ class ConversationsController extends Controller
         $users->updateLabelId($conversation_id, \Auth::user()->id, $label_id);
 
         return \Redirect::to('mail/l/' . $label);
+    }
+
+    /**
+     * Select as important / not
+     *
+     * @param int $id
+     * @param int $is
+     *
+     * @return mixed
+     */
+    public function important($id, $is)
+    {
+        $users  = new Users();
+
+        $users->where('conversation_id', $id)->where('user_id', Auth::getUserId())->update(['is_important' => (string) $is]);
+
+        return \Redirect::to('mail/' . $id);
     }
 }
