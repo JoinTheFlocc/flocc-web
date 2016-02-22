@@ -10,6 +10,7 @@ use Flocc\Events\Events;
 use Flocc\Events\Members;
 use Flocc\Events\Routes;
 use Flocc\Events\TimeLine;
+use Flocc\Helpers\ImageHelper;
 use Flocc\Http\Controllers\Controller;
 use Flocc\Intensities;
 use Flocc\Notifications\NewNotification;
@@ -361,6 +362,31 @@ class EditEventController extends Controller
             'errors'            => isset($errors) ? $errors : [],
             'post_routes'       => $post_routes,
             'post_new_activity' => isset($post_new_activity) ? $post_new_activity : null
+        ]);
+    }
+
+    public function photo(\Illuminate\Http\Request $request, $id)
+    {
+        $this->init($id);
+
+        if ($request->hasFile('photo')) {
+            $image      = new ImageHelper();
+            $file       = $request->file('photo');
+            $new_name   = 'Event_' . $id . '_' . $file->getClientOriginalName();
+
+            $file_url   = $image->uploadFile($file);
+
+            echo 'file: ' ;
+            var_dump($file_url); die;
+
+
+            die;
+
+            return \Redirect::to('events/' . $this->event->getSlug());
+        }
+
+        return view('events.edit.photo', [
+            'event'             => $this->event,
         ]);
     }
 }

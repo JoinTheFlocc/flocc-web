@@ -341,3 +341,17 @@ ul#places_route li i {
 .mails .important td {
     background: #ffbcb5;
 }
+
+.event-photo {
+    margin: 0px auto;
+    width: 150px;
+    height: 150px;
+    border-radius: 5px;
+}
+
+.edit-event-photo {
+    background: #000;
+    color: #fff;
+    border-radius: 5px;
+    padding: 5px 8px;
+}

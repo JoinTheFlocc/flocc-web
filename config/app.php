@@ -151,7 +151,7 @@ return [
         //Laravel\Socialite\SocialiteServiceProvider::class,
         SocialiteProviders\Manager\ServiceProvider::class,
         Illuminate\Html\HtmlServiceProvider::class,
-        //Intervention\Image\ImageServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
 
     ],
 
