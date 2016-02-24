@@ -1052,4 +1052,17 @@ class Events extends Model
             }
         }
     }
+
+    /**
+     * Update avatar URL
+     *
+     * @param int $id
+     * @param string $avatar_url
+     *
+     * @return bool
+     */
+    public function updateAvatarUrl($id, $avatar_url)
+    {
+        return (self::where('id', $id)->update(['avatar_url' => $avatar_url]) == 1);
+    }
 }

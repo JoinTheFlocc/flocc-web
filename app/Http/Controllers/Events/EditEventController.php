@@ -365,28 +365,39 @@ class EditEventController extends Controller
         ]);
     }
 
+    /**
+     * Update avatar
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function photo(\Illuminate\Http\Request $request, $id)
     {
         $this->init($id);
 
         if ($request->hasFile('photo')) {
             $image      = new ImageHelper();
+            $events     = new Events();
+
             $file       = $request->file('photo');
-            $new_name   = 'Event_' . $id . '_' . $file->getClientOriginalName();
 
-            $file_url   = $image->uploadFile($file);
+            $validator  = \Validator::make(\Input::all(), [
+                'photo' => 'required|max:10000'
+            ], []);
+            $errors     = $validator->errors();
 
-            echo 'file: ' ;
-            var_dump($file_url); die;
+            if ($errors->count() == 0) {
+                $events->updateAvatarUrl($this->event->getId(), $image->uploadFile($file));
 
-
-            die;
-
-            return \Redirect::to('events/' . $this->event->getSlug());
+                return \Redirect::to('events/' . $this->event->getSlug());
+            }
         }
 
         return view('events.edit.photo', [
-            'event'             => $this->event,
+            'event'     => $this->event,
+            'errors'    => isset($errors) ? $errors : []
         ]);
     }
 }
