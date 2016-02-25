@@ -66,15 +66,13 @@ class ImageHelper
 
     public function uploadFile($file, $type = null)
     {
-
-        $w = null;
-        $h = null;
-        $prefix = '';
+        $w      = null;
+        $h      = null;
 
         switch ($type) {
             case 'avatar':
             default:
-                $h = 300;
+                $h      = 300;
                 $prefix = "avatars";
                 break;
         }
