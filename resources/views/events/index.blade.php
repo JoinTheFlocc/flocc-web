@@ -10,6 +10,7 @@
             @endif
 
             <div class="row">
+                @if($search_form)
                 <div class="col-md-4">
                     <h2>Wyszukaj</h2><br>
 
@@ -70,7 +71,9 @@
                         </div>
                     </form>
                 </div>
-                <div class="col-md-8">
+                @endif
+
+                <div class="@if($search_form) col-md-8 @else col-md-12 @endif">
                     <h2>Wyniki</h2><br>
                     @if($events->count() > 0)
                         <ul class="events">

@@ -25,11 +25,12 @@ class EventsController extends Controller
      */
     public function index(\Illuminate\Http\Request $request, $filters = [])
     {
-        $search     = new Search();
+        $search         = new Search();
 
-        $action     = 'all';
-        $user_id    = \Flocc\Auth::getUserId();
-        $form_data  = [];
+        $action         = 'all';
+        $user_id        = \Flocc\Auth::getUserId();
+        $form_data      = [];
+        $search_form    = false;
 
         if(!empty($filters)) {
             $filters    = explode(',', $filters);
@@ -72,19 +73,21 @@ class EventsController extends Controller
 
             // Filtrowanie wiadomości
             case 'by':
-                $form_data  = unserialize(base64_decode($filters[1]));
-                $events     = $search->search();
+                $form_data      = unserialize(base64_decode($filters[1]));
+                $events         = $search->search();
+                $search_form    = true;
                 break;
 
             // Wszystkie wydarzenia
             default:
-                $events = $search->getAll();
+                $events         = $search->getAll();
+                $search_form    = true;
         }
 
         $activities = (new Activities())->get();
         $places     = (new Places())->get();
 
-        return view('events.index', compact('events', 'user_id', 'activities', 'places', 'form_data'));
+        return view('events.index', compact('events', 'user_id', 'activities', 'places', 'form_data', 'search_form'));
     }
 
     /**
