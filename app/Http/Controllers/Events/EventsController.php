@@ -57,22 +57,22 @@ class EventsController extends Controller
 
         switch($action) {
             // Wydarzenia użytkownika
-            case 'user':
+            case Search::TYPE_USER:
                 $events = $search->getByUserId();
                 break;
 
             // Wydarzenia w których bierze udział
-            case 'member':
+            case Search::TYPE_MEMBER:
                 $events = $search->getByMemberId(['member', 'awaiting']);
                 break;
 
             // Wydarzenia, które obserwuje
-            case 'follower':
+            case Search::TYPE_FOLLOWER:
                 $events = $search->getByMemberId('follower');
                 break;
 
             // Filtrowanie wiadomości
-            case 'by':
+            case Search::TYPE_SEARCH:
                 $form_data      = unserialize(base64_decode($filters[1]));
                 $events         = $search->search();
                 $search_form    = true;

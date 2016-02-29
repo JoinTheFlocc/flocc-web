@@ -9,8 +9,14 @@ namespace Flocc\Events;
  */
 class Search
 {
-    private $filters = [];
-    private $on_page = 10;
+    // Typy wyszukiwań
+    const TYPE_USER         = 'user';
+    const TYPE_MEMBER       = 'member';
+    const TYPE_FOLLOWER     = 'follower';
+    const TYPE_SEARCH       = 'by';
+
+    private $filters        = [];
+    private $on_page        = 10;
 
     /**
      * Set filters

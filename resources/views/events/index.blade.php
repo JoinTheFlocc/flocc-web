@@ -91,8 +91,8 @@
                                             @if($event->getMember() !== null)
                                                 @if($event->getMember()->isStatusAwaiting())
                                                     <span class="label label-danger">
-                                                W oczekiwaniu na akceptacje
-                                            </span>
+                                                        W oczekiwaniu na akceptacje
+                                                    </span>
                                                 @endif
                                             @endif
                                         </h2>
@@ -112,10 +112,10 @@
 
                                         <div class="buttons">
                                             @if($event->isMine())
-                                                    <!-- Moje wydarzenie -->
-                                            <a href="{{ URL::route('events.edit.members', ['id' => $event->getId()]) }}"><i class="fa fa-users"></i></a>
-                                            <a href="{{ URL::route('events.edit', ['id' => $event->getId()]) }}"><i class="fa fa-pencil"></i></a>
-                                            <a href="{{ URL::route('events.event.cancel', ['slug' => $event->getSlug()]) }}" class="close_event"><i class="fa fa-times"></i></a>
+                                                <!-- Moje wydarzenie -->
+                                                <a href="{{ URL::route('events.edit.members', ['id' => $event->getId()]) }}"><i class="fa fa-users"></i></a>
+                                                <a href="{{ URL::route('events.edit', ['id' => $event->getId()]) }}"><i class="fa fa-pencil"></i></a>
+                                                <a href="{{ URL::route('events.event.cancel', ['slug' => $event->getSlug()]) }}" class="close_event"><i class="fa fa-times"></i></a>
                                             @endif
                                         </div>
                                     </div>
