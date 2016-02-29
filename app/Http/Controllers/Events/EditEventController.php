@@ -148,7 +148,7 @@ class EditEventController extends Controller
                     /**
                      * Wysłanie powiadomienia do użytkowników
                      */
-                    foreach($this->event->getMembers() as $member) {
+                    foreach($this->event->getMembersAndFollowers() as $member) {
                         (new NewNotification())
                             ->setUserId($member->getUserId())
                             ->setUniqueKey('events.limit.' . $this->event->getId())

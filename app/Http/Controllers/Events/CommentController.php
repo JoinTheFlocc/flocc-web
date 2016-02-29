@@ -53,7 +53,7 @@ class CommentController extends Controller
              *
              * @var $member \Flocc\Events\Members
              */
-            foreach($event->getMembers() as $member) {
+            foreach($event->getMembersAndFollowers() as $member) {
                 (new NewNotification())
                     ->setUserId($member->getUserId())
                     ->setUniqueKey('events.comment.' . $event->getId() . '.' . md5($comment))

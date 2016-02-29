@@ -685,6 +685,16 @@ class Events extends Model
     }
 
     /**
+     * Get members and folowers
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getMembersAndFollowers()
+    {
+        return $this->hasMany('Flocc\Events\Members', 'event_id', 'id')->whereIn('status', ['member', 'follower'])->get();
+    }
+
+    /**
      * Get event followers
      *
      * @return \Illuminate\Database\Eloquent\Collection
