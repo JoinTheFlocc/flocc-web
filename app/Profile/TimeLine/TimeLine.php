@@ -27,7 +27,7 @@ class TimeLine extends Model
      *
      * @var array
      */
-    protected $fillable = ['id', 'user_id', 'time', 'type', 'time_line_user_id', 'time_line_event_comment_id', 'time_line_event_id'];
+    protected $fillable = ['id', 'user_id', 'time', 'type', 'event_type', 'time_line_user_id', 'time_line_event_comment_id', 'time_line_event_id'];
 
     /**
      * Indicates if the model should be timestamped.
@@ -97,11 +97,13 @@ class TimeLine extends Model
     {
         $i = 0;
 
-        foreach($line->getUsers() as $user_id) {
+        foreach($line->getUsers() as $user_id => $user_type) {
+            $event_type = empty($line->getEventType()) ? $user_type : $line->getEventType();
+
             self::create([
                 'user_id'                       => $user_id,
                 'type'                          => $line->getType(),
-                'event_type'                    => $line->getEventType(),
+                'event_type'                    => $event_type,
                 'time_line_user_id'             => $line->getTimeLineUserId(),
                 'time_line_event_id'            => $line->getTimeLineEventId(),
                 'time_line_event_comment_id'    => $line->getTimeLineEventCommentId()
