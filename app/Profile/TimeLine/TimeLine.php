@@ -27,7 +27,7 @@ class TimeLine extends Model
      *
      * @var array
      */
-    protected $fillable = ['id', 'user_id', 'time', 'type', 'time_line_user_id', 'time_line_event_comment_id', 'time_line_event_id'];
+    protected $fillable = ['id', 'user_id', 'time', 'type', 'event_type', 'time_line_user_id', 'time_line_event_comment_id', 'time_line_event_id'];
 
     /**
      * Indicates if the model should be timestamped.

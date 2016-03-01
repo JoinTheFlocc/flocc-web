@@ -181,6 +181,10 @@ class NewTimeLine
             return false;
         }
 
+        if(empty($this->event_type)) {
+            return false;
+        }
+
         return true;
     }
 
