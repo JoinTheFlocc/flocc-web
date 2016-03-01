@@ -337,6 +337,7 @@ class EditEventController extends Controller
                         ->setType(($is_draft === true) ? 'new_event' : 'edit_event')
                         ->setTimeLineUserId(Auth::getUserId())
                         ->setTimeLineEventId($id)
+                        ->setEventType('follower')
                     ->save();
                 }
 
