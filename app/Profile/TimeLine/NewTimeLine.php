@@ -20,17 +20,18 @@ class NewTimeLine
      * Set user or users id
      *
      * @param int|array $user_id
+     * @param string|null $type
      *
      * @return $this
      */
-    public function setUserId($user_id)
+    public function setUserId($user_id, $type = null)
     {
         if(is_array($user_id)) {
-            foreach($user_id as $id) {
-                $this->users[] = (int) $id;
+            foreach($user_id as $id => $type) {
+                $this->users[(int) $id] = $type;
             }
         } else {
-            $this->users[] = (int) $user_id;
+            $this->users[(int) $user_id] = $type;
         }
 
         return $this;
@@ -178,10 +179,6 @@ class NewTimeLine
         }
 
         if(empty($this->type)) {
-            return false;
-        }
-
-        if(empty($this->event_type)) {
             return false;
         }
 
