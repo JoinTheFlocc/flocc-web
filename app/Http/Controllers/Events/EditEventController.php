@@ -125,6 +125,16 @@ class EditEventController extends Controller
                 ->save();
 
                 /**
+                 * Powiadomienie na tablicy wydarzenia
+                 */
+                (new TimeLine\NewLine())
+                    ->setEventId($id)
+                    ->setTypeAsMessage()
+                    ->setMessage(sprintf('[b]%s[/b] dołączył do wydarzenia dnia ', $user->getFirstName() . ' ' . $user->getLastName(), date('Y-m-d')))
+                    ->setUserId(Auth::getUserId())
+                ->save();
+
+                /**
                  * Powiadomienie na tablicy członkow wydarzenia
                  */
                 (new \Flocc\Profile\TimeLine\NewTimeLine())
