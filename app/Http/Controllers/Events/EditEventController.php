@@ -130,7 +130,7 @@ class EditEventController extends Controller
                 (new TimeLine\NewLine())
                     ->setEventId($id)
                     ->setTypeAsMessage()
-                    ->setMessage(sprintf('[b]%s[/b] dołączył do wydarzenia dnia ', $user->getFirstName() . ' ' . $user->getLastName(), date('Y-m-d')))
+                    ->setMessage(sprintf('[b]%s[/b] dołączył do wydarzenia dnia [b]%s[/b]', $user->getFirstName() . ' ' . $user->getLastName(), date('Y-m-d')))
                     ->setUserId(Auth::getUserId())
                 ->save();
 
