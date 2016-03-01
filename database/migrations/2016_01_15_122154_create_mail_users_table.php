@@ -19,6 +19,7 @@ class CreateMailUsersTable extends Migration
             $table->integer('label_id')->unsigned();
             $table->enum('is_owner', ['0', '1'])->default('0');
             $table->integer('unread_messages')->default(0);
+            $table->enum('is_important', ['0', '1'])->default('0');
 
             $table
                 ->foreign('conversation_id')

@@ -16,6 +16,10 @@ class EventServiceProvider extends ServiceProvider
         'Flocc\Events\SomeEvent' => [
             'Flocc\Listeners\EventListener',
         ],
+        SocialiteProviders\Manager\SocialiteWasCalled::class => [
+            'SocialiteProviders\Google\GoogleExtendSocialite@handle',
+            'SocialiteProviders\Live\LiveExtendSocialite@handle',
+        ],
     ];
 
     /**

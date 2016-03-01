@@ -10,6 +10,7 @@ use Flocc\Events\Events;
 use Flocc\Events\Members;
 use Flocc\Events\Routes;
 use Flocc\Events\TimeLine;
+use Flocc\Helpers\ImageHelper;
 use Flocc\Http\Controllers\Controller;
 use Flocc\Intensities;
 use Flocc\Notifications\NewNotification;
@@ -124,6 +125,16 @@ class EditEventController extends Controller
                 ->save();
 
                 /**
+                 * Powiadomienie na tablicy członkow wydarzenia
+                 */
+                (new \Flocc\Profile\TimeLine\NewTimeLine())
+                    ->setUserId($this->event->getMembersAndFollowersIds())
+                    ->setType('new_member')
+                    ->setTimeLineUserId($user_id)
+                    ->setTimeLineEventId($this->event->getId())
+                ->save();
+
+                /**
                  * Zmiana statusu
                  */
                 (new Members())->updateStatus($user_id, $id, $status);
@@ -133,6 +144,19 @@ class EditEventController extends Controller
                  */
                 if($this->event->getUsersLimit() == $this->event->getMembers()->count()) {
                     (new Events())->closeEvent($id);
+
+                    /**
+                     * Wysłanie powiadomienia do użytkowników
+                     */
+                    foreach($this->event->getMembersAndFollowers() as $member) {
+                        (new NewNotification())
+                            ->setUserId($member->getUserId())
+                            ->setUniqueKey('events.limit.' . $this->event->getId())
+                            ->setCallback('/events/' . $this->event->getSlug())
+                            ->setTypeId('events.limit')
+                            ->addVariable('event', $this->event->getTitle())
+                        ->save();
+                    }
                 }
             }
         }
@@ -197,7 +221,7 @@ class EditEventController extends Controller
                 $this->event->setStatus('open');
             }
 
-            if($post['place_type'] == 'place') {
+            if(\Input::get('place_type') == 'place') {
                 $this->event->setPlaceId(\Input::get('place_id'));
             } else {
                 $this->event->setPlaceId(null);
@@ -277,8 +301,6 @@ class EditEventController extends Controller
                         ->setMessage(sprintf('[b]%s[/b] utworzył wydarzenie dnia %s o %s', $user_name, date('Y-m-d'), date('H:i')))
                         ->setUserId(Auth::getUserId())
                     ->save();
-
-                    return \Redirect::to('events/' . $this->event->getSlug() . '/share');
                 } else {
                     /**
                      * Notification
@@ -296,9 +318,25 @@ class EditEventController extends Controller
                     }
                 }
 
+                /**
+                 * Powiadomienie na tablicy członkow wydarzenia o edycji
+                 */
+                foreach(User::all() as $user) {
+                    (new \Flocc\Profile\TimeLine\NewTimeLine())
+                        ->setUserId($user->getId())
+                        ->setType(($is_draft === true) ? 'new_event' : 'edit_event')
+                        ->setTimeLineUserId(Auth::getUserId())
+                        ->setTimeLineEventId($id)
+                    ->save();
+                }
+
+                if($is_draft === true) {
+                    return \Redirect::to('events/' . $this->event->getSlug() . '/share');
+                }
+
                 return \Redirect::to('events/' . $this->event->getSlug());
             } else {
-                if($post['place_type'] == 'place') {
+                if(\Input::get('place_type') == 'place') {
                     $this->event->setPlaceId($post['place_id']);
                 } else {
                     foreach(explode(',', $post['route']) as $row) {
@@ -306,6 +344,10 @@ class EditEventController extends Controller
                             $post_routes[$row] = $places->getById($row)->getName();
                         }
                     }
+                }
+
+                if(in_array('new', \Input::get('activities', []))) {
+                    $post_new_activity = \Input::get('new_activities');
                 }
             }
         }
@@ -318,7 +360,44 @@ class EditEventController extends Controller
             'intensities'       => $intensities->all(),
             'places'            => $places->all(),
             'errors'            => isset($errors) ? $errors : [],
-            'post_routes'       => $post_routes
+            'post_routes'       => $post_routes,
+            'post_new_activity' => isset($post_new_activity) ? $post_new_activity : null
+        ]);
+    }
+
+    /**
+     * Update avatar
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function photo(\Illuminate\Http\Request $request, $id)
+    {
+        $this->init($id);
+
+        if ($request->hasFile('photo')) {
+            $image      = new ImageHelper();
+            $events     = new Events();
+
+            $file       = $request->file('photo');
+
+            $validator  = \Validator::make(\Input::all(), [
+                'photo' => 'required|max:10000'
+            ], []);
+            $errors     = $validator->errors();
+
+            if ($errors->count() == 0) {
+                $events->updateAvatarUrl($this->event->getId(), $image->uploadFile($file));
+
+                return \Redirect::to('events/' . $this->event->getSlug());
+            }
+        }
+
+        return view('events.edit.photo', [
+            'event'     => $this->event,
+            'errors'    => isset($errors) ? $errors : []
         ]);
     }
 }

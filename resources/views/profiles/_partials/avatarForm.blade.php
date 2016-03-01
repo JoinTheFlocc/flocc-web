@@ -12,11 +12,10 @@
                 @endif
                 <div class="box">
                     <div class="form uploadBox">
-                        {!! Form::open(array('url' => 'profile/upload', 'class'=>'form-horizontal','files'=>true)) !!}
-
+                        {!! Form::open(array('id' => 'image_form', 'url' => 'profile/upload', 'class'=>'form-horizontal', 'files'=>true)) !!}
                         <div class="form-group">
-                            <div class="col-xs-offset-4 col-xs-4">
-                                <img src="{{ $profile->avatar_url or '/img/avatar.png' }}" alt="" class="avatar img-thumbnail">
+                            <div id="image_preview" class="col-xs-offset-4 col-xs-4">
+                                <img src="{{ $profile->avatar_url or '/img/avatar.png' }}" alt="Avatar" class="avatar img-thumbnail">
                             </div>
                         </div>
                         <div class="form-group">
@@ -31,7 +30,7 @@
                         </div>
                         <div class="form-group">
                             <div class="input-group col-xs-offset-2 col-xs-8">
-                                <button type="submit" class="btn btn-primary pull-right">
+                                <button id="image_submit" type="submit" class="btn btn-primary pull-right">
                                     <i class="fa fa-btn fa-upload"></i>Upload
                                 </button>
                             </div>
@@ -40,15 +39,6 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-            </div>
         </div>
     </div>
 </div>
-
-<script>
-    $('.btn-file :file').on('change', function() {
-        var f = $(this).val().replace(/^.*\\/, '');
-        $('#image_file').val(f);
-    })
-</script>

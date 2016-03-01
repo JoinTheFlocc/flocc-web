@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+    <div class="contentBox">
         <div class="col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-body">
@@ -42,9 +43,19 @@
                             <a href="{{ URL::route('mail.move', ['id' => $conversation->conversation_id, 'label' => 'trash']) }}" class="btn btn-danger">
                                 Move to trash
                             </a>
+                            @if($conversation->isImportant() === false)
+                                <a href="{{ URL::route('mail.important', ['id' => $conversation->conversation_id, 'is' => '1']) }}" class="btn btn-default">
+                                    Oznacz jako ważna
+                                </a>
+                            @else
+                                <a href="{{ URL::route('mail.important', ['id' => $conversation->conversation_id, 'is' => '0']) }}" class="btn btn-danger">
+                                    Oznacz jako nie ważna
+                                </a>
+                            @endif
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 @endsection

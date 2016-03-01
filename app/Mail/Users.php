@@ -47,9 +47,10 @@ class Users extends Model
         $data           = new Collection();
         $conversations  = self::where('mail_users.user_id', (int) $user_id)
             ->where('mail_labels.label_id', (int) $label_id)
-            ->select('mail_users.conversation_id', 'mail_users.unread_messages', 'mail_conversations.last_message_time', 'mail_conversations.start_time')
+            ->select('mail_users.conversation_id', 'mail_users.unread_messages', 'mail_conversations.last_message_time', 'mail_conversations.start_time', 'mail_users.is_important')
             ->join('mail_conversations', 'mail_conversations.conversation_id', '=', 'mail_users.conversation_id')
             ->join('mail_labels', 'mail_users.label_id', '=', 'mail_labels.label_id')
+            ->orderBy('mail_users.is_important', 'desc')
             ->orderBy('mail_conversations.last_message_time', 'desc')
             ->take(10)
         ->get();

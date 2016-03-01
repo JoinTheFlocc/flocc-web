@@ -34,11 +34,23 @@ return [
         'key'    => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
     ],
-    
+
     'facebook' => [
         'client_id'     => env('FB_APP_ID'),
         'client_secret' => env('FB_APP_SECRET'),
         'redirect'      => env('FB_CALLBACK'),
     ],
+
+    'google' => [
+        'client_id'     => env('GOOGLE_APP_ID'),
+        'client_secret' => env('GOOGLE_APP_SECRET'),
+        'redirect'      => env('GOOGLE_CALLBACK'),
+    ],
+
+    'live' => [
+        'client_id'     => env('LIVE_APP_ID'),
+        'client_secret' => env('LIVE_APP_SECRET'),
+        'redirect'      => env('LIVE_CALLBACK'),
+    ]
 
 ];

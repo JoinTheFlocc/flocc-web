@@ -9,8 +9,14 @@ namespace Flocc\Events;
  */
 class Search
 {
-    private $filters = [];
-    private $on_page = 10;
+    // Typy wyszukiwań
+    const TYPE_USER         = 'user';
+    const TYPE_MEMBER       = 'member';
+    const TYPE_FOLLOWER     = 'follower';
+    const TYPE_SEARCH       = 'by';
+
+    private $filters        = [];
+    private $on_page        = 10;
 
     /**
      * Set filters
@@ -21,6 +27,12 @@ class Search
      */
     public function setFilters(array $filters)
     {
+        if(isset($filters[0])) {
+            if($filters[0] == 'by') {
+                $filters = array_merge($filters, unserialize(base64_decode($filters[1])));
+            }
+        }
+
         $this->filters = $filters;
 
         return $this;
@@ -36,7 +48,7 @@ class Search
      */
     public function getParam($i, $default = null)
     {
-        return isset($this->filters[(int) $i]) ? $this->filters[(int) $i] : $default;
+        return isset($this->filters[$i]) ? $this->filters[$i] : $default;
     }
 
     /**
@@ -80,9 +92,47 @@ class Search
     }
 
     /**
+     * Get all events with criterias
+     *
+     * @return \Illuminate\Pagination\LengthAwarePaginator
+     */
+    public function search()
+    {
+        $query      = Events::select('events.*', \DB::raw($this->getScoringFunction() . ' as scoring'));
+        $query      = $query->leftjoin('events_activities', 'events.id', '=', 'events_activities.event_id');
+
+        if($this->getParam('place_id') !== null) {
+            $query = $query->leftjoin('events_routes', function ($join) {
+                $join->on('events.id', '=', 'events_routes.event_id');
+                $join->on('events_routes.place_id', '=', \DB::raw($this->getParam('place_id')));
+            });
+        }
+
+        $query = $query->where('status', 'open');
+
+        if ($this->getParam('activity_id') !== null) {
+            $query = $query->where('activity_id', (int) $this->getParam('activity_id'));
+        }
+
+        if ($this->getParam('place_id') !== null) {
+            $query = $query->where(function($query) {
+                $query->where('events.place_id', '=', $this->getParam('place_id'));
+                $query->orWhere('events_routes.place_id', '=', $this->getParam('place_id'));
+            });
+        }
+
+        $query = $query->where(\DB::raw($this->getScoringFunction()), '>', 0);
+
+        $query = $query->orderBy(\DB::raw($this->getScoringFunction()), 'desc');
+        $query = $query->groupBy('events.id');
+        
+        return $query->paginate($this->on_page);
+    }
+
+    /**
      * Get member and follower events
      *
-     * @param string $status
+     * @param string|array $status
      *
      * @return \Illuminate\Pagination\LengthAwarePaginator
      *
@@ -103,8 +153,16 @@ class Search
             $user_id = (int) \Auth::user()->id;
         }
 
-        $get_events_ids = Members::where('user_id', $user_id)->where('status', $status)->get();
-        $ids            = [];
+        $get_events_ids = Members::where('user_id', $user_id);
+
+        if(is_array($status)) {
+            $get_events_ids = $get_events_ids->whereIn('status', $status);
+        } else {
+            $get_events_ids = $get_events_ids->where('status', $status);
+        }
+
+        $get_events_ids     = $get_events_ids->get();
+        $ids                = [];
 
         foreach($get_events_ids as $event) {
             $ids[] = $event->getEventId();
@@ -114,5 +172,24 @@ class Search
             ->whereIn('id', $ids)
             ->orderBy('created_at', 'desc')
         ->paginate($this->on_page);
+    }
+
+    /**
+     * Get scoring function SQL
+     *
+     * @return string
+     */
+    private function getScoringFunction()
+    {
+        $event_from     = ($this->getParam('event_from') === null) ? date('Y') . '-01-01' : $this->getParam('event_from');
+        $event_to       = ($this->getParam('event_to') === null) ? date('Y') . '-12-31' : $this->getParam('event_to');
+        $event_span     = ((int) $this->getParam('event_span') === 0) ? 4 : (int) $this->getParam('event_span');
+
+        return sprintf(
+            'eventScore("%s", "%s", events.event_from, events.event_to, %d)',
+            $event_from,
+            $event_to,
+            $event_span
+        );
     }
 }

@@ -7,20 +7,28 @@
                 @if(!Auth::guest())
                     @if($event->isMine() === false)
                         <div class="text-center">
-                            @if(!$event->isImIn())
-                                    @if($event->isStatusOpen())
-                                        @if($event->getMembers()->count() < $event->getUsersLimit())
-                                            <a href="{{ URL::route('events.event.join', ['slug' => $event->getSlug(), 'type' => 'member']) }}" class="btn btn-success" style="width:32%">
-                                                Dołącz
-                                            </a>
-                                        @endif
-                                    @endif
-                                    @if(!$event->isStatusCanceled() and !Auth::guest())
-                                        <a href="{{ URL::route('events.event.join', ['slug' => $event->getSlug(), 'type' => 'follower']) }}" class="btn btn-primary" style="width:32%">
-                                            Obserwuj
-                                        </a>
-                                    @endif
+                            @if($event->canJoin())
+                                <a href="{{ URL::route('events.event.join', ['slug' => $event->getSlug(), 'type' => 'member']) }}" class="btn btn-success" style="width:32%">
+                                    Dołącz
+                                </a>
                             @endif
+                            @if($event->canUnJoin())
+                                <a href="{{ URL::route('events.event.resign', ['slug' => $event->getSlug()]) }}" class="btn btn-danger">
+                                    Zrezygnuj
+                                </a>
+                            @endif
+
+                            @if($event->canFollow())
+                                <a href="{{ URL::route('events.event.join', ['slug' => $event->getSlug(), 'type' => 'follower']) }}" class="btn btn-primary" style="width:32%">
+                                    Obserwuj
+                                </a>
+                            @endif
+                            @if($event->canUnFollow())
+                                <a href="{{ URL::route('events.event.resign', ['slug' => $event->getSlug()]) }}" class="btn btn-danger">
+                                    Nie obserwuj
+                                </a>
+                            @endif
+
                             <a href="{{ URL::route('mail.new.form', ['user_id' => $event->getUserId()]) }}" class="btn btn-default" style="width:32%">
                                 Wiadomość
                             </a>
@@ -41,7 +49,13 @@
 
                 <div class="well text-center">
                     <h1>{{ $event->getTitle() }}</h1><br>
-                    <img src="{{ $event->getAvatarUrl() }}" style="width:150px;border-radius:5px;"><br><br>
+                    <div class="event-photo" style="background:url({{ $event->getAvatarUrl() }});">
+                        @if($event->isMine())
+                            <a href="{{ URL::route('events.edit.photo', ['id' => $event->getId()]) }}" class="edit-event-photo">
+                                zmień
+                            </a>
+                        @endif
+                    </div><br><br>
                     <p>{{ $event->getDescription() }}</p><br>
 
                     <div class="row text-left">
