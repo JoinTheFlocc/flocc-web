@@ -332,12 +332,14 @@ class EditEventController extends Controller
                  * Powiadomienie na tablicy członkow wydarzenia o edycji
                  */
                 foreach(User::all() as $user) {
+                    $event_type = ($user->getId() === Auth::getUserId()) ? 'owner' : 'follower';
+
                     (new \Flocc\Profile\TimeLine\NewTimeLine())
                         ->setUserId($user->getId())
                         ->setType(($is_draft === true) ? 'new_event' : 'edit_event')
                         ->setTimeLineUserId(Auth::getUserId())
                         ->setTimeLineEventId($id)
-                        ->setEventType('follower')
+                        ->setEventType($event_type)
                     ->save();
                 }
 
