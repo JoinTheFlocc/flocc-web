@@ -41,7 +41,13 @@
                                     </a>
                                 </td>
                                 <td class="text-center">{{ $conversation->unread_messages }}</td>
-                                <td class="text-center">{{ $conversation->last_message_time }}</td>
+                                <td class="text-center">
+                                    @if($conversation->last_message_time === null)
+                                        {{ $conversation->start_time }}
+                                    @else
+                                        {{ $conversation->last_message_time }}
+                                    @endif
+                                </td>
                             </tr>
                         @empty
                             <strong>You don't have any messages!</strong>
