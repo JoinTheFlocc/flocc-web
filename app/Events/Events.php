@@ -981,6 +981,7 @@ class Events extends Model
      * @return bool
      */
     public function openEvent($id)
+    {
         return (self::where('id', $id)->update(['status' => 'open']) == 1);
     }
 
