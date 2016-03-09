@@ -10,6 +10,7 @@
             @endif
 
             <div class="row">
+                @if($search_form)
                 <div class="col-md-4">
                     <h2>Wyszukaj</h2><br>
 
@@ -54,7 +55,13 @@
                                 <br>&nbsp;<br>
 
                                 <strong>Ilość dni</strong><br>&nbsp;
-                                <input name="event_span" class="form-control" placeholder="Od" @if(isset($form_data['event_span'])) value="{{ $form_data['event_span'] }}" @endif>
+                                <select name="event_span" class="form-control">
+                                    <option>Wybierz</option>
+                                    <option value="1" @if(isset($form_data['event_span']) and $form_data['event_span'] == '1') selected="selected" @endif>do 2 dni</option>
+                                    <option value="2" @if(isset($form_data['event_span']) and $form_data['event_span'] == '2') selected="selected" @endif>2-5 dni</option>
+                                    <option value="3" @if(isset($form_data['event_span']) and $form_data['event_span'] == '3') selected="selected" @endif>6-14 dni</option>
+                                    <option value="4" @if(isset($form_data['event_span']) and $form_data['event_span'] == '4') selected="selected" @endif>powyżej 14 dni</option>
+                                </select>
                             </div>
                         </div>
 
@@ -64,7 +71,9 @@
                         </div>
                     </form>
                 </div>
-                <div class="col-md-8">
+                @endif
+
+                <div class="@if($search_form) col-md-8 @else col-md-12 @endif">
                     <h2>Wyniki</h2><br>
                     @if($events->count() > 0)
                         <ul class="events">
@@ -82,8 +91,8 @@
                                             @if($event->getMember() !== null)
                                                 @if($event->getMember()->isStatusAwaiting())
                                                     <span class="label label-danger">
-                                                W oczekiwaniu na akceptacje
-                                            </span>
+                                                        W oczekiwaniu na akceptacje
+                                                    </span>
                                                 @endif
                                             @endif
                                         </h2>
@@ -103,10 +112,10 @@
 
                                         <div class="buttons">
                                             @if($event->isMine())
-                                                    <!-- Moje wydarzenie -->
-                                            <a href="{{ URL::route('events.edit.members', ['id' => $event->getId()]) }}"><i class="fa fa-users"></i></a>
-                                            <a href="{{ URL::route('events.edit', ['id' => $event->getId()]) }}"><i class="fa fa-pencil"></i></a>
-                                            <a href="{{ URL::route('events.event.cancel', ['slug' => $event->getSlug()]) }}" class="close_event"><i class="fa fa-times"></i></a>
+                                                <!-- Moje wydarzenie -->
+                                                <a href="{{ URL::route('events.edit.members', ['id' => $event->getId()]) }}"><i class="fa fa-users"></i></a>
+                                                <a href="{{ URL::route('events.edit', ['id' => $event->getId()]) }}"><i class="fa fa-pencil"></i></a>
+                                                <a href="{{ URL::route('events.event.cancel', ['slug' => $event->getSlug()]) }}" class="close_event"><i class="fa fa-times"></i></a>
                                             @endif
                                         </div>
                                     </div>

@@ -671,17 +671,27 @@ class Events extends Model
      */
     public function getMembersAndFollowersIds()
     {
-        $ids = [$this->getUserId()];
+        $ids = [$this->getUserId() => 'owner'];
 
         foreach($this->getMembers() as $member) {
-            $ids[] = $member->getUserId();
+            $ids[$member->getUserId()] = 'member';
         }
 
         foreach($this->getFollowers() as $member) {
-            $ids[] = $member->getUserId();
+            $ids[$member->getUserId()] = 'follower';
         }
 
         return $ids;
+    }
+
+    /**
+     * Get members and folowers
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getMembersAndFollowers()
+    {
+        return $this->hasMany('Flocc\Events\Members', 'event_id', 'id')->whereIn('status', ['member', 'follower'])->get();
     }
 
     /**
@@ -1051,5 +1061,18 @@ class Events extends Model
                 ->save();
             }
         }
+    }
+
+    /**
+     * Update avatar URL
+     *
+     * @param int $id
+     * @param string $avatar_url
+     *
+     * @return bool
+     */
+    public function updateAvatarUrl($id, $avatar_url)
+    {
+        return (self::where('id', $id)->update(['avatar_url' => $avatar_url]) == 1);
     }
 }

@@ -53,7 +53,7 @@ class CommentController extends Controller
              *
              * @var $member \Flocc\Events\Members
              */
-            foreach($event->getMembers() as $member) {
+            foreach($event->getMembersAndFollowers() as $member) {
                 (new NewNotification())
                     ->setUserId($member->getUserId())
                     ->setUniqueKey('events.comment.' . $event->getId() . '.' . md5($comment))
@@ -62,17 +62,32 @@ class CommentController extends Controller
                     ->addVariable('user', $user->getFirstName() . ' ' . $user->getLastName())
                     ->addVariable('event', $event->getTitle())
                 ->save();
+
+                /**
+                 * Powiadomienie na tablicy członkow wydarzenia
+                 */
+                $event_type = $member->isStatusMember() ? 'member' : 'follower';
+
+                (new \Flocc\Profile\TimeLine\NewTimeLine())
+                    ->setUserId($member->getUserId())
+                    ->setType('new_comment')
+                    ->setTimeLineUserId($user_id)
+                    ->setTimeLineEventId($event->getId())
+                    ->setTimeLineEventCommentId($comment_id)
+                    ->setEventType($event_type)
+                ->save();
             }
 
             /**
-             * Powiadomienie na tablicy członkow wydarzenia
+             * Powiadomienie na tablicy do organizatora wydarzenia
              */
             (new \Flocc\Profile\TimeLine\NewTimeLine())
-                ->setUserId($event->getMembersAndFollowersIds())
+                ->setUserId($event->getUserId())
                 ->setType('new_comment')
                 ->setTimeLineUserId($user_id)
                 ->setTimeLineEventId($event->getId())
                 ->setTimeLineEventCommentId($comment_id)
+                ->setEventType('owner')
             ->save();
         }
 

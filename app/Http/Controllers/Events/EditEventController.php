@@ -125,6 +125,16 @@ class EditEventController extends Controller
                 ->save();
 
                 /**
+                 * Powiadomienie na tablicy wydarzenia
+                 */
+                (new TimeLine\NewLine())
+                    ->setEventId($id)
+                    ->setTypeAsMessage()
+                    ->setMessage(sprintf('[b]%s[/b] dołączył do wydarzenia dnia [b]%s[/b]', $user->getFirstName() . ' ' . $user->getLastName(), date('Y-m-d')))
+                    ->setUserId(Auth::getUserId())
+                ->save();
+
+                /**
                  * Powiadomienie na tablicy członkow wydarzenia
                  */
                 (new \Flocc\Profile\TimeLine\NewTimeLine())
@@ -148,7 +158,7 @@ class EditEventController extends Controller
                     /**
                      * Wysłanie powiadomienia do użytkowników
                      */
-                    foreach($this->event->getMembers() as $member) {
+                    foreach($this->event->getMembersAndFollowers() as $member) {
                         (new NewNotification())
                             ->setUserId($member->getUserId())
                             ->setUniqueKey('events.limit.' . $this->event->getId())
@@ -322,11 +332,14 @@ class EditEventController extends Controller
                  * Powiadomienie na tablicy członkow wydarzenia o edycji
                  */
                 foreach(User::all() as $user) {
+                    $event_type = ($user->getId() === Auth::getUserId()) ? 'owner' : 'follower';
+
                     (new \Flocc\Profile\TimeLine\NewTimeLine())
                         ->setUserId($user->getId())
                         ->setType(($is_draft === true) ? 'new_event' : 'edit_event')
                         ->setTimeLineUserId(Auth::getUserId())
                         ->setTimeLineEventId($id)
+                        ->setEventType($event_type)
                     ->save();
                 }
 
@@ -365,28 +378,39 @@ class EditEventController extends Controller
         ]);
     }
 
+    /**
+     * Update avatar
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function photo(\Illuminate\Http\Request $request, $id)
     {
         $this->init($id);
 
         if ($request->hasFile('photo')) {
             $image      = new ImageHelper();
+            $events     = new Events();
+
             $file       = $request->file('photo');
-            $new_name   = 'Event_' . $id . '_' . $file->getClientOriginalName();
 
-            $file_url   = $image->uploadFile($file);
+            $validator  = \Validator::make(\Input::all(), [
+                'photo' => 'required|max:10000'
+            ], []);
+            $errors     = $validator->errors();
 
-            echo 'file: ' ;
-            var_dump($file_url); die;
+            if ($errors->count() == 0) {
+                $events->updateAvatarUrl($this->event->getId(), $image->uploadFile($file));
 
-
-            die;
-
-            return \Redirect::to('events/' . $this->event->getSlug());
+                return \Redirect::to('events/' . $this->event->getSlug());
+            }
         }
 
         return view('events.edit.photo', [
-            'event'             => $this->event,
+            'event'     => $this->event,
+            'errors'    => isset($errors) ? $errors : []
         ]);
     }
 }

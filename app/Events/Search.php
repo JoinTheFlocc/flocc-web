@@ -9,8 +9,14 @@ namespace Flocc\Events;
  */
 class Search
 {
-    private $filters = [];
-    private $on_page = 10;
+    // Typy wyszukiwań
+    const TYPE_USER         = 'user';
+    const TYPE_MEMBER       = 'member';
+    const TYPE_FOLLOWER     = 'follower';
+    const TYPE_SEARCH       = 'by';
+
+    private $filters        = [];
+    private $on_page        = 10;
 
     /**
      * Set filters
@@ -92,8 +98,8 @@ class Search
      */
     public function search()
     {
-        $query = Events::select('events.*');
-        $query = $query->leftjoin('events_activities', 'events.id', '=', 'events_activities.event_id');
+        $query      = Events::select('events.*', \DB::raw($this->getScoringFunction() . ' as scoring'));
+        $query      = $query->leftjoin('events_activities', 'events.id', '=', 'events_activities.event_id');
 
         if($this->getParam('place_id') !== null) {
             $query = $query->leftjoin('events_routes', function ($join) {
@@ -115,17 +121,11 @@ class Search
             });
         }
 
-        if($this->getParam('event_from') !== null) {
-            $query = $query->where('event_from', '>=', $this->getParam('event_from'));
-        }
+        $query = $query->where(\DB::raw($this->getScoringFunction()), '>', 0);
 
-        if($this->getParam('event_to') !== null) {
-            $query = $query->where('event_to', '<=', $this->getParam('event_to'));
-        }
-
-        $query = $query->orderBy('created_at', 'desc');
+        $query = $query->orderBy(\DB::raw($this->getScoringFunction()), 'desc');
         $query = $query->groupBy('events.id');
-
+        
         return $query->paginate($this->on_page);
     }
 
@@ -172,5 +172,24 @@ class Search
             ->whereIn('id', $ids)
             ->orderBy('created_at', 'desc')
         ->paginate($this->on_page);
+    }
+
+    /**
+     * Get scoring function SQL
+     *
+     * @return string
+     */
+    private function getScoringFunction()
+    {
+        $event_from     = ($this->getParam('event_from') === null) ? date('Y') . '-01-01' : $this->getParam('event_from');
+        $event_to       = ($this->getParam('event_to') === null) ? date('Y') . '-12-31' : $this->getParam('event_to');
+        $event_span     = ((int) $this->getParam('event_span') === 0) ? 4 : (int) $this->getParam('event_span');
+
+        return sprintf(
+            'eventScore("%s", "%s", events.event_from, events.event_to, %d)',
+            $event_from,
+            $event_to,
+            $event_span
+        );
     }
 }
