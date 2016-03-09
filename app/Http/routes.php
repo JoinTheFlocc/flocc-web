@@ -40,6 +40,8 @@ Route::get('auth/social/{provider}/callback', 'Auth\AuthController@handleProvide
 Route::get('profile', 'ProfilesController@show')->name('profile.my');
 Route::post('profile/upload', 'ProfilesController@upload')->name('profile.upload');
 Route::get('profile/time-line', 'ProfilesController@timeLine')->name('profile.timeline');
+Route::get('profile/{id}/edit', 'ProfilesController@edit')->name('profile.edit')->where('id', '[0-9]+');
+Route::patch('profile/{id}/update', 'ProfilesController@update')->name('profile.update')->where('id', '[0-9]+');
 Route::get('profile/{id?}', 'ProfilesController@show')->name('profile.display')->where('id', '[0-9]+');
 
 // Settings

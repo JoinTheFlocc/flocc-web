@@ -15,6 +15,10 @@
                                 <a href="{{ URL::route('mail.new.form', ['user_id' => $profile->user_id]) }}" class="btn btn-success btn-block">
                                     <i class="fa fa-envelope"></i> Start chat
                                 </a>
+                            @else
+                                <a href="{{ URL::route('profile.edit', ['id' => $profile->id]) }}" class="btn btn-success btn-block">
+                                    <i class="fa fa-edit"></i> Edit profile
+                                </a>
                             @endif
                         </div>
 
