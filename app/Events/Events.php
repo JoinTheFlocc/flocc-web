@@ -671,7 +671,7 @@ class Events extends Model
      */
     public function getMembersAndFollowersIds()
     {
-        $ids = [$this->getUserId() => 'owner'];
+        $ids = [];
 
         foreach($this->getMembers() as $member) {
             $ids[$member->getUserId()] = 'member';
