@@ -49,9 +49,15 @@
                     </tbody>
                 </table>
                 <br>
-                <a href="{{ URL::route('mail.label', ['label' => 'trash']) }}" class="btn btn-danger">
-                    Trash
-                </a>
+                @if($label == 'trash')
+                    <a href="{{ URL::route('mail.label') }}" class="btn btn-primary">
+                        Inbox
+                    </a>
+                @else
+                    <a href="{{ URL::route('mail.label', ['label' => 'trash']) }}" class="btn btn-danger">
+                        Trash
+                    </a>
+                @endif
             </div>
         </div>
     </div>
