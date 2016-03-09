@@ -85,90 +85,95 @@ class EditEventController extends Controller
     {
         $this->init($id);
 
-        if(in_array($status, ['member', 'rejected'])) {
-            if($status == 'member') {
-                /**
-                 * Sprawdzenie limitu
-                 */
-                if($this->event->getMembers()->count() == $this->event->getUsersLimit()) {
-                    // @TODO:
-                    throw new \Exception('Przekroczony limit');
-                }
+        if($status == 'member') {
+            /**
+             * Sprawdzenie limitu
+             */
+            if($this->event->getMembers()->count() == $this->event->getUsersLimit()) {
+                // @TODO:
+                throw new \Exception('Przekroczony limit');
+            }
+
+            /**
+             * Powiadomienia do pozostałych uczestników
+             *
+             * @var $user \Flocc\Profile
+             */
+            $user = (new User())->getById($user_id)->getProfile();
+
+            foreach(array_merge($this->event->getMembers()->toArray(), $this->event->getFollowers()->toArray()) as $member) {
+                (new NewNotification())
+                    ->setUserId($member->getUserId())
+                    ->setUniqueKey('events.members.new.' . $id . '.' . $user_id)
+                    ->setTypeId('events.members.new')
+                    ->setCallback('/events/' . $this->event->getSlug())
+                    ->addVariable('user', $user->getFirstName() . ' ' . $user->getLastName())
+                    ->addVariable('event', $this->event->getTitle())
+                ->save();
+            }
+
+            /**
+             * Powiadomienie do usera, że został zaakceptowany
+             */
+            (new NewNotification())
+                ->setUserId($user_id)
+                ->setUniqueKey('events.members.accept.' . $id)
+                ->setTypeId('events.members.accept')
+                ->setCallback('/events/' . $this->event->getSlug())
+                ->addVariable('event', $this->event->getTitle())
+            ->save();
+
+            /**
+             * Powiadomienie na tablicy wydarzenia
+             */
+            (new TimeLine\NewLine())
+                ->setEventId($id)
+                ->setTypeAsMessage()
+                ->setMessage(sprintf('[b]%s[/b] dołączył do wydarzenia dnia [b]%s[/b]', $user->getFirstName() . ' ' . $user->getLastName(), date('Y-m-d')))
+                ->setUserId(Auth::getUserId())
+            ->save();
+
+            /**
+             * Powiadomienie na tablicy członkow wydarzenia
+             */
+            (new \Flocc\Profile\TimeLine\NewTimeLine())
+                ->setUserId($this->event->getMembersAndFollowersIds())
+                ->setType('new_member')
+                ->setTimeLineUserId($user_id)
+                ->setTimeLineEventId($this->event->getId())
+            ->save();
+
+            /**
+             * Zmiana statusu
+             */
+            (new Members())->updateStatus($user_id, $id, $status);
+
+            /**
+             * Po dodaniu tego jest przekroczny limit
+             */
+            if($this->event->getUsersLimit() == $this->event->getMembers()->count()) {
+                (new Events())->closeEvent($id);
 
                 /**
-                 * Powiadomienia do pozostałych uczestników
-                 *
-                 * @var $user \Flocc\Profile
+                 * Wysłanie powiadomienia do użytkowników
                  */
-                $user = (new User())->getById($user_id)->getProfile();
-
-                foreach(array_merge($this->event->getMembers()->toArray(), $this->event->getFollowers()->toArray()) as $member) {
+                foreach($this->event->getMembersAndFollowers() as $member) {
                     (new NewNotification())
                         ->setUserId($member->getUserId())
-                        ->setUniqueKey('events.members.new.' . $id . '.' . $user_id)
-                        ->setTypeId('events.members.new')
+                        ->setUniqueKey('events.limit.' . $this->event->getId())
                         ->setCallback('/events/' . $this->event->getSlug())
-                        ->addVariable('user', $user->getFirstName() . ' ' . $user->getLastName())
+                        ->setTypeId('events.limit')
                         ->addVariable('event', $this->event->getTitle())
                     ->save();
                 }
-
-                /**
-                 * Powiadomienie do usera, że został zaakceptowany
-                 */
-                (new NewNotification())
-                    ->setUserId($user_id)
-                    ->setUniqueKey('events.members.accept.' . $id)
-                    ->setTypeId('events.members.accept')
-                    ->setCallback('/events/' . $this->event->getSlug())
-                    ->addVariable('event', $this->event->getTitle())
-                ->save();
-
-                /**
-                 * Powiadomienie na tablicy wydarzenia
-                 */
-                (new TimeLine\NewLine())
-                    ->setEventId($id)
-                    ->setTypeAsMessage()
-                    ->setMessage(sprintf('[b]%s[/b] dołączył do wydarzenia dnia [b]%s[/b]', $user->getFirstName() . ' ' . $user->getLastName(), date('Y-m-d')))
-                    ->setUserId(Auth::getUserId())
-                ->save();
-
-                /**
-                 * Powiadomienie na tablicy członkow wydarzenia
-                 */
-                (new \Flocc\Profile\TimeLine\NewTimeLine())
-                    ->setUserId($this->event->getMembersAndFollowersIds())
-                    ->setType('new_member')
-                    ->setTimeLineUserId($user_id)
-                    ->setTimeLineEventId($this->event->getId())
-                ->save();
-
-                /**
-                 * Zmiana statusu
-                 */
-                (new Members())->updateStatus($user_id, $id, $status);
-
-                /**
-                 * Po dodaniu tego jest przekroczny limit
-                 */
-                if($this->event->getUsersLimit() == $this->event->getMembers()->count()) {
-                    (new Events())->closeEvent($id);
-
-                    /**
-                     * Wysłanie powiadomienia do użytkowników
-                     */
-                    foreach($this->event->getMembersAndFollowers() as $member) {
-                        (new NewNotification())
-                            ->setUserId($member->getUserId())
-                            ->setUniqueKey('events.limit.' . $this->event->getId())
-                            ->setCallback('/events/' . $this->event->getSlug())
-                            ->setTypeId('events.limit')
-                            ->addVariable('event', $this->event->getTitle())
-                        ->save();
-                    }
-                }
             }
+        }
+
+        if($status == 'rejected') {
+            /**
+             * Zmiana statusu
+             */
+            (new Members())->updateStatus($user_id, $id, 'follower');
         }
 
         return \Redirect::to('/events/edit/' . $id . '/members');
