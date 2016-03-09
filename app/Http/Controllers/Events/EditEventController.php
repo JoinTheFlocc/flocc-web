@@ -85,90 +85,95 @@ class EditEventController extends Controller
     {
         $this->init($id);
 
-        if(in_array($status, ['member', 'rejected'])) {
-            if($status == 'member') {
-                /**
-                 * Sprawdzenie limitu
-                 */
-                if($this->event->getMembers()->count() == $this->event->getUsersLimit()) {
-                    // @TODO:
-                    throw new \Exception('Przekroczony limit');
-                }
+        if($status == 'member') {
+            /**
+             * Sprawdzenie limitu
+             */
+            if($this->event->getMembers()->count() == $this->event->getUsersLimit()) {
+                // @TODO:
+                throw new \Exception('Przekroczony limit');
+            }
+
+            /**
+             * Powiadomienia do pozostałych uczestników
+             *
+             * @var $user \Flocc\Profile
+             */
+            $user = (new User())->getById($user_id)->getProfile();
+
+            foreach(array_merge($this->event->getMembers()->toArray(), $this->event->getFollowers()->toArray()) as $member) {
+                (new NewNotification())
+                    ->setUserId($member->getUserId())
+                    ->setUniqueKey('events.members.new.' . $id . '.' . $user_id)
+                    ->setTypeId('events.members.new')
+                    ->setCallback('/events/' . $this->event->getSlug())
+                    ->addVariable('user', $user->getFirstName() . ' ' . $user->getLastName())
+                    ->addVariable('event', $this->event->getTitle())
+                ->save();
+            }
+
+            /**
+             * Powiadomienie do usera, że został zaakceptowany
+             */
+            (new NewNotification())
+                ->setUserId($user_id)
+                ->setUniqueKey('events.members.accept.' . $id)
+                ->setTypeId('events.members.accept')
+                ->setCallback('/events/' . $this->event->getSlug())
+                ->addVariable('event', $this->event->getTitle())
+            ->save();
+
+            /**
+             * Powiadomienie na tablicy wydarzenia
+             */
+            (new TimeLine\NewLine())
+                ->setEventId($id)
+                ->setTypeAsMessage()
+                ->setMessage(sprintf('[b]%s[/b] dołączył do wydarzenia dnia [b]%s[/b]', $user->getFirstName() . ' ' . $user->getLastName(), date('Y-m-d')))
+                ->setUserId(Auth::getUserId())
+            ->save();
+
+            /**
+             * Powiadomienie na tablicy członkow wydarzenia
+             */
+            (new \Flocc\Profile\TimeLine\NewTimeLine())
+                ->setUserId($this->event->getMembersAndFollowersIds())
+                ->setType('new_member')
+                ->setTimeLineUserId($user_id)
+                ->setTimeLineEventId($this->event->getId())
+            ->save();
+
+            /**
+             * Zmiana statusu
+             */
+            (new Members())->updateStatus($user_id, $id, $status);
+
+            /**
+             * Po dodaniu tego jest przekroczny limit
+             */
+            if($this->event->getUsersLimit() == $this->event->getMembers()->count()) {
+                (new Events())->closeEvent($id);
 
                 /**
-                 * Powiadomienia do pozostałych uczestników
-                 *
-                 * @var $user \Flocc\Profile
+                 * Wysłanie powiadomienia do użytkowników
                  */
-                $user = (new User())->getById($user_id)->getProfile();
-
-                foreach(array_merge($this->event->getMembers()->toArray(), $this->event->getFollowers()->toArray()) as $member) {
+                foreach($this->event->getMembersAndFollowers() as $member) {
                     (new NewNotification())
                         ->setUserId($member->getUserId())
-                        ->setUniqueKey('events.members.new.' . $id . '.' . $user_id)
-                        ->setTypeId('events.members.new')
+                        ->setUniqueKey('events.limit.' . $this->event->getId())
                         ->setCallback('/events/' . $this->event->getSlug())
-                        ->addVariable('user', $user->getFirstName() . ' ' . $user->getLastName())
+                        ->setTypeId('events.limit')
                         ->addVariable('event', $this->event->getTitle())
                     ->save();
                 }
-
-                /**
-                 * Powiadomienie do usera, że został zaakceptowany
-                 */
-                (new NewNotification())
-                    ->setUserId($user_id)
-                    ->setUniqueKey('events.members.accept.' . $id)
-                    ->setTypeId('events.members.accept')
-                    ->setCallback('/events/' . $this->event->getSlug())
-                    ->addVariable('event', $this->event->getTitle())
-                ->save();
-
-                /**
-                 * Powiadomienie na tablicy wydarzenia
-                 */
-                (new TimeLine\NewLine())
-                    ->setEventId($id)
-                    ->setTypeAsMessage()
-                    ->setMessage(sprintf('[b]%s[/b] dołączył do wydarzenia dnia [b]%s[/b]', $user->getFirstName() . ' ' . $user->getLastName(), date('Y-m-d')))
-                    ->setUserId(Auth::getUserId())
-                ->save();
-
-                /**
-                 * Powiadomienie na tablicy członkow wydarzenia
-                 */
-                (new \Flocc\Profile\TimeLine\NewTimeLine())
-                    ->setUserId($this->event->getMembersAndFollowersIds())
-                    ->setType('new_member')
-                    ->setTimeLineUserId($user_id)
-                    ->setTimeLineEventId($this->event->getId())
-                ->save();
-
-                /**
-                 * Zmiana statusu
-                 */
-                (new Members())->updateStatus($user_id, $id, $status);
-
-                /**
-                 * Po dodaniu tego jest przekroczny limit
-                 */
-                if($this->event->getUsersLimit() == $this->event->getMembers()->count()) {
-                    (new Events())->closeEvent($id);
-
-                    /**
-                     * Wysłanie powiadomienia do użytkowników
-                     */
-                    foreach($this->event->getMembersAndFollowers() as $member) {
-                        (new NewNotification())
-                            ->setUserId($member->getUserId())
-                            ->setUniqueKey('events.limit.' . $this->event->getId())
-                            ->setCallback('/events/' . $this->event->getSlug())
-                            ->setTypeId('events.limit')
-                            ->addVariable('event', $this->event->getTitle())
-                        ->save();
-                    }
-                }
             }
+        }
+
+        if($status == 'rejected') {
+            /**
+             * Zmiana statusu
+             */
+            (new Members())->updateStatus($user_id, $id, 'follower');
         }
 
         return \Redirect::to('/events/edit/' . $id . '/members');
@@ -177,11 +182,12 @@ class EditEventController extends Controller
     /**
      * Edit event
      *
+     * @param \Illuminate\Http\Request $request
      * @param int $id
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index($id)
+    public function index(\Illuminate\Http\Request $request, $id)
     {
         $this->init($id);
 
@@ -275,6 +281,16 @@ class EditEventController extends Controller
                 $post['activities'] = array_unique($post['activities']);
 
                 /**
+                 * Avatar
+                 */
+                if($request->hasFile('photo')) {
+                    $image      = new ImageHelper();
+                    $file       = $request->file('photo');
+
+                    $this->event->setAvatarUrl($image->uploadFile($file));
+                }
+
+                /**
                  * Save event
                  */
                 $this->event->save();
@@ -311,6 +327,11 @@ class EditEventController extends Controller
                         ->setMessage(sprintf('[b]%s[/b] utworzył wydarzenie dnia %s o %s', $user_name, date('Y-m-d'), date('H:i')))
                         ->setUserId(Auth::getUserId())
                     ->save();
+
+                    /**
+                     * Add owner as member
+                     */
+                    (new Members())->addNew($id, Auth::getUserId(), 'member');
                 } else {
                     /**
                      * Notification
@@ -362,6 +383,14 @@ class EditEventController extends Controller
                 if(in_array('new', \Input::get('activities', []))) {
                     $post_new_activity = \Input::get('new_activities');
                 }
+
+                $post_activities = [];
+
+                if(isset($post['activities'])) {
+                    foreach($post['activities'] as $post_activity) {
+                        $post_activities[(int) $post_activity] = (int) $post_activity;
+                    }
+                }
             }
         }
 
@@ -374,43 +403,8 @@ class EditEventController extends Controller
             'places'            => $places->all(),
             'errors'            => isset($errors) ? $errors : [],
             'post_routes'       => $post_routes,
-            'post_new_activity' => isset($post_new_activity) ? $post_new_activity : null
-        ]);
-    }
-
-    /**
-     * Update avatar
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function photo(\Illuminate\Http\Request $request, $id)
-    {
-        $this->init($id);
-
-        if ($request->hasFile('photo')) {
-            $image      = new ImageHelper();
-            $events     = new Events();
-
-            $file       = $request->file('photo');
-
-            $validator  = \Validator::make(\Input::all(), [
-                'photo' => 'required|max:10000'
-            ], []);
-            $errors     = $validator->errors();
-
-            if ($errors->count() == 0) {
-                $events->updateAvatarUrl($this->event->getId(), $image->uploadFile($file));
-
-                return \Redirect::to('events/' . $this->event->getSlug());
-            }
-        }
-
-        return view('events.edit.photo', [
-            'event'     => $this->event,
-            'errors'    => isset($errors) ? $errors : []
+            'post_new_activity' => isset($post_new_activity) ? $post_new_activity : null,
+            'post_activities'   => isset($post_activities) ? $post_activities : []
         ]);
     }
 }

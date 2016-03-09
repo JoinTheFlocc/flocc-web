@@ -13,13 +13,26 @@ use Flocc\Notifications\Notifications;
 class NotificationsController extends Controller
 {
     /**
-     * Get notifications JSON
+     *  Get notifications JSON
+     *
+     * @param null|string $type
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function getNotifications()
+    public function getNotifications($type = null)
     {
+        /**
+         * Notification type
+         */
+        if($type !== null) {
+            if(in_array($type, ['mail.new']) === false) {
+                $type = null;
+            }
+        }
+
         if(\Auth::user()) {
             $notifications  = new Notifications();
-            $data           = $notifications->getByUserId(\Auth::user()->id);
+            $data           = $notifications->getByUserId(\Auth::user()->id, true, $type);
 
             return response()->json($data->toArray());
         }

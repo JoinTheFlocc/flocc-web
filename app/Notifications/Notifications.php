@@ -38,14 +38,25 @@ class Notifications extends Model
      *
      * @param int $user_id
      * @param bool $unread
+     * @param null|string $type
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getByUserId($user_id, $unread = true)
+    public function getByUserId($user_id, $unread = true, $type = null)
     {
         $variables  = new Variables();
         $get        = self::where('user_id', (int) $user_id)->orderBy('notification_id', 'desc');
 
+        /**
+         * Notification type
+         */
+        if($type !== null) {
+            $get = $get->where('notifications.type_id', $type);
+        }
+
+        /**
+         * Get only unread
+         */
         if($unread === true) {
             $get->where('is_read', '0');
         }

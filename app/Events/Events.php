@@ -281,6 +281,20 @@ class Events extends Model
     }
 
     /**
+     * Set photo URL
+     *
+     * @param string $url
+     *
+     * @return $this
+     */
+    public function setAvatarUrl($url)
+    {
+        $this->avatar_url = $url;
+
+        return $this;
+    }
+
+    /**
      * Get photo URL
      *
      * @return string
@@ -671,7 +685,7 @@ class Events extends Model
      */
     public function getMembersAndFollowersIds()
     {
-        $ids = [$this->getUserId() => 'owner'];
+        $ids = [];
 
         foreach($this->getMembers() as $member) {
             $ids[$member->getUserId()] = 'member';
@@ -691,7 +705,7 @@ class Events extends Model
      */
     public function getMembersAndFollowers()
     {
-        return $this->hasMany('Flocc\Events\Members', 'event_id', 'id')->whereIn('status', ['member', 'follower'])->get();
+        return $this->hasMany('Flocc\Events\Members', 'event_id', 'id')->whereIn('status', ['member', 'follower', 'awaiting'])->get();
     }
 
     /**
@@ -701,7 +715,7 @@ class Events extends Model
      */
     public function getFollowers()
     {
-        return $this->hasMany('Flocc\Events\Members', 'event_id', 'id')->where('status', 'follower')->get();
+        return $this->hasMany('Flocc\Events\Members', 'event_id', 'id')->whereIn('status', ['follower', 'awaiting'])->get();
     }
 
     /**
@@ -971,6 +985,18 @@ class Events extends Model
         self::create(['user_id' => $user_id]);
 
         return $this->getUserDraft($user_id);
+    }
+
+    /**
+     * Open event
+     *
+     * @param int $id
+     *
+     * @return bool
+     */
+    public function openEvent($id)
+    {
+        return (self::where('id', $id)->update(['status' => 'open']) == 1);
     }
 
     /**

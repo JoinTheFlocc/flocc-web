@@ -38,14 +38,15 @@ class EditEvent
             'title'             => 'required',
             'description'       => 'required',
             'event_from'        => 'required|date_format:Y-m-d|after:tomorrow',
-            'event_to'          => 'required|date_format:Y-m-d|after:event_from',
+            'event_to'          => 'required|date_format:Y-m-d',
             'event_span'        => 'required|integer|min:1',
             'users_limit'       => 'required|integer|min:1',
             'budgets'           => 'required',
             'intensities'       => 'required',
             'fixed'             => 'required',
             'place_type'        => 'required',
-            'activities'        => 'required'
+            'activities'        => 'required',
+            'photo'             => 'max:10000'
         ];
 
         if(isset($this->data['place_type'])) {
@@ -71,6 +72,10 @@ class EditEvent
 
             $days                    = (int) $date2->diff($date1)->format("%a")+1;
             $rules['event_span']    .= '|max:' . $days;
+
+            if($post['event_from'] !== $post['event_to']) {
+                $rules['event_to'] .= '|after:event_from';
+            }
         }
 
         return $rules;
@@ -105,6 +110,7 @@ class EditEvent
             'place_id.required'         => 'Prosimy wybrać miejsce wydarzenia',
             'route.required'            => 'Prosimy wybrać przynajmniej 1 punkt na trasie',
             'new_activities.required'   => 'Prosimy podać nazwę nowej aktywności',
+            'photo.size'                => 'Wybrany obrazek jest za duży'
         ];
     }
 }
