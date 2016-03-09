@@ -73,7 +73,7 @@ Route::get('mail/important/{id}/{is_important}', ['middleware' => 'auth', 'uses'
 // Notifications
 Route::get('notifications', ['middleware' => 'auth', 'uses' => 'Notifications\NotificationsController@index'])->name('notifications');
 Route::get('notifications/{id}', ['middleware' => 'auth', 'uses' => 'Notifications\NotificationsController@callback'])->name('notifications.callback')->where('id', '[0-9]+');;
-Route::get('notifications/get', ['middleware' => 'auth', 'uses' => 'Notifications\NotificationsController@getNotifications'])->name('notifications.get');
+Route::get('notifications/get/{type?}', ['middleware' => 'auth', 'uses' => 'Notifications\NotificationsController@getNotifications'])->name('notifications.get');
 
 // Events
 Route::match(['get', 'post'], 'search/{filters?}', ['middleware' => 'auth', 'uses' => 'Events\EventsController@index'])->name('events');

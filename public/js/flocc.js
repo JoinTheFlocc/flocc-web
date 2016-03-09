@@ -58,6 +58,7 @@ var Flocc = {
             Flocc.Notification.Get();
 
             Flocc.Notification.Start(100000000);
+            Flocc.Notification.Mail.Initialize();
         },
         Start : function(time) {
             Flocc.Notification.__interval = setInterval('Flocc.Notification.Get();', time);
@@ -69,6 +70,14 @@ var Flocc = {
             Flocc.Responses.Json(Flocc.Config.Get('notifications.url'), {}, function(data) {
                 FloccThemeNotifications.Initialize(data);
             });
+        },
+
+        Mail : {
+            Initialize : function() {
+                Flocc.Responses.Json(Flocc.Config.Get('notifications.url') + '/mail.new', {}, function(data) {
+                    FloccThemeNotifications.Mail.Initialize(data);
+                });
+            }
         }
     },
 

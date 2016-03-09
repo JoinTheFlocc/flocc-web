@@ -7,8 +7,6 @@ var FloccThemeNotifications = {
     Initialize : function(data) {
         var count = Flocc.Helpers.Count(data);
 
-        console.log(count);
-
         if(count > 0) {
             FloccThemeNotifications.SetCount(count);
         } else {
@@ -20,5 +18,22 @@ var FloccThemeNotifications = {
     },
     SetCount : function(count) {
         $('#notificationsCount').html(count).show();
+    },
+    Mail : {
+        Initialize : function(data) {
+            var count = Flocc.Helpers.Count(data);
+
+            if(count > 0) {
+                FloccThemeNotifications.Mail.SetCount(count);
+            } else {
+                FloccThemeNotifications.Mail.Clear();
+            }
+        },
+        Clear : function() {
+            $('#notificationsMailCount').html(0).hide();
+        },
+        SetCount : function(count) {
+            $('#notificationsMailCount').html(count).show();
+        },
     }
 };
