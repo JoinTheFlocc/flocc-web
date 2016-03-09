@@ -22,6 +22,7 @@
                     <thead>
                         <tr>
                             <th>&nbsp;</th>
+                            <th>&nbsp;</th>
                             <th class="text-center">Unread messages</th>
                             <th class="text-center">Last message date</th>
                         </tr>
@@ -29,6 +30,11 @@
                     <tbody>
                         @forelse ($conversations as $conversation)
                             <tr class="@if($conversation->is_important == '1') important @endif">
+                                <td class="text-center">
+                                    @if($conversation->is_important == '1')
+                                        <i class="fa fa-exclamation-circle"></i>
+                                    @endif
+                                </td>
                                 <td>
                                     <a href="{{ URL::route('mail.conversation', ['id' => $conversation->conversation_id]) }}">
                                         Conversation with {{ $conversation->users_list }}
