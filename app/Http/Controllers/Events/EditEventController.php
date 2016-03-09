@@ -362,6 +362,14 @@ class EditEventController extends Controller
                 if(in_array('new', \Input::get('activities', []))) {
                     $post_new_activity = \Input::get('new_activities');
                 }
+
+                $post_activities = [];
+
+                if(isset($post['activities'])) {
+                    foreach($post['activities'] as $post_activity) {
+                        $post_activities[(int) $post_activity] = (int) $post_activity;
+                    }
+                }
             }
         }
 
@@ -374,7 +382,8 @@ class EditEventController extends Controller
             'places'            => $places->all(),
             'errors'            => isset($errors) ? $errors : [],
             'post_routes'       => $post_routes,
-            'post_new_activity' => isset($post_new_activity) ? $post_new_activity : null
+            'post_new_activity' => isset($post_new_activity) ? $post_new_activity : null,
+            'post_activities'   => isset($post_activities) ? $post_activities : []
         ]);
     }
 

@@ -159,7 +159,7 @@
                                 @foreach($activities as $activity)
                                     <div class="checkbox">
                                         <label>
-                                            <input type="checkbox" name="activities[]" value="{{ $activity->getId() }}" class="activity" @if($event->isActivity($activity->getId())) checked="checked" @endif>
+                                            <input type="checkbox" name="activities[]" value="{{ $activity->getId() }}" class="activity" @if($event->isActivity($activity->getId()) or isset($post_activities[$activity->getId()])) checked="checked" @endif>
                                             {{ $activity->getName() }}
                                         </label>
                                     </div>
