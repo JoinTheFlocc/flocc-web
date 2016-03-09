@@ -77,7 +77,7 @@ class ImageHelper
                 break;
         }
 
-        include_once base_path() . '/vendor/intervention/image/src/intervention/image/ImageManager.php';
+        include_once '../vendor/intervention/image/src/intervention/image/ImageManager.php';
 
         $image  = new \Intervention\Image\ImageManager();
         $img    = $image->make($file->getRealPath());
@@ -88,8 +88,8 @@ class ImageHelper
             $constraint->upsize();
         });
 
-        $fname = $this->generateName();
-        $fname .= ".$ext";
+        $fname  = $this->generateName();
+        $fname .= "." . $ext;
 
         switch (config('filesystems.default')) {
             case 'local':
