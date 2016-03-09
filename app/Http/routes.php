@@ -81,7 +81,6 @@ Route::get('events/new', ['middleware' => 'auth', 'uses' => 'Events\EventsContro
 Route::post('events/comment', ['middleware' => 'auth', 'uses' => 'Events\CommentController@save'])->name('events.comment');
 Route::match(['get', 'post'], 'events/edit/{id}', ['middleware' => 'auth', 'uses' => 'Events\EditEventController@index'])->name('events.edit');
 Route::get('events/edit/{id}/members', ['middleware' => 'auth', 'uses' => 'Events\EditEventController@members'])->name('events.edit.members');
-Route::match(['get', 'post'], 'events/edit/{id}/photo', ['middleware' => 'auth', 'uses' => 'Events\EditEventController@photo'])->name('events.edit.photo');
 Route::get('events/edit/{id}/{user_id}/{status}', ['middleware' => 'auth', 'uses' => 'Events\EditEventController@status'])->name('events.edit.members.status');
 
 // Event

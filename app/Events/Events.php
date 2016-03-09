@@ -281,6 +281,20 @@ class Events extends Model
     }
 
     /**
+     * Set photo URL
+     *
+     * @param string $url
+     *
+     * @return $this
+     */
+    public function setAvatarUrl($url)
+    {
+        $this->avatar_url = $url;
+
+        return $this;
+    }
+
+    /**
      * Get photo URL
      *
      * @return string

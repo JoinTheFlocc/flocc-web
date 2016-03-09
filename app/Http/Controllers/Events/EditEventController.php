@@ -182,11 +182,12 @@ class EditEventController extends Controller
     /**
      * Edit event
      *
+     * @param \Illuminate\Http\Request $request
      * @param int $id
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index($id)
+    public function index(\Illuminate\Http\Request $request, $id)
     {
         $this->init($id);
 
@@ -278,6 +279,16 @@ class EditEventController extends Controller
                 }
 
                 $post['activities'] = array_unique($post['activities']);
+
+                /**
+                 * Avatar
+                 */
+                if($request->hasFile('photo')) {
+                    $image      = new ImageHelper();
+                    $file       = $request->file('photo');
+
+                    $this->event->setAvatarUrl($image->uploadFile($file));
+                }
 
                 /**
                  * Save event
@@ -394,42 +405,6 @@ class EditEventController extends Controller
             'post_routes'       => $post_routes,
             'post_new_activity' => isset($post_new_activity) ? $post_new_activity : null,
             'post_activities'   => isset($post_activities) ? $post_activities : []
-        ]);
-    }
-
-    /**
-     * Update avatar
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function photo(\Illuminate\Http\Request $request, $id)
-    {
-        $this->init($id);
-
-        if ($request->hasFile('photo')) {
-            $image      = new ImageHelper();
-            $events     = new Events();
-
-            $file       = $request->file('photo');
-
-            $validator  = \Validator::make(\Input::all(), [
-                'photo' => 'required|max:10000'
-            ], []);
-            $errors     = $validator->errors();
-
-            if ($errors->count() == 0) {
-                $events->updateAvatarUrl($this->event->getId(), $image->uploadFile($file));
-
-                return \Redirect::to('events/' . $this->event->getSlug());
-            }
-        }
-
-        return view('events.edit.photo', [
-            'event'     => $this->event,
-            'errors'    => isset($errors) ? $errors : []
         ]);
     }
 }

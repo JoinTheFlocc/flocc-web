@@ -15,7 +15,7 @@
                 </div>
             @endif
 
-            <form class="form-horizontal" method="post" style="margin:50px 0;">
+            <form class="form-horizontal" method="post" enctype="multipart/form-data" style="margin:50px 0;">
                 {{ csrf_field() }}
 
                 <div class="flocc-tabs">
@@ -231,13 +231,33 @@
 
                         <div style="margin-top: 50px;text-align: center;">
                             <a href="#" class="btn btn-default btn-lg tab-action change-tab" action-tab-id="tab2">Wstecz</a>
-                            <button type="submit" class="btn btn-success btn-lg">Zapisz</button>
+                            <a href="#" class="btn btn-primary btn-lg tab-action change-tab" action-tab-id="tab4">Dalej</a>
                         </div>
                     </div>
                     <!-- tab 3 -->
 
-                </div>
+                    <!-- tab 4 -->
+                    <div class="flocc-tab" tab-id="tab4">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h3>Aktualne zdjęcie</h3><br>
 
+                                <img src="{{ $event->getAvatarUrl() }}">
+                            </div>
+                            <div class="col-md-8">
+                                <h3>Awatar wydarzenia</h3><br>
+
+                                <input type="file" name="photo" class="form-control">
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 50px;text-align: center;">
+                            <a href="#" class="btn btn-default btn-lg tab-action change-tab" action-tab-id="tab3">Wstecz</a>
+                            <button type="submit" class="btn btn-success btn-lg">Zapisz</button>
+                        </div>
+                    </div>
+                    <!-- tab 4 -->
+                </div>
             </form>
         </div>
     </div>

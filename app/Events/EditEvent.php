@@ -45,7 +45,8 @@ class EditEvent
             'intensities'       => 'required',
             'fixed'             => 'required',
             'place_type'        => 'required',
-            'activities'        => 'required'
+            'activities'        => 'required',
+            'photo'             => 'max:10000'
         ];
 
         if(isset($this->data['place_type'])) {
@@ -109,6 +110,7 @@ class EditEvent
             'place_id.required'         => 'Prosimy wybrać miejsce wydarzenia',
             'route.required'            => 'Prosimy wybrać przynajmniej 1 punkt na trasie',
             'new_activities.required'   => 'Prosimy podać nazwę nowej aktywności',
+            'photo.size'                => 'Wybrany obrazek jest za duży'
         ];
     }
 }
