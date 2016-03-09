@@ -22,6 +22,7 @@
                     <thead>
                         <tr>
                             <th>&nbsp;</th>
+                            <th>&nbsp;</th>
                             <th class="text-center">Unread messages</th>
                             <th class="text-center">Last message date</th>
                         </tr>
@@ -29,13 +30,24 @@
                     <tbody>
                         @forelse ($conversations as $conversation)
                             <tr class="@if($conversation->is_important == '1') important @endif">
+                                <td class="text-center">
+                                    @if($conversation->is_important == '1')
+                                        <i class="fa fa-exclamation-circle"></i>
+                                    @endif
+                                </td>
                                 <td>
                                     <a href="{{ URL::route('mail.conversation', ['id' => $conversation->conversation_id]) }}">
                                         Conversation with {{ $conversation->users_list }}
                                     </a>
                                 </td>
                                 <td class="text-center">{{ $conversation->unread_messages }}</td>
-                                <td class="text-center">{{ $conversation->last_message_time }}</td>
+                                <td class="text-center">
+                                    @if($conversation->last_message_time === null)
+                                        {{ $conversation->start_time }}
+                                    @else
+                                        {{ $conversation->last_message_time }}
+                                    @endif
+                                </td>
                             </tr>
                         @empty
                             <strong>You don't have any messages!</strong>
@@ -43,9 +55,15 @@
                     </tbody>
                 </table>
                 <br>
-                <a href="{{ URL::route('mail.label', ['label' => 'trash']) }}" class="btn btn-danger">
-                    Trash
-                </a>
+                @if($label == 'trash')
+                    <a href="{{ URL::route('mail.label') }}" class="btn btn-primary">
+                        Inbox
+                    </a>
+                @else
+                    <a href="{{ URL::route('mail.label', ['label' => 'trash']) }}" class="btn btn-danger">
+                        Trash
+                    </a>
+                @endif
             </div>
         </div>
     </div>

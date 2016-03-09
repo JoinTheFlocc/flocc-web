@@ -292,6 +292,11 @@ class EventController extends Controller
                     ->addVariable('event', $event->getTitle())
                 ->save();
             }
+
+            // Reopen event
+            if($event->isStatusClose()) {
+                $event->setStatusOpen()->save();
+            }
         }
 
         $member->delete();

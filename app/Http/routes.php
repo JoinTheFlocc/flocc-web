@@ -40,6 +40,8 @@ Route::get('auth/social/{provider}/callback', 'Auth\AuthController@handleProvide
 Route::get('profile', 'ProfilesController@show')->name('profile.my');
 Route::post('profile/upload', 'ProfilesController@upload')->name('profile.upload');
 Route::get('profile/time-line', 'ProfilesController@timeLine')->name('profile.timeline');
+Route::get('profile/{id}/edit', 'ProfilesController@edit')->name('profile.edit')->where('id', '[0-9]+');
+Route::patch('profile/{id}/update', 'ProfilesController@update')->name('profile.update')->where('id', '[0-9]+');
 Route::get('profile/{id?}', 'ProfilesController@show')->name('profile.display')->where('id', '[0-9]+');
 
 // Settings
@@ -71,7 +73,7 @@ Route::get('mail/important/{id}/{is_important}', ['middleware' => 'auth', 'uses'
 // Notifications
 Route::get('notifications', ['middleware' => 'auth', 'uses' => 'Notifications\NotificationsController@index'])->name('notifications');
 Route::get('notifications/{id}', ['middleware' => 'auth', 'uses' => 'Notifications\NotificationsController@callback'])->name('notifications.callback')->where('id', '[0-9]+');;
-Route::get('notifications/get', ['middleware' => 'auth', 'uses' => 'Notifications\NotificationsController@getNotifications'])->name('notifications.get');
+Route::get('notifications/get/{type?}', ['middleware' => 'auth', 'uses' => 'Notifications\NotificationsController@getNotifications'])->name('notifications.get');
 
 // Events
 Route::match(['get', 'post'], 'search/{filters?}', ['middleware' => 'auth', 'uses' => 'Events\EventsController@index'])->name('events');
@@ -79,7 +81,6 @@ Route::get('events/new', ['middleware' => 'auth', 'uses' => 'Events\EventsContro
 Route::post('events/comment', ['middleware' => 'auth', 'uses' => 'Events\CommentController@save'])->name('events.comment');
 Route::match(['get', 'post'], 'events/edit/{id}', ['middleware' => 'auth', 'uses' => 'Events\EditEventController@index'])->name('events.edit');
 Route::get('events/edit/{id}/members', ['middleware' => 'auth', 'uses' => 'Events\EditEventController@members'])->name('events.edit.members');
-Route::match(['get', 'post'], 'events/edit/{id}/photo', ['middleware' => 'auth', 'uses' => 'Events\EditEventController@photo'])->name('events.edit.photo');
 Route::get('events/edit/{id}/{user_id}/{status}', ['middleware' => 'auth', 'uses' => 'Events\EditEventController@status'])->name('events.edit.members.status');
 
 // Event

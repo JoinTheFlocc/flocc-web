@@ -36,7 +36,9 @@
                         </li>
                       @endif
                       <li>
-                          <a href="{{ URL::route('mail') }}"><i class="fa fa-btn fa-lg fa-commenting"></i></a>
+                          <a href="{{ URL::route('mail') }}">
+                              <i class="fa fa-btn fa-lg fa-commenting"></i> <span class="label label-danger" id="notificationsMailCount" style="display:none">0</span>
+                          </a>
                       </li>
                       <li>
                         <a href="{{ URL::route('notifications') }}">

@@ -49,13 +49,7 @@
 
                 <div class="well text-center">
                     <h1>{{ $event->getTitle() }}</h1><br>
-                    <div class="event-photo" style="background:url({{ $event->getAvatarUrl() }});">
-                        @if($event->isMine())
-                            <a href="{{ URL::route('events.edit.photo', ['id' => $event->getId()]) }}" class="edit-event-photo">
-                                zmień
-                            </a>
-                        @endif
-                    </div><br><br>
+                    <img src="{{ $event->getAvatarUrl() }}" style="width:300px;"><br>&nbsp;<br>
                     <p>{{ $event->getDescription() }}</p><br>
 
                     <div class="row text-left">
