@@ -691,7 +691,7 @@ class Events extends Model
      */
     public function getMembersAndFollowers()
     {
-        return $this->hasMany('Flocc\Events\Members', 'event_id', 'id')->whereIn('status', ['member', 'follower'])->get();
+        return $this->hasMany('Flocc\Events\Members', 'event_id', 'id')->whereIn('status', ['member', 'follower', 'awaiting'])->get();
     }
 
     /**
@@ -701,7 +701,7 @@ class Events extends Model
      */
     public function getFollowers()
     {
-        return $this->hasMany('Flocc\Events\Members', 'event_id', 'id')->where('status', 'follower')->get();
+        return $this->hasMany('Flocc\Events\Members', 'event_id', 'id')->whereIn('status', ['follower', 'awaiting'])->get();
     }
 
     /**
