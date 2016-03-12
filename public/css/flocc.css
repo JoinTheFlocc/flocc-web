@@ -16,7 +16,7 @@ body {
      background-repeat: no-repeat;
 }
 .intro-over {
-    padding-top: 45px;
+    padding-top: 48px;
     color: lightblue;
 }
 .intro-heading {
@@ -101,22 +101,22 @@ body {
 .navbar-text:hover,
 .navbar-text:focus {
     font-family:Signika;
-    color:royalblue;
-    font-size: 21px;
+    color:#00c176;
+    font-size: 24px;
     font-weight: 400;
 }
 
 .navbar-text small {
     font-size: 18px;
     font-weight: 300;
-    color:cornflowerblue;
 }
 
 .navbar .navbar-nav > li > a,
 .navbar .navbar-nav > .active > a
 {
     color:royalblue;
-    .padding: 10px;
+    margin-top: 2px;
+    padding-top: 20px;
     font-size: 14px;
 }
 
