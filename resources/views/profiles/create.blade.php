@@ -29,7 +29,7 @@
 					<!-- Display Validation Errors -->
 					@include('common.errors')
 
-                    {!! Form::open(['route' => 'profile.store', 'class' => 'form-horizontal']) !!}
+                    {!! Form::model($profile, ['method' => 'PATCH', 'route' => ['profile.update', $profile->id], 'class' => 'form-horizontal']) !!}
                         @include('profiles._partials.form', ['submitButton' => 'Create Profile'])
                     {!! Form::close() !!}
 					</form>
