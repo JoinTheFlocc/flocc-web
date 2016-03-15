@@ -22,7 +22,7 @@
 		<div class="col-sm-7">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<h4>Tell us more about yourself, {{ Auth::user()->name }}</h4>
+					<h4>Tell us more about yourself</h4>
 				</div>
 
 				<div class="panel-body">
