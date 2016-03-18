@@ -8,22 +8,22 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="{{ Auth::guest() ? '/' : URL::route('profile.display') }}">
-                <img src="/img/logo_min.png" class="img-responsive" style="inline: block">
+                <img src="/img/logo-mint.png" class="img-responsive" style="inline: block; height: 32px;">
             </a>
             <div class="navbar-text">
-                Flocc <small>alpha</small>
+                Flocc <small>(alpha)</small>
             </div>
         </div>
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="{{ URL::route('events') }}"><i class="fa fa-globe"></i> Wydarzenia</a></li>
+                <li><a href="{{ URL::route('events') }}"><i class="fa fa-search fa-lg"></i> Wydarzenia</a></li>
 
                 @if (Auth::guest())
                     <li>
-                      <a href="{{ URL::route('auth.register') }}"><i class="fa fa-btn fa-heart"></i>Register</a>
+                      <a href="{{ URL::route('auth.register') }}"><i class="fa fa-btn fa-heart fa-lg"></i>Register</a>
                     </li>
                     <li>
-                      <a href="{{ URL::route('auth.login') }}"><i class="fa fa-btn fa-sign-in"></i>Login</a>
+                      <a href="{{ URL::route('auth.login') }}"><i class="fa fa-btn fa-sign-in fa-lg"></i>Login</a>
                     </li>
                 @else
                     <li><a href="{{ URL::route('events', ['filters' => 'user,my']) }}"><i class="fa fa-globe"></i> Moje wydarzenia</a></li>
@@ -32,7 +32,7 @@
 
                       @if(Auth::user()->profile)
                         <li>
-                          <a href="{{ url('/profile/' . Auth::user()->profile->id) }}"><i class="fa fa-btn fa-user"></i>{{ Auth::user()->name }}</a>
+                          <a href="{{ url('/profile/' . Auth::user()->profile->id) }}"><i class="fa fa-btn fa-user fa-lg"></i>{{ Auth::user()->name }}</a>
                         </li>
                       @endif
                       <li>
@@ -46,7 +46,7 @@
                         </a>
                       </li>
                       <li>
-                        <a href="{{ URL::route('auth.logout') }}"><i class="fa fa-btn fa-sign-out"></i>Logout</a>
+                        <a href="{{ URL::route('auth.logout') }}"><i class="fa fa-btn fa-sign-out fa-lg"></i>Logout</a>
                       </li>
                 @endif
             </ul>

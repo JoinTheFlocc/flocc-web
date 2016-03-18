@@ -77,7 +77,7 @@ class ImageHelper
                 break;
         }
 
-        include_once '../vendor/intervention/image/src/intervention/image/ImageManager.php';
+        include_once '../vendor/intervention/image/src/Intervention/Image/ImageManager.php';
 
         $image  = new \Intervention\Image\ImageManager();
         $img    = $image->make($file->getRealPath());

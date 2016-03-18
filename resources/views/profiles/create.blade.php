@@ -22,14 +22,14 @@
 		<div class="col-sm-7">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<h4>Tell us more about yourself, {{ Auth::user()->name }}</h4>
+					<h4>Tell us more about yourself</h4>
 				</div>
 
 				<div class="panel-body">
 					<!-- Display Validation Errors -->
 					@include('common.errors')
 
-                    {!! Form::open(['route' => 'profile.store', 'class' => 'form-horizontal']) !!}
+                    {!! Form::model($profile, ['method' => 'PATCH', 'route' => ['profile.update', $profile->id], 'class' => 'form-horizontal']) !!}
                         @include('profiles._partials.form', ['submitButton' => 'Create Profile'])
                     {!! Form::close() !!}
 					</form>

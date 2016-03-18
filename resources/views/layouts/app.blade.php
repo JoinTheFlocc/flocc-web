@@ -5,6 +5,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="robots" content="noindex">
 
 	<title>Join the Flocc</title>
 
@@ -53,17 +54,20 @@
 		@include('layouts.footer')
 	</footer>
 
+	@yield('bottomscripts')
+
+	<!-- castle.io friendly testing -->
 	<script type="text/javascript">
-  (function(e,t,n,r){function i(e,n){e=t.createElement("script");e.async=1;e.src=r;n=t.getElementsByTagName("script")[0];n.parentNode.insertBefore(e,n)}e[n]=e[n]||function(){(e[n].q=e[n].q||[]).push(arguments)};e.attachEvent?e.attachEvent("onload",i):e.addEventListener("load",i,false)})(window,document,"_castle","//d2t77mnxyo7adj.cloudfront.net/v1/c.js")
-  _castle('setAppId', '988356266816382');
-</script>
-<script type="text/javascript">
-  (function(e,t,n,r){function i(e,n){e=t.createElement("script");e.async=1;e.src=r;n=t.getElementsByTagName("script")[0];n.parentNode.insertBefore(e,n)}e[n]=e[n]||function(){(e[n].q=e[n].q||[]).push(arguments)};e.attachEvent?e.attachEvent("onload",i):e.addEventListener("load",i,false)})(window,document,"_castle","//d2t77mnxyo7adj.cloudfront.net/v1/c.js")
-  _castle('setAppId', '988356266816382');
-  _castle('identify', '1234', {  // 1234 is this user's id in your database
-    name: 'Jane Doe', // optional
-    email: 'jane@doe.io' // optional
-  });
-</script>
+		(function(e,t,n,r){function i(e,n){e=t.createElement("script");e.async=1;e.src=r;n=t.getElementsByTagName("script")[0];n.parentNode.insertBefore(e,n)}e[n]=e[n]||function(){(e[n].q=e[n].q||[]).push(arguments)};e.attachEvent?e.attachEvent("onload",i):e.addEventListener("load",i,false)})(window,document,"_castle","//d2t77mnxyo7adj.cloudfront.net/v1/c.js")
+  		_castle('setAppId', '988356266816382');
+	</script>
+	<script type="text/javascript">
+  		(function(e,t,n,r){function i(e,n){e=t.createElement("script");e.async=1;e.src=r;n=t.getElementsByTagName("script")[0];n.parentNode.insertBefore(e,n)}e[n]=e[n]||function(){(e[n].q=e[n].q||[]).push(arguments)};e.attachEvent?e.attachEvent("onload",i):e.addEventListener("load",i,false)})(window,document,"_castle","//d2t77mnxyo7adj.cloudfront.net/v1/c.js")
+  		_castle('setAppId', '988356266816382');
+  		_castle('identify', '1234', {  // 1234 is this user's id in your database
+    		name: 'Jane Doe', // optional
+    		email: 'jane@doe.io' // optional
+  		});
+	</script>
 </body>
 </html>
