@@ -108,6 +108,7 @@
                                             @else
                                                 Miejsce: <strong>@foreach($event->getRoutes() as $place) {{ $place->getName() }} > @endforeach</strong>
                                             @endif
+                                             | Punkty: {{ $event->scoring }}
                                         </div>
 
                                         <div class="buttons">
