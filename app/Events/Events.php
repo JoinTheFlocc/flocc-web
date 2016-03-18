@@ -847,7 +847,7 @@ class Events extends Model
             return false;
         }
 
-        if($this->isStatusOpen() === false) {
+        if($this->isStatusOpen() === false and $this->isStatusClose() === false) {
             return false;
         }
 

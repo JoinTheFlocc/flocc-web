@@ -25,7 +25,11 @@ class ProfilesController extends Controller
      */
     public function create()
     {
-        return view('profiles.create');
+        $user_id    = \Flocc\Auth::getUserId();
+        $users      = new User();
+        $profile    = $users->getById($user_id)->getProfile();
+
+        return view('profiles.create', compact('profile'));
     }
 
     /**
