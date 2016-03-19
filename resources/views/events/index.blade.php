@@ -58,7 +58,7 @@
                                 <select name="event_span" class="form-control">
                                     <option>Wybierz</option>
                                     <option value="1" @if(isset($form_data['event_span']) and $form_data['event_span'] == '1') selected="selected" @endif>do 2 dni</option>
-                                    <option value="2" @if(isset($form_data['event_span']) and $form_data['event_span'] == '2') selected="selected" @endif>2-5 dni</option>
+                                    <option value="2" @if(isset($form_data['event_span']) and $form_data['event_span'] == '2') selected="selected" @endif>3-5 dni</option>
                                     <option value="3" @if(isset($form_data['event_span']) and $form_data['event_span'] == '3') selected="selected" @endif>6-14 dni</option>
                                     <option value="4" @if(isset($form_data['event_span']) and $form_data['event_span'] == '4') selected="selected" @endif>powyżej 14 dni</option>
                                 </select>
