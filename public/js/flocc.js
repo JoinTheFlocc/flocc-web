@@ -86,8 +86,7 @@ var Flocc = {
             Flocc.Social.Facebook.Initialize();
 
             $('.facebook_share').click(function() {
-                Flocc.Social.Facebook.Share($(this).attr('facebook-url'));
-
+                Flocc.Social.Facebook.Share($(this).attr('facebook-url'), $(this).attr('facebook-title'), $(this).attr('facebook-img'), $(this).attr('facebook-desc'));
                 return false;
             });
         },
@@ -109,8 +108,17 @@ var Flocc = {
                     fjs.parentNode.insertBefore(js, fjs);
                 }(document, 'script', 'facebook-jssdk'));
             },
-            Share : function(url) {
-                FB.ui({method: 'share', href: url}, function(response) {
+            Share : function(url, title, img, desc) {
+                FB.ui({
+                    method: 'feed',
+                    name: 'Flocc: ' + title,
+                    link: url,
+                    picture: img,
+                    caption: title,
+                    description: desc,
+                    message: ''
+
+                }, function(response) {
                     console.log('FB RESPONSE:')
                     console.log(response);
                 });

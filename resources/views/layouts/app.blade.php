@@ -18,10 +18,26 @@
 	<link href="/css/bootstrap-social.css" rel="stylesheet" type="text/css">
 	<link href="/css/flocc.css" rel="stylesheet" type="text/css">
 
+	<script>
+		window.fbAsyncInit = function() {
+    	  FB.init({
+      		appId      : '178041392343208',
+      		xfbml      : true,
+      		version    : 'v2.5'
+    	  });
+  		};
+
+  		(function(d, s, id){
+     	  var js, fjs = d.getElementsByTagName(s)[0];
+     	  if (d.getElementById(id)) {return;}
+     	  js = d.createElement(s); js.id = id;
+     	  js.src = "//connect.facebook.net/en_US/sdk.js";
+     	  fjs.parentNode.insertBefore(js, fjs);
+   		}(document, 'script', 'facebook-jssdk'));
+	</script>
+
 	<script src="/js/jquery-2.2.0.min.js"></script>
 	<script src="/js/bootstrap.min.js"></script>
-
-	<link href="/css/flocc.css" rel="stylesheet" type="text/css">
 
 	@if(isset($meta_facebook))
 		<meta property="og:url"           content="{{ $meta_facebook->getUrl() }}" />
@@ -34,22 +50,9 @@
 
 <body>
 	@include('layouts.navbar')
-	@if (isset($sidebarView))
-	<section id="main">
-		<div class="container mainBoxA">
-			<div class="row">
-				<div class="col-md-3">
-					@include('layouts.sidebar')
-				</div>
-				<div class="col-md-9">
-					@yield('content')
-				</div>
-			</div>
-		</div>
-	</section>
-	@else
-		@yield('content')
-	@endif
+
+	@yield('content')
+
 	<footer class="navbar-default navbar-static-bottom grad">
 		@include('layouts.footer')
 	</footer>

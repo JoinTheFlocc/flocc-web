@@ -8,7 +8,7 @@
                     <i class="fa fa-check"></i> Wydarzenie zostało utworzone!
                 </div>
 
-                <a href="#" class="btn btn-primary facebook_share" facebook-url="{{ $meta_facebook->getUrl() }}">
+                <a href="#" class="btn btn-primary facebook_share" facebook-url="{{ $meta_facebook->getUrl() }}" facebook-title="{{ $meta_facebook->getTitle() }}" facebook-img="{{ $meta_facebook->getImage() }}" facebook-desc="{{ $meta_facebook->getDescription() }}">
                     <i class="fa fa-facebook-official"></i> Udostępnij na Facebooku
                 </a>
                 <a href="{{ URL::route('events.event', ['slug' => $event->getSlug()]) }}" class="btn btn-success">

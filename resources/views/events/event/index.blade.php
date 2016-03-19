@@ -166,7 +166,7 @@
                         <a href="#">Posty</a>
                     </li>
                     <li class="pull-right">
-                        <a href="#" style="background: #3b5998;color:#fff;" class="facebook_share" facebook-url="{{ $meta_facebook->getUrl() }}">
+                        <a href="#" class="facebook_share" style="background: #3b5998;color:#fff;" facebook-url="{{ $meta_facebook->getUrl() }}" facebook-title="{{ $meta_facebook->getTitle() }}" facebook-img="{{ $meta_facebook->getImage() }}" facebook-desc="{{ $meta_facebook->getDescription() }}">
                             <i class="fa fa-facebook-official"></i>
                         </a>
                     </li>
