@@ -101,7 +101,7 @@ class EditEventController extends Controller
              */
             $user = (new User())->getById($user_id)->getProfile();
 
-            foreach(array_merge($this->event->getMembers()->toArray(), $this->event->getFollowers()->toArray()) as $member) {
+            foreach($this->event->getMembersAndFollowers() as $member) {
                 (new NewNotification())
                     ->setUserId($member->getUserId())
                     ->setUniqueKey('events.members.new.' . $id . '.' . $user_id)
