@@ -186,7 +186,7 @@ class Search
         $event_span     = ((int) $this->getParam('event_span') === 0) ? 4 : (int) $this->getParam('event_span');
 
         return sprintf(
-            'eventScore("%s", "%s", events.event_from, events.event_to, %d)',
+            'eventScore("%s", "%s", %d, events.event_from, events.event_to, events.event_span)',
             $event_from,
             $event_to,
             $event_span
