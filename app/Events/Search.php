@@ -121,8 +121,6 @@ class Search
             });
         }
 
-        $query = $query->where(\DB::raw($this->getScoringFunction()), '>', 0);
-
         $query = $query->orderBy(\DB::raw($this->getScoringFunction()), 'desc');
         $query = $query->groupBy('events.id');
         

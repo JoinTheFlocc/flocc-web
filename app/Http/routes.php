@@ -96,7 +96,7 @@ Route::get('events/{slug}/share', 'Events\EventController@share')->name('events.
 /**
  * Set true if you want debug all queries
  */
-if(1) {
+if(false) {
     Event::listen('illuminate.query',function($query){
         var_dump($query);
     });
