@@ -26,7 +26,7 @@ class Events extends Model
      *
      * @var array
      */
-    protected $fillable = ['id', 'user_id', 'created_at', 'title', 'description', 'date_from', 'date_to', 'duration', 'views', 'photo', 'users_limit', 'place_id'];
+    protected $fillable = ['id', 'user_id', 'created_at', 'title', 'slug', 'description', 'event_from', 'event_to', 'event_span', 'views', 'avatar_url', 'users_limit', 'fixed', 'status', 'place_id', 'budget_id', 'intensities_id'];
 
     /**
      * Indicates if the model should be timestamped.
