@@ -62,14 +62,18 @@ class ProfilesController extends Controller
      */
     public function show($id = null)
     {
+        $profile = null;
+
         if($id === null) {
-            $id = \Flocc\Auth::getUserId();
+            $user_id = \Flocc\Auth::getUserId();
+            $profile = Profile::where('user_id', $user_id)->firstOrFail();
+        } else {
+            $profile = Profile::findOrFail($id);
         }
 
-        $profile = Profile::where('user_id', $id)->firstOrFail();
         $is_mine = ($profile->user_id == \Flocc\Auth::getUserId());
 
-        return view('dashboard', compact('profile', 'is_mine', 'id'));
+        return view('dashboard', compact('profile', 'is_mine'));
     }
 
     /**
