@@ -122,7 +122,7 @@
                         <div class="well" style="margin-top:15px;">
                             @foreach($event->getMembers() as $member)
                                 <a href="{{ URL::route('profile.display', ['id' => $member->getUserId()]) }}" title="{{ $member->getUser()->getProfile()->getFirstName() }} {{ $member->getUser()->getProfile()->getLastName() }}">
-                                    <img src="{{ $member->getUser()->getProfile()->getAvatarUrl()}}" alt="{{ $member->getUser()->getProfile()->getFirstName() }} {{ $member->getUser()->getProfile()->getLastName() }}" style="border-radius:5px;">
+                                    <img src="{{ $member->getUser()->getProfile()->getAvatarUrl()}}" alt="{{ $member->getUser()->getProfile()->getFirstName() }} {{ $member->getUser()->getProfile()->getLastName() }}"  class="img-responsive img-thumbnail img-rounded avatar">
                                 </a>
                             @endforeach
 
@@ -137,7 +137,7 @@
                         <div class="well" style="margin-top:15px;">
                             @foreach($event->getFollowers() as $member)
                                 <a href="{{ URL::route('profile.display', ['id' => $member->getUserId()]) }}" title="{{ $member->getUser()->getProfile()->getFirstName() }} {{ $member->getUser()->getProfile()->getLastName() }}">
-                                    <img src="{{ $member->getUser()->getProfile()->getAvatarUrl()}}" alt="{{ $member->getUser()->getProfile()->getFirstName() }} {{ $member->getUser()->getProfile()->getLastName() }}">
+                                    <img src="{{ $member->getUser()->getProfile()->getAvatarUrl()}}" alt="{{ $member->getUser()->getProfile()->getFirstName() }} {{ $member->getUser()->getProfile()->getLastName() }}" class="img-responsive img-thumbnail img-rounded avatar">
                                 </a>
                             @endforeach
 

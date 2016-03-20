@@ -9,7 +9,7 @@ class Profile extends Model
 {
     protected $table = 'profiles';
     protected $fillable = ['firstname', 'lastname', 'description', 'avatar_url', 'status', 'user_id'];
-    
+
     // FIXME: user_id should be protected, but Eloquent won't let constrained INSERT
     //protected $hidden = ['user_id'];
 
@@ -79,8 +79,11 @@ class Profile extends Model
      * @return string
      */
     public function getAvatarUrl()
-    {
-        return 'http://a.deviantart.net/avatars/a/v/avatar239.jpg?2'; //$this->avatar_url;
+    {   if (empty($this->avatar_url)) {
+            return 'http://a.deviantart.net/avatars/a/v/avatar239.jpg?2'; //$this->avatar_url;
+        } else {
+            return $this->avatar_url;
+        }
     }
 
     /**
