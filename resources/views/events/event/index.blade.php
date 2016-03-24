@@ -162,9 +162,14 @@
                 @endif
 
                 <ul class="nav nav-tabs" style="margin-top:58px;">
-                    <li class="active">
+                    <li class="active" tab-id="comments">
                         <a href="#">Posty</a>
                     </li>
+                    @if($event->isImIn())
+                        <li tab-id="forum">
+                            <a href="#">Forum</a>
+                        </li>
+                    @endif
                     <li class="pull-right">
                         <a href="#" style="background: #3b5998;color:#fff;" class="facebook_share" facebook-url="{{ $meta_facebook->getUrl() }}">
                             <i class="fa fa-facebook-official"></i>
@@ -172,31 +177,68 @@
                     </li>
                 </ul>
                 <div class="nav" style="border-left:1px solid #ddd; border-right:1px solid #ddd; border-bottom:1px solid #ddd; padding: 20px;">
-                    <div class="well">
-                        <form method="POST" action="{{ URL::route('events.comment') }}">
-                            <textarea name="comment" style="width:100%;height:50px;background: transparent; border: 0;" placeholder="Wpisz swój komentarz"></textarea><br>
-                            <input type="hidden" name="event_id" value="{{ $event->getId() }}">
-                            @if(!Auth::guest())
-                                {{ csrf_field() }}
-                                <button type="submit" class="btn btn-primary btn-block">Skomentuj</button>
-                            @else
-                                <p style="color:#ddd;text-align:center;">Prosimy się zalogować</p>
-                            @endif
-                        </form>
+                    <div id="comments" class="tab">
+                        <div class="well">
+                            <form method="POST" action="{{ URL::route('events.comment') }}">
+                                <textarea name="comment" style="width:100%;height:50px;background: transparent; border: 0;" placeholder="Wpisz swój komentarz"></textarea><br>
+                                <input type="hidden" name="event_id" value="{{ $event->getId() }}">
+                                @if(!Auth::guest())
+                                    {{ csrf_field() }}
+                                    <button type="submit" class="btn btn-primary btn-block">Skomentuj</button>
+                                @else
+                                    <p style="color:#ddd;text-align:center;">Prosimy się zalogować</p>
+                                @endif
+                            </form>
+                        </div>
+
+                        <div style="margin-top:50px;">
+                            <h2 style="margin-bottom: 25px;">Time line</h2>
+
+                            @foreach($event->getTimeLine() as $item)
+                                <div style="margin: 25px 0;">
+                                    @include('partials.events.time_line.' . $item->getType(), array('item' => $item))
+                                </div>
+                            @endforeach
+                        </div>
                     </div>
+                    @if($event->isImIn())
+                        <div id="forum" style="display:none;" class="tab">
+                            <h2 style="margin-bottom: 25px;">Forum</h2>
 
-                    <div style="margin-top:50px;">
-                        <h2 style="margin-bottom: 25px;">Time line</h2>
-
-                        @foreach($event->getTimeLine() as $item)
-                            <div style="margin: 25px 0;">
-                                @include('partials.events.time_line.' . $item->getType(), array('item' => $item))
+                            <div>
+                                @include('partials.events.comments', array('comments' => $event->getComments()))
                             </div>
-                        @endforeach
-                    </div>
+
+                            <div>
+                                <h2>Nowy temat</h2><br>
+
+                                <form method="POST" action="{{ URL::route('events.comment') }}">
+                                    <textarea name="comment" style="width:100%;height:50px;background:#fff; border: 1px solid #000; border-radius:5px;" placeholder="Wpisz swój komentarz"></textarea><br>
+                                    <input type="hidden" name="event_id" value="{{ $event->getId() }}">
+                                    <input type="hidden" name="label" value="private">
+                                    {{ csrf_field() }}
+                                    <button type="submit" class="btn btn-primary btn-block">Załóż temat</button>
+                                </form>
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
         <br>&nbsp;<br>
     </div>
+
+    <script>
+        $('.nav-tabs li').click(function() {
+            var tab = $(this).attr('tab-id');
+
+            $('.nav-tabs li').removeClass('active');
+            $('.nav .tab').hide();
+
+            $('#' + tab).show();
+            $(this).addClass('active');
+
+            return false;
+        });
+    </script>
 @endsection

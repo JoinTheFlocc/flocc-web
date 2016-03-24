@@ -751,9 +751,11 @@ class Events extends Model
     /**
      * Czy jestem w tym wydarzeniu
      *
+     * @param bool $only_accept
+     *
      * @return bool
      */
-    public function isImIn()
+    public function isImIn($only_accept = false)
     {
         foreach($this->getMembers() as $user) {
             if ($user->getUserId() == Auth::getUserId()) {
@@ -761,9 +763,11 @@ class Events extends Model
             }
         }
 
-        foreach($this->getAwaitingRequests() as $user) {
-            if($user->getUserId() == Auth::getUserId()) {
-                return true;
+        if($only_accept !== false) {
+            foreach($this->getAwaitingRequests() as $user) {
+                if($user->getUserId() == Auth::getUserId()) {
+                    return true;
+                }
             }
         }
 
@@ -904,6 +908,16 @@ class Events extends Model
     public function getTimeLine()
     {
         return (new TimeLine())->getByEventId($this->id);
+    }
+
+    /**
+     * Get comments
+     *
+     * @return \Flocc\Events\Comments
+     */
+    public function getComments()
+    {
+        return (new Comments())->getByEventId($this->id);
     }
 
     /**
