@@ -93,6 +93,9 @@ Route::get('events/{slug}/join/{type}', ['middleware' => 'auth', 'uses' => 'Even
 Route::get('events/{slug}/resign', ['middleware' => 'auth', 'uses' => 'Events\EventController@resign'])->name('events.event.resign');
 Route::get('events/{slug}/share', 'Events\EventController@share')->name('events.event.share');
 
+// Google Places
+Route::get('api/google/places/auto-complete', 'Api\Google\PlacesController@autoComplete')->name('api.google.places.autocomplete');
+
 /**
  * Set true if you want debug all queries
  */

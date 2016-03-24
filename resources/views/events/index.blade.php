@@ -31,12 +31,7 @@
                             <div class="well">
                                 <strong>Gdzie</strong><br>&nbsp;
 
-                                <select name="place_id" class="form-control">
-                                    <option value="">Wybierz</option>
-                                    @foreach($places as $place)
-                                        <option value="{{ $place->getId() }}" @if(isset($form_data['place_id']) and $form_data['place_id'] == $place->getId()) selected="selected" @endif>{{ $place->getName() }}</option>
-                                    @endforeach
-                                </select>
+                                <input type="text" name="place" class="form-control place_auto_complete"  autocomplete="off">
                             </div>
 
 

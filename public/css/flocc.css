@@ -363,3 +363,24 @@ ul#places_route li i {
   background: -moz-linear-gradient(bottom right, #424242, royalblue); /* For Firefox 3.6 to 15 */
   background: linear-gradient(to bottom right, #424242, royalblue); /* Standard syntax */
 }
+
+#auto-complete {
+    position: absolute;
+    border: 1px solid #000;
+    background: #fff;
+}
+
+#auto-complete ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+#auto-complete ul li {
+    padding: 10px;
+    cursor: pointer;
+}
+
+#auto-complete ul li:hover {
+    background: azure;
+}

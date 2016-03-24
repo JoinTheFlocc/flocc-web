@@ -189,4 +189,51 @@ var Flocc = {
             }
         }
     },
+    Google : {
+        AutoComplete : {
+            Initialize : function() {
+                $('.place_auto_complete').keyup(function() {
+                    var value       = $(this).val();
+                    var position    = $(this).offset();
+                    var height      = $(this).outerHeight();
+                    var width       = $(this).outerWidth();
+
+                    if(value.length > 3) {
+                        Flocc.Responses.Json('/api/google/places/auto-complete', {'keyword' : value}, function(data) {
+                            Flocc.Google.AutoComplete.Show(data, position, height, width);
+                        });
+
+                        var input = $(this);
+
+                        $(document).on('click', '#auto-complete ul li', function() {
+                            input.val($(this).html());
+                            Flocc.Google.AutoComplete.Hide();
+                        });
+                    } else {
+                        Flocc.Google.AutoComplete.Hide();
+                    }
+                });
+            },
+            Show : function(data, position, height, width)
+            {
+                Flocc.Google.AutoComplete.Hide();
+
+                var lis     = '';
+                var style   = 'top: ' + (position.top+height) + 'px; left: ' + position.left + 'px; width: ' + width + 'px;';
+
+                for(var i in data) {
+                    var row = data[i];
+
+                    lis = lis + '<li id="' + i + '">' + row + '</li>';
+                }
+
+                $('body').append('<div id="auto-complete" style="' + style + '"></div>');
+                $('#auto-complete').append('<ul>' + lis + '</ul>');
+            },
+
+            Hide : function() {
+                $('#auto-complete').remove();
+            }
+        }
+    }
 };

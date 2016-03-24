@@ -32,6 +32,7 @@
     Flocc.Config.Set('users.timeline.json', '{{ URL::route('profile.timeline') }}');
 
     Flocc.Notification.Initialize();
+    Flocc.Google.AutoComplete.Initialize();
 </script>
 
 <script type="text/javascript">
