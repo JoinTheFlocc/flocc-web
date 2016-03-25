@@ -4,6 +4,9 @@
     <div class="container">
         <div class="row" style="margin:80px 0;">
             @if(!Auth::guest())
+                <a href="{{ URL::route('events.new.inspiration') }}" class="btn btn-primary pull-right" style="margin-left:10px;">
+                    Utwórz nową inspirację
+                </a>
                 <a href="{{ URL::route('events.new') }}" class="btn btn-success pull-right">
                     Utwórz nowe wydarzenie
                 </a><br>&nbsp;<br>

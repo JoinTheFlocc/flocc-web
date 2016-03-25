@@ -79,6 +79,7 @@ Route::get('notifications/get/{type?}', ['middleware' => 'auth', 'uses' => 'Noti
 // Events
 Route::match(['get', 'post'], 'search/{filters?}', ['middleware' => 'auth', 'uses' => 'Events\EventsController@index'])->name('events');
 Route::get('events/new', ['middleware' => 'auth', 'uses' => 'Events\EventsController@newEvent'])->name('events.new');
+Route::get('events/new/inspiration', ['middleware' => 'auth', 'uses' => 'Events\EventsController@newInspirationEvent'])->name('events.new.inspiration');
 Route::post('events/comment', ['middleware' => 'auth', 'uses' => 'Events\CommentController@save'])->name('events.comment');
 Route::match(['get', 'post'], 'events/edit/{id}', ['middleware' => 'auth', 'uses' => 'Events\EditEventController@index'])->name('events.edit');
 Route::get('events/edit/{id}/members', ['middleware' => 'auth', 'uses' => 'Events\EditEventController@members'])->name('events.edit.members');

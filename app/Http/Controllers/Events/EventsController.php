@@ -102,19 +102,31 @@ class EventsController extends Controller
     /**
      * Create new event
      *
+     * @param bool $inspiration
+     *
      * @return mixed
      */
-    public function newEvent()
+    public function newEvent($inspiration = false)
     {
         $events     = new Events();
 
         $user_id    = \Flocc\Auth::getUserId();
-        $draft      = $events->getUserDraft($user_id);
+        $draft      = $events->getUserDraft($user_id, $inspiration);
 
         if($draft === null) {
-            $draft = $events->createDraft($user_id);
+            $draft = $events->createDraft($user_id, $inspiration);
         }
 
         return \Redirect::to('events/edit/' . $draft->getId());
+    }
+
+    /**
+     * New inspiration
+     *
+     * @return mixed
+     */
+    public function newInspirationEvent()
+    {
+        return $this->newEvent(true);
     }
 }

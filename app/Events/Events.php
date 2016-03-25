@@ -26,7 +26,7 @@ class Events extends Model
      *
      * @var array
      */
-    protected $fillable = ['id', 'user_id', 'created_at', 'title', 'slug', 'description', 'event_from', 'event_to', 'event_span', 'views', 'avatar_url', 'users_limit', 'fixed', 'status', 'place_id', 'budget_id', 'intensities_id'];
+    protected $fillable = ['id', 'user_id', 'created_at', 'title', 'slug', 'description', 'event_from', 'event_to', 'event_span', 'views', 'avatar_url', 'users_limit', 'fixed', 'status', 'place_id', 'budget_id', 'intensities_id', 'tribe_id', 'travel_ways_id', 'infrastructure_id', 'tourist_id', 'voluntary', 'language_learning', 'is_inspiration'];
 
     /**
      * Indicates if the model should be timestamped.
@@ -1183,26 +1183,40 @@ class Events extends Model
      * Get user draft
      *
      * @param int $user_id
+     * @param bool $inspiration
      *
      * @return \Flocc\Events\Events
      */
-    public function getUserDraft($user_id)
+    public function getUserDraft($user_id, $inspiration = false)
     {
-        return self::where('user_id', $user_id)->where('status', 'draft')->take(1)->first();
+        $find = self::where('user_id', $user_id)->where('status', 'draft');
+
+        if($inspiration === true) {
+            $find = $find->where('is_inspiration', '1');
+        }
+
+        return $find->take(1)->first();
     }
 
     /**
      * Create new draft
      *
      * @param int $user_id
+     * @param bool $inspiration
      *
      * @return \Flocc\Events\Events
      */
-    public function createDraft($user_id)
+    public function createDraft($user_id, $inspiration = false)
     {
-        self::create(['user_id' => $user_id]);
+        $data = ['user_id' => $user_id];
 
-        return $this->getUserDraft($user_id);
+        if($inspiration === true) {
+            $data['is_inspiration'] = '1';
+        }
+
+        $o = self::create($data);
+
+        return $this->getUserDraft($user_id, $inspiration);
     }
 
     /**
