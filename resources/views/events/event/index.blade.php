@@ -107,6 +107,50 @@
                             {{ $event->getIntensity()->getName() }}
                         </div>
                     </div>
+                    <div class="row text-left" style="margin-top:25px;">
+                        <div class="col-sm-6">
+                            <strong>Jak:</strong><br>
+
+                            {{ $event->getTribe()->getName() }}
+                        </div>
+                        <div class="col-sm-6">
+                            <strong>Sposób podróżowani:</strong><br>
+
+                            {{ $event->getTravelWays()->getName() }}
+                        </div>
+                    </div>
+                    <div class="row text-left" style="margin-top:25px;">
+                        <div class="col-sm-6">
+                            <strong>Infrastruktura:</strong><br>
+
+                            {{ $event->getInfrastructure()->getName() }}
+                        </div>
+                        <div class="col-sm-6">
+                            <strong>Turystyczność:</strong><br>
+
+                            {{ $event->getTourist()->getName() }}
+                        </div>
+                    </div>
+                    <div class="row text-left" style="margin-top:25px;">
+                        <div class="col-sm-6">
+                            <strong>Wolontariat:</strong><br>
+
+                            @if($event->isVoluntary())
+                                Tak
+                            @else
+                                Nie
+                            @endif
+                        </div>
+                        <div class="col-sm-6">
+                            <strong>Nauka języków:</strong><br>
+
+                            @if($event->isLanguageLearning())
+                                Tak
+                            @else
+                                Nie
+                            @endif
+                        </div>
+                    </div>
                 </div>
 
                 <div class="well">

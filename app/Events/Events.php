@@ -921,6 +921,66 @@ class Events extends Model
     }
 
     /**
+     * Get tribes
+     *
+     * @return \Flocc\Tribes
+     */
+    public function getTribe()
+    {
+        return $this->hasOne('Flocc\Tribes', 'id', 'tribe_id')->first();
+    }
+
+    /**
+     * Get travel ways
+     *
+     * @return \Flocc\TravelWays
+     */
+    public function getTravelWays()
+    {
+        return $this->hasOne('Flocc\TravelWays', 'id', 'travel_ways_id')->first();
+    }
+
+    /**
+     * Get infrastructure
+     *
+     * @return \Flocc\Infrastructure
+     */
+    public function getInfrastructure()
+    {
+        return $this->hasOne('Flocc\Infrastructure', 'id', 'infrastructure_id')->first();
+    }
+
+    /**
+     * Get tourist
+     *
+     * @return \Flocc\Tourist
+     */
+    public function getTourist()
+    {
+        return $this->hasOne('Flocc\Tourist', 'id', 'tourist_id')->first();
+    }
+
+    /**
+     * Is voluntary
+     *
+     * @return bool
+     */
+    public function isVoluntary()
+    {
+        return ($this->voluntary == '1');
+    }
+
+    /**
+     * Is language learning
+     *
+     * @return bool
+     */
+    public function isLanguageLearning()
+    {
+        return ($this->language_learning == '1');
+    }
+
+    /**
      * Get event by ID
      *
      * @param int $id
