@@ -1,6 +1,7 @@
 <?php
 
 namespace Flocc\Events;
+use Flocc\Places;
 
 /**
  * Class Search
@@ -34,6 +35,21 @@ class Search
         }
 
         $this->filters = $filters;
+
+        return $this;
+    }
+
+    /**
+     * Set param
+     *
+     * @param int|string $i
+     * @param int|string $value
+     *
+     * @return $this
+     */
+    public function setParam($i, $value)
+    {
+        $this->filters[$i] = $value;
 
         return $this;
     }
@@ -101,6 +117,17 @@ class Search
         $query      = Events::select('events.*', \DB::raw($this->getScoringFunction() . ' as scoring'));
         $query      = $query->leftjoin('events_activities', 'events.id', '=', 'events_activities.event_id');
 
+        if($this->getParam('place') !== null) {
+            $this->setParam('place_id', 0);
+
+            $places = new Places();
+            $place  = $places->getByName($this->getParam('place'));
+
+            if($place !== null) {
+                $this->setParam('place_id', $place->getId());
+            }
+        }
+
         if($this->getParam('place_id') !== null) {
             $query = $query->leftjoin('events_routes', function ($join) {
                 $join->on('events.id', '=', 'events_routes.event_id');
@@ -114,11 +141,43 @@ class Search
             $query = $query->where('activity_id', (int) $this->getParam('activity_id'));
         }
 
+        if ($this->getParam('budget_id') !== null) {
+            $query = $query->where('budget_id', (int) $this->getParam('budget_id'));
+        }
+
+        if ($this->getParam('tribe_id') !== null) {
+            $query = $query->where('tribe_id', (int) $this->getParam('tribe_id'));
+        }
+
         if ($this->getParam('place_id') !== null) {
             $query = $query->where(function($query) {
                 $query->where('events.place_id', '=', $this->getParam('place_id'));
                 $query->orWhere('events_routes.place_id', '=', $this->getParam('place_id'));
             });
+        }
+
+        if ($this->getParam('intensities_id') !== null) {
+            $query = $query->where('intensities_id', $this->getParam('intensities_id'));
+        }
+
+        if ($this->getParam('travel_ways_id') !== null) {
+            $query = $query->where('travel_ways_id', $this->getParam('travel_ways_id'));
+        }
+
+        if ($this->getParam('infrastructure_id') !== null) {
+            $query = $query->where('infrastructure_id', $this->getParam('infrastructure_id'));
+        }
+
+        if ($this->getParam('tourist_id') !== null) {
+            $query = $query->where('tourist_id', $this->getParam('tourist_id'));
+        }
+
+        if ($this->getParam('voluntary') !== null) {
+            $query = $query->where('voluntary', '1');
+        }
+
+        if ($this->getParam('language_learning') !== null) {
+            $query = $query->where('language_learning', '1');
         }
 
         $query = $query->orderBy(\DB::raw($this->getScoringFunction()), 'desc');
@@ -179,7 +238,7 @@ class Search
      */
     private function getScoringFunction()
     {
-        $event_from     = ($this->getParam('event_from') === null) ? date('Y') . '-01-01' : $this->getParam('event_from');
+        $event_from     = ($this->getParam('event_from') === null) ? date('Y-m-d') : $this->getParam('event_from');
         $event_to       = ($this->getParam('event_to') === null) ? date('Y') . '-12-31' : $this->getParam('event_to');
         $event_span     = ((int) $this->getParam('event_span') === 0) ? 4 : (int) $this->getParam('event_span');
 

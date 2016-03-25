@@ -32,6 +32,14 @@ class CreateEventsTable extends Migration
             $table->integer('budget_id')->nullable()->default(null)->unsigned();
             $table->integer('intensities_id')->nullable()->default(null)->unsigned();
 
+            $table->integer('tribe_id')->nullable()->default(null)->unsigned();
+            $table->integer('travel_ways_id')->nullable()->default(null)->unsigned();
+            $table->integer('infrastructure_id')->nullable()->default(null)->unsigned();
+            $table->integer('tourist_id')->nullable()->default(null)->unsigned();
+            $table->enum('voluntary', ['0', '1'])->default('0');
+            $table->enum('language_learning', ['0', '1'])->default('0');
+
+
             $table
                 ->foreign('place_id')
                 ->references('id')
@@ -47,6 +55,26 @@ class CreateEventsTable extends Migration
             $table->foreign('intensities_id')
                 ->references('id')
                 ->on('intensities')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+            $table->foreign('tribe_id')
+                ->references('id')
+                ->on('tribes')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+            $table->foreign('travel_ways_id')
+                ->references('id')
+                ->on('travel_ways')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+            $table->foreign('infrastructure_id')
+                ->references('id')
+                ->on('infrastructure')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+            $table->foreign('tourist_id')
+                ->references('id')
+                ->on('tourist')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
         });

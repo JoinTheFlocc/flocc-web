@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateIntensitiesTable extends Migration
+class CreateTravelWaysTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,7 +12,7 @@ class CreateIntensitiesTable extends Migration
      */
     public function up()
     {
-        Schema::create('intensities', function(Blueprint $table)
+        Schema::create('travel_ways', function(Blueprint $table)
         {
             $table->increments('id')->unsigned();
             $table->string('name');
@@ -21,8 +21,8 @@ class CreateIntensitiesTable extends Migration
         /**
          * Default inserts
          */
-        DB::table('intensities')->insert(['id' => 1, 'name' => 'Relaks']);
-        DB::table('intensities')->insert(['id' => 2, 'name' => 'Aktywnie']);
-        DB::table('intensities')->insert(['id' => 3, 'name' => 'Wyczynowo']);
+        DB::table('travel_ways')->insert(['id' => 1, 'name' => 'A']);
+        DB::table('travel_ways')->insert(['id' => 2, 'name' => 'B']);
+        DB::table('travel_ways')->insert(['id' => 3, 'name' => 'C']);
     }
 }

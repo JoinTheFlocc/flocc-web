@@ -3,10 +3,16 @@
 namespace Flocc\Http\Controllers\Events;
 
 use Flocc\Activities;
+use Flocc\Budgets;
 use Flocc\Events\Events;
 use Flocc\Events\Search;
 use Flocc\Http\Controllers\Controller;
+use Flocc\Infrastructure;
+use Flocc\Intensities;
 use Flocc\Places;
+use Flocc\Tourist;
+use Flocc\TravelWays;
+use Flocc\Tribes;
 
 /**
  * Class EventsController
@@ -50,44 +56,48 @@ class EventsController extends Controller
             }))));
         }
 
-        /**
-         * Inject filters to model
-         */
-        $search->setFilters($filters);
+        $activities     = (new Activities())->get();
+        $tribes         = (new Tribes())->get();
+        $intensities    = (new Intensities())->get();
+        $travel_ways    = (new TravelWays())->get();
+        $infrastructure = (new Infrastructure())->get();
+        $tourist        = (new Tourist())->get();
+        $budgets        = (new Budgets())->get();
 
-        switch($action) {
-            // Wydarzenia użytkownika
-            case Search::TYPE_USER:
-                $events         = $search->getByUserId();
-                break;
+        if($action == 'all') {
+            return view('events.search.form', compact('activities', 'tribes'));
+        } else {
+            /**
+             * Inject filters to model
+             */
+            $search->setFilters($filters);
 
-            // Wydarzenia w których bierze udział
-            case Search::TYPE_MEMBER:
-                $events         = $search->getByMemberId(['member', 'awaiting']);
-                break;
+            switch($action) {
+                // Wydarzenia użytkownika
+                case Search::TYPE_USER:
+                    $events         = $search->getByUserId();
+                    break;
 
-            // Wydarzenia, które obserwuje
-            case Search::TYPE_FOLLOWER:
-                $events         = $search->getByMemberId('follower');
-                break;
+                // Wydarzenia w których bierze udział
+                case Search::TYPE_MEMBER:
+                    $events         = $search->getByMemberId(['member', 'awaiting']);
+                    break;
 
-            // Filtrowanie wiadomości
-            case Search::TYPE_SEARCH:
-                $form_data      = unserialize(base64_decode($filters[1]));
-                $events         = $search->search();
-                $search_form    = true;
-                break;
+                // Wydarzenia, które obserwuje
+                case Search::TYPE_FOLLOWER:
+                    $events         = $search->getByMemberId('follower');
+                    break;
 
-            // Wszystkie wydarzenia
-            default:
-                $events         = $search->getAll();
-                $search_form    = true;
+                // Filtrowanie wiadomości
+                case Search::TYPE_SEARCH:
+                    $form_data      = unserialize(base64_decode($filters[1]));
+                    $events         = $search->search();
+                    $search_form    = true;
+                    break;
+            }
+
+            return view('events.search.results', compact('events', 'user_id', 'activities', 'places', 'form_data', 'search_form', 'tribes', 'intensities', 'travel_ways', 'infrastructure', 'tourist', 'budgets'));
         }
-
-        $activities = (new Activities())->get();
-        $places     = (new Places())->get();
-
-        return view('events.index', compact('events', 'user_id', 'activities', 'places', 'form_data', 'search_form'));
     }
 
     /**
