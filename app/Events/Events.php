@@ -931,6 +931,46 @@ class Events extends Model
     }
 
     /**
+     * Get tribe ID
+     *
+     * @return null|int
+     */
+    public function getTribeId()
+    {
+        return $this->tribe_id;
+    }
+
+    /**
+     * Get travel ways ID
+     *
+     * @return null|int
+     */
+    public function getTravelWaysId()
+    {
+        return $this->travel_ways_id;
+    }
+
+    /**
+     * Get infrastructure ID
+     *
+     * @return null|int
+     */
+    public function getInfrastructureId()
+    {
+        return $this->infrastructure_id;
+    }
+
+    /**
+     * Get tourist ID
+     *
+     * @return null|int
+     */
+    public function getTouristId()
+    {
+        return $this->tourist_id;
+    }
+
+    /**
      * Get travel ways
      *
      * @return \Flocc\TravelWays
@@ -978,6 +1018,110 @@ class Events extends Model
     public function isLanguageLearning()
     {
         return ($this->language_learning == '1');
+    }
+
+    /**
+     * Set tribe ID
+     *
+     * @param int $tribe_id
+     *
+     * @return $this
+     */
+    public function setTribeId($tribe_id)
+    {
+        $this->tribe_id = (int) $tribe_id;
+
+        return $this;
+    }
+
+    /**
+     * Set travel ways ID
+     *
+     * @param int $travel_ways_id
+     *
+     * @return $this
+     */
+    public function setTravelWaysId($travel_ways_id)
+    {
+        $this->travel_ways_id = (int) $travel_ways_id;
+
+        return $this;
+    }
+
+    /**
+     * Set infrastructure ID
+     *
+     * @param int $infrastructure_id
+     *
+     * @return $this
+     */
+    public function setInfrastructureId($infrastructure_id)
+    {
+        $this->infrastructure_id = (int) $infrastructure_id;
+
+        return $this;
+    }
+
+    /**
+     * Set tourist ID
+     *
+     * @param int $tourist_id
+     *
+     * @return $this
+     */
+    public function setTouristId($tourist_id)
+    {
+        $this->tourist_id = (int) $tourist_id;
+
+        return $this;
+    }
+
+    /**
+     * Set voluntary sa true
+     *
+     * @return $this
+     */
+    public function setVoluntaryAsTrue()
+    {
+        $this->voluntary = '1';
+
+        return $this;
+    }
+
+    /**
+     * Set voluntary sa false
+     *
+     * @return $this
+     */
+    public function setVoluntaryAsFalse()
+    {
+        $this->voluntary = '0';
+
+        return $this;
+    }
+
+    /**
+     * Set language learning as true
+     *
+     * @return $this
+     */
+    public function setLanguageLearningAsTrue()
+    {
+        $this->language_learning = '1';
+
+        return $this;
+    }
+
+    /**
+     * Set language learning as false
+     *
+     * @return $this
+     */
+    public function setLanguageLearningAsFalse()
+    {
+        $this->language_learning = '0';
+
+        return $this;
     }
 
     /**

@@ -229,6 +229,87 @@
                             </div>
                         </div>
 
+                        <!-- tribes -->
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Jak?</label>
+                            <div class="col-sm-9">
+                                @foreach($tribes as $tribes_row)
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="tribe_id" value="{{ $tribes_row->getId() }}" @if($event->getTribeId() == $tribes_row->getId()) checked="checked" @endif>
+                                            {{ $tribes_row->getName() }}
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <!-- travel_ways_id -->
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Sposób podróżowania</label>
+                            <div class="col-sm-9">
+                                @foreach($travel_ways as $travel_ways_row)
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="travel_ways_id" value="{{ $travel_ways_row->getId() }}" @if($event->getTravelWaysId() == $travel_ways_row->getId()) checked="checked" @endif>
+                                            {{ $travel_ways_row->getName() }}
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <!-- infrastructure_id -->
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Infrastruktura</label>
+                            <div class="col-sm-9">
+                                @foreach($infrastructure as $infrastructure_row)
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="infrastructure_id" value="{{ $infrastructure_row->getId() }}" @if($event->getInfrastructureId() == $infrastructure_row->getId()) checked="checked" @endif>
+                                            {{ $infrastructure_row->getName() }}
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <!-- tourist_id -->
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Turystyczność</label>
+                            <div class="col-sm-9">
+                                @foreach($tourist as $tourist_row)
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="tourist_id" value="{{ $tourist_row->getId() }}" @if($event->getTouristId() == $tourist_row->getId()) checked="checked" @endif>
+                                            {{ $tourist_row->getName() }}
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <!-- tourist_id -->
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">&nbsp;</label>
+                            <div class="col-sm-9">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" name="voluntary" value="1" @if($event->isVoluntary()) checked="checked" @endif>
+
+                                        Wolontariat
+                                    </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" name="language_learning" value="1" @if($event->isLanguageLearning()) checked="checked" @endif>
+
+                                        Nauka języków
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
                         <div style="margin-top: 50px;text-align: center;">
                             <a href="#" class="btn btn-default btn-lg tab-action change-tab" action-tab-id="tab2">Wstecz</a>
                             <a href="#" class="btn btn-primary btn-lg tab-action change-tab" action-tab-id="tab4">Dalej</a>

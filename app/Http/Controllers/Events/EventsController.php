@@ -9,7 +9,6 @@ use Flocc\Events\Search;
 use Flocc\Http\Controllers\Controller;
 use Flocc\Infrastructure;
 use Flocc\Intensities;
-use Flocc\Places;
 use Flocc\Tourist;
 use Flocc\TravelWays;
 use Flocc\Tribes;

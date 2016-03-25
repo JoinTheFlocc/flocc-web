@@ -12,9 +12,13 @@ use Flocc\Events\Routes;
 use Flocc\Events\TimeLine;
 use Flocc\Helpers\ImageHelper;
 use Flocc\Http\Controllers\Controller;
+use Flocc\Infrastructure;
 use Flocc\Intensities;
 use Flocc\Notifications\NewNotification;
 use Flocc\Places;
+use Flocc\Tourist;
+use Flocc\TravelWays;
+use Flocc\Tribes;
 use Flocc\User;
 
 /**
@@ -194,6 +198,10 @@ class EditEventController extends Controller
         $activities         = new Activities();
         $budgets            = new Budgets();
         $intensities        = new Intensities();
+        $tribes             = new Tribes();
+        $travel_ways        = new TravelWays();
+        $infrastructure     = new Infrastructure();
+        $tourist            = new Tourist();
         $places             = new Places();
         $edit               = new EditEvent();
         $routes             = new Routes();
@@ -223,7 +231,12 @@ class EditEventController extends Controller
                 ->setEventSpan(\Input::get('event_span'))
                 ->setUsersLimit(\Input::get('users_limit'))
                 ->setBudgetId(\Input::get('budgets'))
-                ->setIntensitiesId(\Input::get('intensities'));
+                ->setIntensitiesId(\Input::get('intensities'))
+                ->setTribeId(\Input::get('tribe_id'))
+                ->setTravelWaysId(\Input::get('travel_ways_id'))
+                ->setInfrastructureId(\Input::get('infrastructure_id'))
+                ->setTouristId(\Input::get('tourist_id'))
+            ;
 
             if(isset($post['fixed'])) {
                 if($post['fixed'] == '1') {
@@ -241,6 +254,18 @@ class EditEventController extends Controller
                 $this->event->setPlaceId(\Input::get('place_id'));
             } else {
                 $this->event->setPlaceId(null);
+            }
+
+            if(isset($post['voluntary']) and $post['voluntary'] == '1') {
+                $this->event->setVoluntaryAsTrue();
+            } else {
+                $this->event->setVoluntaryAsFalse();
+            }
+
+            if(isset($post['language_learning']) and $post['language_learning'] == '1') {
+                $this->event->setLanguageLearningAsTrue();
+            } else {
+                $this->event->setLanguageLearningAsFalse();
             }
 
             if($errors->count() == 0) {
@@ -400,6 +425,10 @@ class EditEventController extends Controller
             'activities'        => $activities->all(),
             'budgets'           => $budgets->all(),
             'intensities'       => $intensities->all(),
+            'tribes'            => $tribes->all(),
+            'travel_ways'       => $travel_ways->all(),
+            'infrastructure'    => $infrastructure->all(),
+            'tourist'           => $tourist->all(),
             'places'            => $places->all(),
             'errors'            => isset($errors) ? $errors : [],
             'post_routes'       => $post_routes,
