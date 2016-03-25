@@ -251,7 +251,18 @@ class EditEventController extends Controller
             }
 
             if(\Input::get('place_type') == 'place') {
-                $this->event->setPlaceId(\Input::get('place_id'));
+                $place_name     = \Input::get('place');
+                $find_place     = $places->getByName($place_name);
+
+                if($find_place === null) {
+                    $places->addNew($place_name);
+
+                    $find_place = $places->getByName($place_name);
+                }
+
+                $place_id = $find_place->getId();
+
+                $this->event->setPlaceId($place_id);
             } else {
                 $this->event->setPlaceId(null);
             }
@@ -273,7 +284,7 @@ class EditEventController extends Controller
                     unset($post['route']);
                 } else {
                     $post['place_id']   = null;
-                    $post['route']      = explode(',', substr($post['route'], 0, -1));
+                    $post['route']      = explode(';', substr($post['route'], 0, -1));
                 }
 
                 unset($post['place_type']);
@@ -326,8 +337,16 @@ class EditEventController extends Controller
                 if(isset($post['route'])) {
                     $routes->clear($id);
 
-                    foreach($post['route'] as $place_id) {
-                        Routes::create(['event_id' => $id, 'place_id' => $place_id]);
+                    foreach($post['route'] as $place_name) {
+                        $find_place = $places->getByName($place_name);
+
+                        if($find_place === null) {
+                            $places->addNew($place_name);
+
+                            $find_place = $places->getByName($place_name);
+                        }
+
+                        Routes::create(['event_id' => $id, 'place_id' => $find_place->getId()]);
                     }
                 }
 

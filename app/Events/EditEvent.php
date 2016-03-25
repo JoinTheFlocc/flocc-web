@@ -55,9 +55,9 @@ class EditEvent
 
         if(isset($this->data['place_type'])) {
             if($this->data['place_type'] == 'place') {
-                $rules['place_id']  = 'required';
+                $rules['place']  = 'required';
             } else {
-                $rules['route']     = 'required';
+                $rules['route']  = 'required';
             }
         }
 

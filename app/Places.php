@@ -127,4 +127,20 @@ class Places extends Model
     {
         return self::where('name', $name)->take(1)->first();
     }
+
+    /**
+     * Add new place
+     *
+     * @param string $name
+     * @param null|int $parent_id
+     *
+     * @return static
+     */
+    public function addNew($name, $parent_id = null)
+    {
+        return self::create([
+            'name'          => $name,
+            'parent_id'     => $parent_id
+        ]);
+    }
 }

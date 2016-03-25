@@ -106,12 +106,7 @@
                             <div class="row">
                                 <h2>Miejsce wydarzenia</h2>
 
-                                <select name="place_id" class="form-control" style="margin-top: 50px;">
-                                    <option value="0">Wybierz miejsce</option>
-                                    @foreach($places as $place)
-                                        <option value="{{ $place->getId() }}" @if($event->getPlaceId() == $place->getId()) selected="selected" @endif>{{ $place->getName() }}</option>
-                                    @endforeach
-                                </select>
+                                <input class="form-control place_auto_complete" name="place" autocomplete="off" @if($event->isPlace()) value="{{ $event->getPlace()->getName() }}" @endif>
                             </div>
                         </div>
 
@@ -123,12 +118,7 @@
                                 <input type="hidden" name="route" id="route">
 
                                 <div class="add_place">
-                                    <select id="placesList" class="form-control pull-left" style="width:95%;">
-                                        <option value="0">Wybierz miejsce</option>
-                                        @foreach($places as $place)
-                                            <option value="{{ $place->getId() }}">{{ $place->getName() }}</option>
-                                        @endforeach
-                                    </select>
+                                    <input id="placesList" class="form-control place_auto_complete" name="place" autocomplete="off" style="display:inline-block;width:95%;">
                                     <i id="addPlace" class="fa fa-plus-circle pull-right"></i>
                                     <div class="clearfix"></div>
                                 </div>

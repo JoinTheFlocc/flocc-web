@@ -31,11 +31,12 @@ var FloccThemeEventsEdit = {
                 FloccThemeEventsEdit.Places.Route.Refresh();
 
                 $('#addPlace').click(function() {
-                    var id = $('#placesList').val();
-                    var name = $( "#placesList option:selected" ).text();
+                    var place = $("#placesList").val();
 
-                    if(id != '0') {
-                        FloccThemeEventsEdit.Places.Route.Add(id, name);
+                    if(place.length > 3) {
+                        var id = Flocc.Base64.Encode(place);
+
+                        FloccThemeEventsEdit.Places.Route.Add(id, place);
                     }
                 });
             },
@@ -84,8 +85,8 @@ var FloccThemeEventsEdit = {
                     for(var i in FloccThemeEventsEdit.Places.Route.__route) {
                         var row = FloccThemeEventsEdit.Places.Route.__route[i];
 
-                        $('#places_route').append('<li><span>' + row.name + '</span><i onclick="FloccThemeEventsEdit.Places.Route.Delete(' + row.id + ');" class="fa fa-trash-o pull-right"></i><div class="clearfix"></div></li>');
-                        $('#route').val($('#route').val() + row.id + ',');
+                        $('#places_route').append('<li><span>' + row.name + '</span><i onclick="FloccThemeEventsEdit.Places.Route.Delete(\'' + row.id + '\');" class="fa fa-trash-o pull-right"></i><div class="clearfix"></div></li>');
+                        $('#route').val($('#route').val() + row.name + ';');
                     }
                 }
             }
