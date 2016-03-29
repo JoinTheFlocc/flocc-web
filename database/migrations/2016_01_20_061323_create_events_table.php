@@ -38,6 +38,9 @@ class CreateEventsTable extends Migration
             $table->integer('tourist_id')->nullable()->default(null)->unsigned();
             $table->enum('voluntary', ['0', '1'])->default('0');
             $table->enum('language_learning', ['0', '1'])->default('0');
+            $table->enum('is_inspiration', ['0', '1'])->default('0');
+            $table->enum('event_month', ['1','2','3','4','5','6','7','8','9','10','11','12'])->nullable()->default(null);
+            $table->integer('last_update_time');
 
 
             $table

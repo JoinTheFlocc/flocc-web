@@ -3,6 +3,7 @@
 namespace Flocc\Events;
 
 use Flocc\Auth;
+use Flocc\Helpers\DateHelper;
 use Flocc\Notifications\NewNotification;
 use Flocc\Url;
 use Illuminate\Database\Eloquent\Model;
@@ -26,7 +27,7 @@ class Events extends Model
      *
      * @var array
      */
-    protected $fillable = ['id', 'user_id', 'created_at', 'title', 'slug', 'description', 'event_from', 'event_to', 'event_span', 'views', 'avatar_url', 'users_limit', 'fixed', 'status', 'place_id', 'budget_id', 'intensities_id', 'tribe_id', 'travel_ways_id', 'infrastructure_id', 'tourist_id', 'voluntary', 'language_learning', 'is_inspiration'];
+    protected $fillable = ['id', 'user_id', 'created_at', 'title', 'slug', 'description', 'event_from', 'event_to', 'event_span', 'views', 'avatar_url', 'users_limit', 'fixed', 'status', 'place_id', 'budget_id', 'intensities_id', 'tribe_id', 'travel_ways_id', 'infrastructure_id', 'tourist_id', 'voluntary', 'language_learning', 'is_inspiration', 'event_month', 'last_update_time'];
 
     /**
      * Indicates if the model should be timestamped.
@@ -1021,6 +1022,16 @@ class Events extends Model
     }
 
     /**
+     * Is inspiration
+     *
+     * @return bool
+     */
+    public function isInspiration()
+    {
+        return ($this->is_inspiration == '1');
+    }
+
+    /**
      * Set tribe ID
      *
      * @param int $tribe_id
@@ -1125,6 +1136,64 @@ class Events extends Model
     }
 
     /**
+     * Set event month
+     *
+     * @param string|null $event_month
+     *
+     * @return $this
+     */
+    public function setEventMonth($event_month)
+    {
+        $this->event_month = $event_month;
+
+        return $this;
+    }
+
+    /**
+     * Get event month
+     *
+     * @return null|int
+     */
+    public function getEventMonth()
+    {
+        return ($this->event_month === null) ? null : (int) $this->event_month;
+    }
+
+    /**
+     * Get event month name
+     *
+     * @return string|null
+     */
+    public function getEventMonthName()
+    {
+        return ($this->event_month === null) ? null : (new DateHelper())->getMonths($this->event_month);
+    }
+
+    /**
+     * Set last update time
+     *
+     * @param int $last_update_time
+     *
+     * @return $this
+     */
+    public function setLastUpdateTime($last_update_time)
+    {
+        $this->last_update_time = (int) $last_update_time;
+
+        return $this;
+    }
+
+    /**
+     * Get last update time
+     *
+     * @return int
+     */
+    public function getLastUpdateTime()
+    {
+        return (int) $this->last_update_time;
+    }
+
+    /**
      * Get event by ID
      *
      * @param int $id
@@ -1214,9 +1283,16 @@ class Events extends Model
             $data['is_inspiration'] = '1';
         }
 
-        $o = self::create($data);
+        self::create($data);
 
         return $this->getUserDraft($user_id, $inspiration);
+    }
+
+    public function createFilledDraft(array $data)
+    {
+        self::create($data);
+
+        return $this->getUserDraft($data['user_id']);
     }
 
     /**
@@ -1332,5 +1408,31 @@ class Events extends Model
     public function updateAvatarUrl($id, $avatar_url)
     {
         return (self::where('id', $id)->update(['avatar_url' => $avatar_url]) == 1);
+    }
+
+    /**
+     * Get latest events
+     *
+     * @param int $limit
+     * @param bool $is_inspiration
+     *
+     * @return \Flocc\Events\Events
+     */
+    public function getLatestEvents($limit = 5, $is_inspiration = false)
+    {
+        return self::where('status', 'open')->where('is_inspiration', ($is_inspiration ? '1' : '0'))->orderBy('created_at', 'desc')->limit($limit)->get();
+    }
+
+    /**
+     * Get latest updated events
+     *
+     * @param int $limit
+     * @param bool $is_inspiration
+     *
+     * @return \Flocc\Events\Events
+     */
+    public function getLatestUpdatedTime($limit = 5, $is_inspiration = false)
+    {
+        return self::where('status', 'open')->where('is_inspiration', ($is_inspiration ? '1' : '0'))->orderBy('last_update_time', 'desc')->limit($limit)->get();
     }
 }

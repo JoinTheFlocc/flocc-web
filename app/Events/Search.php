@@ -180,6 +180,7 @@ class Search
             $query = $query->where('language_learning', '1');
         }
 
+        $query = $query->where('is_inspiration', '0');
         $query = $query->orderBy(\DB::raw($this->getScoringFunction()), 'desc');
         $query = $query->groupBy('events.id');
         

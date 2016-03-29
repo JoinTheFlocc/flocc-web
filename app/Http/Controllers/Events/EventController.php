@@ -8,7 +8,6 @@ use Flocc\Events\Members;
 use Flocc\Events\TimeLine\NewLine;
 use Flocc\Http\Controllers\Controller;
 use Flocc\Notifications\NewNotification;
-use Flocc\Profile\TimeLine\NewTimeLine;
 use Flocc\User;
 
 /**
@@ -187,14 +186,6 @@ class EventController extends Controller
                             ->setEventId($event->getId())
                             ->setTypeAsMessage()
                             ->setMessage($user_name . ' zaczął obserwować to wydarzenie')
-                        ->save();
-
-                        // New line on user time line
-                        (new NewTimeLine())
-                            ->setUserId($event->getMembersAndFollowersIds())
-                            ->setType('new_follower')
-                            ->setTimeLineUserId($user_id)
-                            ->setTimeLineEventId($event->getId())
                         ->save();
 
                         $notification->setCallback('/events/' . $event->getSlug());

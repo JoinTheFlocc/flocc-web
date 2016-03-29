@@ -29,7 +29,6 @@
 <script>
     Flocc.Config.Set('notifications.url', '{{ URL::route('notifications.get') }}');
     Flocc.Config.Set('social.facebook.app_id', '178041392343208');
-    Flocc.Config.Set('users.timeline.json', '{{ URL::route('profile.timeline') }}');
 
     Flocc.Notification.Initialize();
     Flocc.Google.AutoComplete.Initialize();

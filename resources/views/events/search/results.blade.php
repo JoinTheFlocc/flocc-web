@@ -151,7 +151,7 @@
                     @if($events->count() > 0)
                         <ul class="events">
                             @foreach($events as $event)
-                                <li>
+                                <li style="@if($event->isMine()) border:1px solid red; @endif">
                                     <a href="{{ URL::route('events.event', ['slug' => $event->getSlug()]) }}">
                                         <img src="{{ $event->getAvatarUrl() }}">
                                     </a>
@@ -175,7 +175,13 @@
                                         <div class="well">
                                             Członków: <strong>{{ $event->getMembers()->count() }}</strong> |
                                             Obserwujących: <strong>{{ $event->getFollowers()->count() }}</strong> |
-                                            Data: <strong>{{ $event->getEventFrom() }}-{{ $event->getEventTo() }} ({{ $event->getEventSpan() }} dni)</strong> |
+
+                                            @if($event->isInspiration())
+                                                Miesiąc: <strong>{{ $event->getEventMonthName() }}</strong> |
+                                            @else
+                                                Data: <strong>{{ $event->getEventFrom() }}-{{ $event->getEventTo() }} ({{ $event->getEventSpan() }} dni)</strong> |
+                                            @endif
+
                                             @if($event->isPlace())
                                                 Miejsce: <strong>{{ $event->getPlace()->getName() }}</strong>
                                             @else

@@ -2,8 +2,8 @@
 
 namespace Flocc\Http\Controllers\Events;
 
-use Flocc\Activities;
 use Flocc\Budgets;
+use Flocc\Activities;
 use Flocc\Events\Events;
 use Flocc\Events\Search;
 use Flocc\Http\Controllers\Controller;
@@ -102,19 +102,40 @@ class EventsController extends Controller
     /**
      * Create new event
      *
-     * @param bool $inspiration
+     * @param null|int $id
      *
      * @return mixed
      */
-    public function newEvent($inspiration = false)
+    public function newEvent($id = null)
     {
         $events     = new Events();
 
         $user_id    = \Flocc\Auth::getUserId();
-        $draft      = $events->getUserDraft($user_id, $inspiration);
+        $draft      = $events->getUserDraft($user_id);
 
         if($draft === null) {
-            $draft = $events->createDraft($user_id, $inspiration);
+            if($id !== null) {
+                $event                  = $events->getById((int) $id);
+                $event_data             = json_decode(json_encode($event), true);
+
+                $event_data['users_id'] = $user_id;
+
+                unset($event_data['id'], $event_data['views'], $event_data['status'], $event_data['is_inspiration']);
+
+                $draft = $events->createFilledDraft($event_data);
+
+                /**
+                 * Add activities
+                 */
+                foreach($event->getActivities() as $activity) {
+                    (new \Flocc\Events\Activities())
+                        ->setEventId($draft->getId())
+                        ->setActivityId($activity->getId())
+                    ->save();
+                }
+            } else {
+                $draft = $events->createDraft($user_id);
+            }
         }
 
         return \Redirect::to('events/edit/' . $draft->getId());
@@ -127,6 +148,15 @@ class EventsController extends Controller
      */
     public function newInspirationEvent()
     {
-        return $this->newEvent(true);
+        $events     = new Events();
+
+        $user_id    = \Flocc\Auth::getUserId();
+        $draft      = $events->getUserDraft($user_id, true);
+
+        if($draft === null) {
+            $draft = $events->createDraft($user_id, true);
+        }
+
+        return \Redirect::to('events/edit/' . $draft->getId());
     }
 }

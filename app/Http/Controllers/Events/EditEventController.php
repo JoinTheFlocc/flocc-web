@@ -10,6 +10,7 @@ use Flocc\Events\Events;
 use Flocc\Events\Members;
 use Flocc\Events\Routes;
 use Flocc\Events\TimeLine;
+use Flocc\Helpers\DateHelper;
 use Flocc\Helpers\ImageHelper;
 use Flocc\Http\Controllers\Controller;
 use Flocc\Infrastructure;
@@ -138,16 +139,6 @@ class EditEventController extends Controller
             ->save();
 
             /**
-             * Powiadomienie na tablicy członkow wydarzenia
-             */
-            (new \Flocc\Profile\TimeLine\NewTimeLine())
-                ->setUserId($this->event->getMembersAndFollowersIds())
-                ->setType('new_member')
-                ->setTimeLineUserId($user_id)
-                ->setTimeLineEventId($this->event->getId())
-            ->save();
-
-            /**
              * Zmiana statusu
              */
             (new Members())->updateStatus($user_id, $id, $status);
@@ -212,6 +203,7 @@ class EditEventController extends Controller
         $is_draft           = $this->event->isStatusDraft();
         $user               = $users->getById(Auth::getUserId());
         $post_routes        = [];
+        $months             = (new DateHelper())->getMonths();
 
         if($this->event->isStatusCanceled()) {
           die; // @TODO
@@ -220,10 +212,11 @@ class EditEventController extends Controller
         if(!empty($post)) {
             $edit->setData($post);
 
-            $validator  = \Validator::make($post, $edit->getValidationRules($post), $edit->getValidationMessages());
+            $validator  = \Validator::make($post, $edit->getValidationRules($post, $this->event), $edit->getValidationMessages());
             $errors     = $validator->errors();
 
             $this->event
+                ->setLastUpdateTime(time())
                 ->setTitle(\Input::get('title'))
                 ->setDescription(\Input::get('description'))
                 ->setEventFrom(\Input::get('event_from'))
@@ -279,11 +272,15 @@ class EditEventController extends Controller
                 $this->event->setLanguageLearningAsFalse();
             }
 
+            if(isset($post['event_month'])) {
+                $this->event->setEventMonth($post['event_month']);
+            }
+
             if($errors->count() == 0) {
                 if($post['place_type'] == 'place') {
                     unset($post['route']);
                 } else {
-                    $post['place_id']   = null;
+                    $post['place']      = null;
                     $post['route']      = explode(';', substr($post['route'], 0, -1));
                 }
 
@@ -393,33 +390,16 @@ class EditEventController extends Controller
                     }
                 }
 
-                /**
-                 * Powiadomienie na tablicy członkow wydarzenia o edycji
-                 */
-                foreach(User::all() as $user) {
-                    $event_type = ($user->getId() === Auth::getUserId()) ? 'owner' : 'follower';
-
-                    (new \Flocc\Profile\TimeLine\NewTimeLine())
-                        ->setUserId($user->getId())
-                        ->setType(($is_draft === true) ? 'new_event' : 'edit_event')
-                        ->setTimeLineUserId(Auth::getUserId())
-                        ->setTimeLineEventId($id)
-                        ->setEventType($event_type)
-                    ->save();
-                }
-
                 if($is_draft === true) {
                     return \Redirect::to('events/' . $this->event->getSlug() . '/share');
                 }
 
                 return \Redirect::to('events/' . $this->event->getSlug());
             } else {
-                if(\Input::get('place_type') == 'place') {
-                    $this->event->setPlaceId($post['place_id']);
-                } else {
-                    foreach(explode(',', $post['route']) as $row) {
+                if(\Input::get('place_type') != 'place') {
+                    foreach(explode(';', $post['route']) as $i => $row) {
                         if(!empty($row)) {;
-                            $post_routes[$row] = $places->getById($row)->getName();
+                            $post_routes[$i] = $row;
                         }
                     }
                 }
@@ -452,7 +432,8 @@ class EditEventController extends Controller
             'errors'            => isset($errors) ? $errors : [],
             'post_routes'       => $post_routes,
             'post_new_activity' => isset($post_new_activity) ? $post_new_activity : null,
-            'post_activities'   => isset($post_activities) ? $post_activities : []
+            'post_activities'   => isset($post_activities) ? $post_activities : [],
+            'months'            => $months
         ]);
     }
 }

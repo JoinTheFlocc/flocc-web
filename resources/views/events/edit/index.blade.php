@@ -38,38 +38,53 @@
                             </div>
                         </div>
 
-                        <!-- dates -->
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Termin</label>
-                            <div class="col-sm-9">
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <div class='input-group date' id='datetimepicker6'>
-                                            <input name="event_from" type="text" class="form-control" placeholder="Data od" value="{{ $event->getEventFrom() }}">
-                                            <span class="input-group-addon">
-                                                <span class="glyphicon glyphicon-calendar"></span>
-                                            </span>
+                        @if(!$event->isInspiration())
+                            <!-- dates -->
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Termin</label>
+                                <div class="col-sm-9">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class='input-group date' id='datetimepicker6'>
+                                                <input name="event_from" type="text" class="form-control" placeholder="Data od" value="{{ $event->getEventFrom() }}">
+                                                <span class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                </span>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <div class='input-group date' id='datetimepicker6'>
-                                            <input name="event_to" type="text" class="form-control" placeholder="Data do" value="{{ $event->getEventTo() }}">
-                                            <span class="input-group-addon">
-                                                <span class="glyphicon glyphicon-calendar"></span>
-                                            </span>
+                                        <div class="col-sm-6">
+                                            <div class='input-group date' id='datetimepicker6'>
+                                                <input name="event_to" type="text" class="form-control" placeholder="Data do" value="{{ $event->getEventTo() }}">
+                                                <span class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- event_span -->
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Ilość dni</label>
-                            <div class="col-sm-9">
-                                <input type="number" name="event_span" class="form-control" value="{{ $event->getEventSpan() }}" style="width:70px;">
+                            <!-- event_span -->
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Ilość dni</label>
+                                <div class="col-sm-9">
+                                    <input type="number" name="event_span" class="form-control" value="{{ $event->getEventSpan() }}" style="width:70px;">
+                                </div>
                             </div>
-                        </div>
+                        @else
+                            <!-- event_month -->
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Proponowany miesiąc</label>
+                                <div class="col-sm-9">
+                                    <select name="event_month" class="form-control">
+                                        <option value="">Wybierz</option>
+                                        @foreach($months as $i => $month)
+                                            <option value="{{ $i }}" @if($i == $event->getEventMonth()) selected="selected" @endif>{{ $month }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        @endif
 
                         <div style="margin-top: 50px;text-align:center;">
                             <button class="btn btn-primary btn-lg tab-action change-tab" action-tab-id="tab2">Dalej</button>
@@ -118,7 +133,7 @@
                                 <input type="hidden" name="route" id="route">
 
                                 <div class="add_place">
-                                    <input id="placesList" class="form-control place_auto_complete" name="place" autocomplete="off" style="display:inline-block;width:95%;">
+                                    <input id="placesList" class="form-control place_auto_complete" autocomplete="off" style="display:inline-block;width:95%;">
                                     <i id="addPlace" class="fa fa-plus-circle pull-right"></i>
                                     <div class="clearfix"></div>
                                 </div>

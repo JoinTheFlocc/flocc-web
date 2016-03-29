@@ -29,17 +29,15 @@ class EditEvent
      * Get validation rules
      *
      * @param array $post
+     * @param Events $event
      *
      * @return array
      */
-    public function getValidationRules(array $post)
+    public function getValidationRules(array $post, Events $event)
     {
         $rules      = [
             'title'                 => 'required',
             'description'           => 'required',
-            'event_from'            => 'required|date_format:Y-m-d|after:tomorrow',
-            'event_to'              => 'required|date_format:Y-m-d',
-            'event_span'            => 'required|integer|min:1',
             'users_limit'           => 'required|integer|min:1',
             'budgets'               => 'required',
             'intensities'           => 'required',
@@ -67,18 +65,26 @@ class EditEvent
             }
         }
 
-        $valid_event_from   = date_parse_from_format('Y-m-d', $post['event_from']);
-        $valid_event_to     = date_parse_from_format('Y-m-d', $post['event_to']);
+        if($event->isInspiration()) {
+            $rules['event_month']   = 'required';
+        } else {
+            $rules['event_span']    = 'required|integer|min:1';
+            $rules['event_from']    = 'required|date_format:Y-m-d|after:tomorrow';
+            $rules['event_to']      = 'required|date_format:Y-m-d';
 
-        if(count($valid_event_from['errors']) == 0 and count($valid_event_to['errors']) == 0) {
-            $date1                   = new \DateTime($post['event_from']);
-            $date2                   = new \DateTime($post['event_to']);
+            $valid_event_from       = date_parse_from_format('Y-m-d', $post['event_from']);
+            $valid_event_to         = date_parse_from_format('Y-m-d', $post['event_to']);
 
-            $days                    = (int) $date2->diff($date1)->format("%a")+1;
-            $rules['event_span']    .= '|max:' . $days;
+            if(count($valid_event_from['errors']) == 0 and count($valid_event_to['errors']) == 0) {
+                $date1                   = new \DateTime($post['event_from']);
+                $date2                   = new \DateTime($post['event_to']);
 
-            if($post['event_from'] !== $post['event_to']) {
-                $rules['event_to'] .= '|after:event_from';
+                $days                    = (int) $date2->diff($date1)->format("%a")+1;
+                $rules['event_span']    .= '|max:' . $days;
+
+                if($post['event_from'] !== $post['event_to']) {
+                    $rules['event_to'] .= '|after:event_from';
+                }
             }
         }
 
@@ -111,7 +117,7 @@ class EditEvent
             'fixed.required'                => 'Prosimy wybrać typ wydarzenia',
             'place_type.required'           => 'Prosimy wybrać czy miejsce czy trasa',
             'activities.required'           => 'Prosimy wybrać min. 1 aktywność',
-            'place_id.required'             => 'Prosimy wybrać miejsce wydarzenia',
+            'place.required'                => 'Prosimy wybrać miejsce wydarzenia',
             'route.required'                => 'Prosimy wybrać przynajmniej 1 punkt na trasie',
             'new_activities.required'       => 'Prosimy podać nazwę nowej aktywności',
             'photo.size'                    => 'Wybrany obrazek jest za duży',
@@ -119,6 +125,7 @@ class EditEvent
             'travel_ways_id.required'       => 'Prosimy wybrać sposób podróżowania',
             'infrastructure_id.required'    => 'Prosimy wybrać infrastrukturę',
             'tourist_id.required'           => 'Prosimy wybrać turystyczność',
+            'event_month.required'          => 'Prosimy wybrać sugerowany miesiac'
         ];
     }
 }
