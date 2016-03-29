@@ -156,6 +156,6 @@ $$
 DELIMITER ;
         ';
 
-        //DB::connection()->getPdo()->exec($sql);
+        DB::connection()->getPdo()->exec($sql);
     }
 }
