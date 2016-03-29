@@ -130,6 +130,13 @@ class DatabaseSeeder extends Seeder
                     'status'        => 'member'
                 ]);
             }
+
+            /**
+             * Mail label
+             */
+            \Flocc\Mail\Labels::create(['user_id' => $user_id, 'name' => 'Skrzynka odbiorcza', 'type' => 'inbox']);
+            \Flocc\Mail\Labels::create(['user_id' => $user_id, 'name' => 'Kosz', 'type' => 'trash']);
+            \Flocc\Mail\Labels::create(['user_id' => $user_id, 'name' => 'Archiwum', 'type' => 'archive']);
         }
     }
 
