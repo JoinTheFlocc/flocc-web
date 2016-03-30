@@ -2,6 +2,7 @@
 
 namespace Flocc\Events;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -24,7 +25,7 @@ class Comments extends Model
      *
      * @var array
      */
-    protected $fillable = ['id', 'event_id', 'parent_id', 'user_id', 'time', 'comment'];
+    protected $fillable = ['id', 'event_id', 'parent_id', 'user_id', 'time', 'comment', 'last_comment_time', 'label'];
 
     /**
      * Indicates if the model should be timestamped.
@@ -116,7 +117,7 @@ class Comments extends Model
     {
         $this->user_id = (int) $user_id;
 
-        return $this->user_id;
+        return $this;
     }
 
     /**
@@ -178,6 +179,84 @@ class Comments extends Model
     }
 
     /**
+     * Set last comment time
+     *
+     * @param string|null $time
+     *
+     * @return $this
+     */
+    public function setLastCommentTime($time)
+    {
+        $this->last_comment_time = $time;
+
+        return $this;
+    }
+
+    /**
+     * Set date as now
+     * 
+     * @return Comments
+     */
+    public function setLastCommentTimeAsCurrent()
+    {
+        return $this->setLastCommentTime(date('Y-m-d H:i:s'));
+    }
+
+    /**
+     * Get last comment time
+     *
+     * @return string|null
+     */
+    public function getLastCommentTime()
+    {
+        return $this->last_comment_time;
+    }
+
+    /**
+     * Set label as public
+     *
+     * @return $this
+     */
+    public function setLabelAsPublic()
+    {
+        $this->label = 'public';
+
+        return $this;
+    }
+
+    /**
+     * Is label is public
+     *
+     * @return bool
+     */
+    public function isLabelPublic()
+    {
+        return ($this->label == 'public');
+    }
+
+    /**
+     * Set label as private
+     *
+     * @return $this
+     */
+    public function setLabelAsPrivate()
+    {
+        $this->label = 'private';
+
+        return $this;
+    }
+
+    /**
+     * Is label is private
+     *
+     * @return bool
+     */
+    public function isLabelPrivate()
+    {
+        return ($this->label == 'private');
+    }
+
+    /**
      * Get user
      *
      * @return \Flocc\User
@@ -185,6 +264,28 @@ class Comments extends Model
     public function getUser()
     {
         return $this->hasOne('Flocc\User', 'id', 'user_id')->first();
+    }
+
+    /**
+     * Get childrens
+     *
+     * @return null|\Illuminate\Database\Eloquent\Collection
+     */
+    public function getChildrens()
+    {
+        return $this->childrens;
+    }
+
+    /**
+     * Get comment by ID
+     *
+     * @param int $id
+     *
+     * @return false|\Illuminate\Database\Eloquent\Collection
+     */
+    public function getById($id)
+    {
+        return self::where('id', (int) $id)->first();
     }
 
     /**
@@ -205,5 +306,31 @@ class Comments extends Model
         ]);
 
         return ($insert === null) ? null : $insert->id;
+    }
+
+    /**
+     * Get comments tree
+     *
+     * @param int $event_id
+     * @param string $label
+     *
+     * @return Collection
+     */
+    public function getByEventId($event_id, $label = 'public')
+    {
+        $comments = new Collection();
+
+        foreach(self::where('event_id', (int) $event_id)->whereNull('parent_id')->where('label', $label)->orderBy('last_comment_time', 'desc')->get() as $comment) {
+            $comment['childrens']           = new Collection();
+            $comments[$comment->getId()]    = $comment;
+        }
+
+        foreach(self::where('event_id', (int) $event_id)->whereNotNull('parent_id')->where('label', $label)->orderBy('id')->get() as $comment) {
+            if(isset($comments[$comment->getParentId()])) {
+                $comments[$comment->getParentId()]['childrens']->push($comment);
+            }
+        }
+
+        return $comments;
     }
 }

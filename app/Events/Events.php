@@ -3,6 +3,7 @@
 namespace Flocc\Events;
 
 use Flocc\Auth;
+use Flocc\Helpers\DateHelper;
 use Flocc\Notifications\NewNotification;
 use Flocc\Url;
 use Illuminate\Database\Eloquent\Model;
@@ -26,7 +27,7 @@ class Events extends Model
      *
      * @var array
      */
-    protected $fillable = ['id', 'user_id', 'created_at', 'title', 'description', 'date_from', 'date_to', 'duration', 'views', 'photo', 'users_limit', 'place_id'];
+    protected $fillable = ['id', 'user_id', 'created_at', 'title', 'slug', 'description', 'event_from', 'event_to', 'event_span', 'views', 'avatar_url', 'users_limit', 'fixed', 'status', 'place_id', 'budget_id', 'intensities_id', 'tribe_id', 'travel_ways_id', 'infrastructure_id', 'tourist_id', 'voluntary', 'language_learning', 'is_inspiration', 'event_month', 'last_update_time'];
 
     /**
      * Indicates if the model should be timestamped.
@@ -751,9 +752,11 @@ class Events extends Model
     /**
      * Czy jestem w tym wydarzeniu
      *
+     * @param bool $only_accept
+     *
      * @return bool
      */
-    public function isImIn()
+    public function isImIn($only_accept = false)
     {
         foreach($this->getMembers() as $user) {
             if ($user->getUserId() == Auth::getUserId()) {
@@ -761,9 +764,11 @@ class Events extends Model
             }
         }
 
-        foreach($this->getAwaitingRequests() as $user) {
-            if($user->getUserId() == Auth::getUserId()) {
-                return true;
+        if($only_accept !== false) {
+            foreach($this->getAwaitingRequests() as $user) {
+                if($user->getUserId() == Auth::getUserId()) {
+                    return true;
+                }
             }
         }
 
@@ -907,6 +912,288 @@ class Events extends Model
     }
 
     /**
+     * Get comments
+     *
+     * @return \Flocc\Events\Comments
+     */
+    public function getComments()
+    {
+        return (new Comments())->getByEventId($this->id, 'private');
+    }
+
+    /**
+     * Get tribes
+     *
+     * @return \Flocc\Tribes
+     */
+    public function getTribe()
+    {
+        return $this->hasOne('Flocc\Tribes', 'id', 'tribe_id')->first();
+    }
+
+    /**
+     * Get tribe ID
+     *
+     * @return null|int
+     */
+    public function getTribeId()
+    {
+        return $this->tribe_id;
+    }
+
+    /**
+     * Get travel ways ID
+     *
+     * @return null|int
+     */
+    public function getTravelWaysId()
+    {
+        return $this->travel_ways_id;
+    }
+
+    /**
+     * Get infrastructure ID
+     *
+     * @return null|int
+     */
+    public function getInfrastructureId()
+    {
+        return $this->infrastructure_id;
+    }
+
+    /**
+     * Get tourist ID
+     *
+     * @return null|int
+     */
+    public function getTouristId()
+    {
+        return $this->tourist_id;
+    }
+
+    /**
+     * Get travel ways
+     *
+     * @return \Flocc\TravelWays
+     */
+    public function getTravelWays()
+    {
+        return $this->hasOne('Flocc\TravelWays', 'id', 'travel_ways_id')->first();
+    }
+
+    /**
+     * Get infrastructure
+     *
+     * @return \Flocc\Infrastructure
+     */
+    public function getInfrastructure()
+    {
+        return $this->hasOne('Flocc\Infrastructure', 'id', 'infrastructure_id')->first();
+    }
+
+    /**
+     * Get tourist
+     *
+     * @return \Flocc\Tourist
+     */
+    public function getTourist()
+    {
+        return $this->hasOne('Flocc\Tourist', 'id', 'tourist_id')->first();
+    }
+
+    /**
+     * Is voluntary
+     *
+     * @return bool
+     */
+    public function isVoluntary()
+    {
+        return ($this->voluntary == '1');
+    }
+
+    /**
+     * Is language learning
+     *
+     * @return bool
+     */
+    public function isLanguageLearning()
+    {
+        return ($this->language_learning == '1');
+    }
+
+    /**
+     * Is inspiration
+     *
+     * @return bool
+     */
+    public function isInspiration()
+    {
+        return ($this->is_inspiration == '1');
+    }
+
+    /**
+     * Set tribe ID
+     *
+     * @param int $tribe_id
+     *
+     * @return $this
+     */
+    public function setTribeId($tribe_id)
+    {
+        $this->tribe_id = (int) $tribe_id;
+
+        return $this;
+    }
+
+    /**
+     * Set travel ways ID
+     *
+     * @param int $travel_ways_id
+     *
+     * @return $this
+     */
+    public function setTravelWaysId($travel_ways_id)
+    {
+        $this->travel_ways_id = (int) $travel_ways_id;
+
+        return $this;
+    }
+
+    /**
+     * Set infrastructure ID
+     *
+     * @param int $infrastructure_id
+     *
+     * @return $this
+     */
+    public function setInfrastructureId($infrastructure_id)
+    {
+        $this->infrastructure_id = (int) $infrastructure_id;
+
+        return $this;
+    }
+
+    /**
+     * Set tourist ID
+     *
+     * @param int $tourist_id
+     *
+     * @return $this
+     */
+    public function setTouristId($tourist_id)
+    {
+        $this->tourist_id = (int) $tourist_id;
+
+        return $this;
+    }
+
+    /**
+     * Set voluntary sa true
+     *
+     * @return $this
+     */
+    public function setVoluntaryAsTrue()
+    {
+        $this->voluntary = '1';
+
+        return $this;
+    }
+
+    /**
+     * Set voluntary sa false
+     *
+     * @return $this
+     */
+    public function setVoluntaryAsFalse()
+    {
+        $this->voluntary = '0';
+
+        return $this;
+    }
+
+    /**
+     * Set language learning as true
+     *
+     * @return $this
+     */
+    public function setLanguageLearningAsTrue()
+    {
+        $this->language_learning = '1';
+
+        return $this;
+    }
+
+    /**
+     * Set language learning as false
+     *
+     * @return $this
+     */
+    public function setLanguageLearningAsFalse()
+    {
+        $this->language_learning = '0';
+
+        return $this;
+    }
+
+    /**
+     * Set event month
+     *
+     * @param string|null $event_month
+     *
+     * @return $this
+     */
+    public function setEventMonth($event_month)
+    {
+        $this->event_month = $event_month;
+
+        return $this;
+    }
+
+    /**
+     * Get event month
+     *
+     * @return null|int
+     */
+    public function getEventMonth()
+    {
+        return ($this->event_month === null) ? null : (int) $this->event_month;
+    }
+
+    /**
+     * Get event month name
+     *
+     * @return string|null
+     */
+    public function getEventMonthName()
+    {
+        return ($this->event_month === null) ? null : (new DateHelper())->getMonths($this->event_month);
+    }
+
+    /**
+     * Set last update time
+     *
+     * @param int $last_update_time
+     *
+     * @return $this
+     */
+    public function setLastUpdateTime($last_update_time)
+    {
+        $this->last_update_time = (int) $last_update_time;
+
+        return $this;
+    }
+
+    /**
+     * Get last update time
+     *
+     * @return int
+     */
+    public function getLastUpdateTime()
+    {
+        return (int) $this->last_update_time;
+    }
+
+    /**
      * Get event by ID
      *
      * @param int $id
@@ -965,26 +1252,54 @@ class Events extends Model
      * Get user draft
      *
      * @param int $user_id
+     * @param bool $inspiration
      *
      * @return \Flocc\Events\Events
      */
-    public function getUserDraft($user_id)
+    public function getUserDraft($user_id, $inspiration = false)
     {
-        return self::where('user_id', $user_id)->where('status', 'draft')->take(1)->first();
+        $find = self::where('user_id', $user_id)->where('status', 'draft');
+
+        if($inspiration === true) {
+            $find = $find->where('is_inspiration', '1');
+        }
+
+        return $find->take(1)->first();
     }
 
     /**
      * Create new draft
      *
      * @param int $user_id
+     * @param bool $inspiration
      *
      * @return \Flocc\Events\Events
      */
-    public function createDraft($user_id)
+    public function createDraft($user_id, $inspiration = false)
     {
-        self::create(['user_id' => $user_id]);
+        $data = ['user_id' => $user_id];
 
-        return $this->getUserDraft($user_id);
+        if($inspiration === true) {
+            $data['is_inspiration'] = '1';
+        }
+
+        self::create($data);
+
+        return $this->getUserDraft($user_id, $inspiration);
+    }
+
+    /**
+     * Create draft from data
+     *
+     * @param array $data
+     * 
+     * @return Events
+     */
+    public function createFilledDraft(array $data)
+    {
+        self::create($data);
+
+        return $this->getUserDraft($data['user_id']);
     }
 
     /**
@@ -1100,5 +1415,31 @@ class Events extends Model
     public function updateAvatarUrl($id, $avatar_url)
     {
         return (self::where('id', $id)->update(['avatar_url' => $avatar_url]) == 1);
+    }
+
+    /**
+     * Get latest events
+     *
+     * @param int $limit
+     * @param bool $is_inspiration
+     *
+     * @return \Flocc\Events\Events
+     */
+    public function getLatestEvents($limit = 5, $is_inspiration = false)
+    {
+        return self::where('status', 'open')->where('is_inspiration', ($is_inspiration ? '1' : '0'))->orderBy('created_at', 'desc')->limit($limit)->get();
+    }
+
+    /**
+     * Get latest updated events
+     *
+     * @param int $limit
+     * @param bool $is_inspiration
+     *
+     * @return \Flocc\Events\Events
+     */
+    public function getLatestUpdatedTime($limit = 5, $is_inspiration = false)
+    {
+        return self::where('status', 'open')->where('is_inspiration', ($is_inspiration ? '1' : '0'))->orderBy('last_update_time', 'desc')->limit($limit)->get();
     }
 }

@@ -38,38 +38,53 @@
                             </div>
                         </div>
 
-                        <!-- dates -->
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Termin</label>
-                            <div class="col-sm-9">
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <div class='input-group date' id='datetimepicker6'>
-                                            <input name="event_from" type="text" class="form-control" placeholder="Data od" value="{{ $event->getEventFrom() }}">
-                                            <span class="input-group-addon">
-                                                <span class="glyphicon glyphicon-calendar"></span>
-                                            </span>
+                        @if(!$event->isInspiration())
+                            <!-- dates -->
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Termin</label>
+                                <div class="col-sm-9">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class='input-group date' id='datetimepicker6'>
+                                                <input name="event_from" type="text" class="form-control" placeholder="Data od" value="{{ $event->getEventFrom() }}">
+                                                <span class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                </span>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <div class='input-group date' id='datetimepicker6'>
-                                            <input name="event_to" type="text" class="form-control" placeholder="Data do" value="{{ $event->getEventTo() }}">
-                                            <span class="input-group-addon">
-                                                <span class="glyphicon glyphicon-calendar"></span>
-                                            </span>
+                                        <div class="col-sm-6">
+                                            <div class='input-group date' id='datetimepicker6'>
+                                                <input name="event_to" type="text" class="form-control" placeholder="Data do" value="{{ $event->getEventTo() }}">
+                                                <span class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- event_span -->
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Ilość dni</label>
-                            <div class="col-sm-9">
-                                <input type="number" name="event_span" class="form-control" value="{{ $event->getEventSpan() }}" style="width:70px;">
+                            <!-- event_span -->
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Ilość dni</label>
+                                <div class="col-sm-9">
+                                    <input type="number" name="event_span" class="form-control" value="{{ $event->getEventSpan() }}" style="width:70px;">
+                                </div>
                             </div>
-                        </div>
+                        @else
+                            <!-- event_month -->
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Proponowany miesiąc</label>
+                                <div class="col-sm-9">
+                                    <select name="event_month" class="form-control">
+                                        <option value="">Wybierz</option>
+                                        @foreach($months as $i => $month)
+                                            <option value="{{ $i }}" @if($i == $event->getEventMonth()) selected="selected" @endif>{{ $month }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        @endif
 
                         <div style="margin-top: 50px;text-align:center;">
                             <button class="btn btn-primary btn-lg tab-action change-tab" action-tab-id="tab2">Dalej</button>
@@ -106,12 +121,7 @@
                             <div class="row">
                                 <h2>Miejsce wydarzenia</h2>
 
-                                <select name="place_id" class="form-control" style="margin-top: 50px;">
-                                    <option value="0">Wybierz miejsce</option>
-                                    @foreach($places as $place)
-                                        <option value="{{ $place->getId() }}" @if($event->getPlaceId() == $place->getId()) selected="selected" @endif>{{ $place->getName() }}</option>
-                                    @endforeach
-                                </select>
+                                <input class="form-control place_auto_complete" name="place" autocomplete="off" @if($event->isPlace()) value="{{ $event->getPlace()->getName() }}" @endif>
                             </div>
                         </div>
 
@@ -123,12 +133,7 @@
                                 <input type="hidden" name="route" id="route">
 
                                 <div class="add_place">
-                                    <select id="placesList" class="form-control pull-left" style="width:95%;">
-                                        <option value="0">Wybierz miejsce</option>
-                                        @foreach($places as $place)
-                                            <option value="{{ $place->getId() }}">{{ $place->getName() }}</option>
-                                        @endforeach
-                                    </select>
+                                    <input id="placesList" class="form-control place_auto_complete" autocomplete="off" style="display:inline-block;width:95%;">
                                     <i id="addPlace" class="fa fa-plus-circle pull-right"></i>
                                     <div class="clearfix"></div>
                                 </div>
@@ -210,20 +215,103 @@
                             </div>
                         </div>
 
-                        <!-- fixed -->
+                        @if(!$event->isInspiration())
+                            <!-- fixed -->
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Typ wydarzenia</label>
+                                <div class="col-sm-9">
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="fixed" value="1" @if(!$event->isStatusDraft() and $event->isFixed()) checked="checked" @endif>
+                                            Odbędzie się
+                                        </label>
+                                    </div>
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="fixed" value="0" @if(!$event->isStatusDraft() and !$event->isFixed()) checked="checked" @endif>
+                                            Planowane
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+
+                        <!-- tribes -->
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Typ wydarzenia</label>
+                            <label class="col-sm-3 control-label">Jak?</label>
                             <div class="col-sm-9">
-                                <div class="radio">
+                                @foreach($tribes as $tribes_row)
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="tribe_id" value="{{ $tribes_row->getId() }}" @if($event->getTribeId() == $tribes_row->getId()) checked="checked" @endif>
+                                            {{ $tribes_row->getName() }}
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <!-- travel_ways_id -->
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Sposób podróżowania</label>
+                            <div class="col-sm-9">
+                                @foreach($travel_ways as $travel_ways_row)
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="travel_ways_id" value="{{ $travel_ways_row->getId() }}" @if($event->getTravelWaysId() == $travel_ways_row->getId()) checked="checked" @endif>
+                                            {{ $travel_ways_row->getName() }}
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <!-- infrastructure_id -->
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Infrastruktura</label>
+                            <div class="col-sm-9">
+                                @foreach($infrastructure as $infrastructure_row)
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="infrastructure_id" value="{{ $infrastructure_row->getId() }}" @if($event->getInfrastructureId() == $infrastructure_row->getId()) checked="checked" @endif>
+                                            {{ $infrastructure_row->getName() }}
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <!-- tourist_id -->
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Turystyczność</label>
+                            <div class="col-sm-9">
+                                @foreach($tourist as $tourist_row)
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="tourist_id" value="{{ $tourist_row->getId() }}" @if($event->getTouristId() == $tourist_row->getId()) checked="checked" @endif>
+                                            {{ $tourist_row->getName() }}
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <!-- tourist_id -->
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">&nbsp;</label>
+                            <div class="col-sm-9">
+                                <div class="checkbox">
                                     <label>
-                                        <input type="radio" name="fixed" value="1" @if(!$event->isStatusDraft() and $event->isFixed()) checked="checked" @endif>
-                                        Odbędzie się
+                                        <input type="checkbox" name="voluntary" value="1" @if($event->isVoluntary()) checked="checked" @endif>
+
+                                        Wolontariat
                                     </label>
                                 </div>
-                                <div class="radio">
+                                <div class="checkbox">
                                     <label>
-                                        <input type="radio" name="fixed" value="0" @if(!$event->isStatusDraft() and !$event->isFixed()) checked="checked" @endif>
-                                        Planowane
+                                        <input type="checkbox" name="language_learning" value="1" @if($event->isLanguageLearning()) checked="checked" @endif>
+
+                                        Nauka języków
                                     </label>
                                 </div>
                             </div>

@@ -20,6 +20,8 @@ class CreateEventsCommentsTable extends Migration
             $table->integer('user_id')->unsigned();
             $table->timestamp('time')->useCurrent();
             $table->longText('comment');
+            $table->timestamp('last_comment_time')->nullable()->default(null);
+            $table->enum('label', ['public','private'])->default('public');
 
             $table
                 ->foreign('event_id')

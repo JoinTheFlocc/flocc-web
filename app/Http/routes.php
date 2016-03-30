@@ -40,7 +40,6 @@ Route::get('auth/social/{provider}/callback', 'Auth\AuthController@handleProvide
 Route::get('profile', 'ProfilesController@show')->name('profile.my');
 Route::get('profile/create', 'ProfilesController@create')->name('profile.create');
 Route::post('profile/upload', 'ProfilesController@upload')->name('profile.upload');
-Route::get('profile/time-line', 'ProfilesController@timeLine')->name('profile.timeline');
 Route::get('profile/{id}/edit', 'ProfilesController@edit')->name('profile.edit')->where('id', '[0-9]+');
 Route::patch('profile/{id}/update', 'ProfilesController@update')->name('profile.update')->where('id', '[0-9]+');
 Route::get('profile/{id?}', 'ProfilesController@show')->name('profile.display')->where('id', '[0-9]+');
@@ -72,12 +71,13 @@ Route::get('mail/important/{id}/{is_important}', ['middleware' => 'auth', 'uses'
 
 // Notifications
 Route::get('notifications', ['middleware' => 'auth', 'uses' => 'Notifications\NotificationsController@index'])->name('notifications');
-Route::get('notifications/{id}', ['middleware' => 'auth', 'uses' => 'Notifications\NotificationsController@callback'])->name('notifications.callback')->where('id', '[0-9]+');;
+Route::get('notifications/{id}', ['middleware' => 'auth', 'uses' => 'Notifications\NotificationsController@callback'])->name('notifications.callback')->where('id', '[0-9]+');
 Route::get('notifications/get/{type?}', ['middleware' => 'auth', 'uses' => 'Notifications\NotificationsController@getNotifications'])->name('notifications.get');
 
 // Events
 Route::match(['get', 'post'], 'search/{filters?}', ['middleware' => 'auth', 'uses' => 'Events\EventsController@index'])->name('events');
-Route::get('events/new', ['middleware' => 'auth', 'uses' => 'Events\EventsController@newEvent'])->name('events.new');
+Route::get('events/new/{id?}', ['middleware' => 'auth', 'uses' => 'Events\EventsController@newEvent'])->name('events.new')->where('id', '[0-9]+');
+Route::get('events/new/inspiration', ['middleware' => 'auth', 'uses' => 'Events\EventsController@newInspirationEvent'])->name('events.new.inspiration');
 Route::post('events/comment', ['middleware' => 'auth', 'uses' => 'Events\CommentController@save'])->name('events.comment');
 Route::match(['get', 'post'], 'events/edit/{id}', ['middleware' => 'auth', 'uses' => 'Events\EditEventController@index'])->name('events.edit');
 Route::get('events/edit/{id}/members', ['middleware' => 'auth', 'uses' => 'Events\EditEventController@members'])->name('events.edit.members');
@@ -91,6 +91,9 @@ Route::get('events/{slug}/cancel', ['middleware' => 'auth', 'uses' => 'Events\Ev
 Route::get('events/{slug}/join/{type}', ['middleware' => 'auth', 'uses' => 'Events\EventController@join'])->name('events.event.join');
 Route::get('events/{slug}/resign', ['middleware' => 'auth', 'uses' => 'Events\EventController@resign'])->name('events.event.resign');
 Route::get('events/{slug}/share', 'Events\EventController@share')->name('events.event.share');
+
+// Google Places
+Route::get('api/google/places/auto-complete', 'Api\Google\PlacesController@autoComplete')->name('api.google.places.autocomplete');
 
 /**
  * Set true if you want debug all queries

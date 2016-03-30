@@ -125,76 +125,59 @@ var Flocc = {
             }
         }
     },
+    Google : {
+        AutoComplete : {
+            Initialize : function() {
+                $('.place_auto_complete').keyup(function() {
+                    var value       = $(this).val();
+                    var position    = $(this).offset();
+                    var height      = $(this).outerHeight();
+                    var width       = $(this).outerWidth();
 
-    Profile : {
-        TimeLine : {
-            Init : function() {
-                $('#time_line').html('');
-            },
-            Tabs : function(callback) {
-                $('#time_line_tabs li a').click(function() {
-                    $('#time_line_tabs').find('.active').removeClass('active');
-                    $(this).parent().addClass('active');
-                    callback($(this).parent().attr('type'));
-                });
-            },
-            Count : function(data) {
-                var count = 0;
+                    if(value.length > 3) {
+                        Flocc.Responses.Json('/api/google/places/auto-complete', {'keyword' : value}, function(data) {
+                            Flocc.Google.AutoComplete.Show(data, position, height, width);
+                        });
 
-                for (var i in data) {
-                    if (data.hasOwnProperty(i)) {
-                        ++count;
-                    }
-                }
+                        var input = $(this);
 
-                return count;
-            },
-            GetActiveType : function() {
-                return $('#time_line_tabs').find('.active').attr('type');
-            },
-            Get : function(user_id, type, start, limit) {
-                if(typeof type == 'undefined') {
-                    type = 'all';
-                }
-
-                if(typeof start == 'undefined') {
-                    start = 0;
-                }
-
-                if(typeof limit == 'undefined') {
-                    limit = 10;
-                }
-
-                $.ajax({
-                    dataType    : "json",
-                    url         : Flocc.Config.Get('users.timeline.json'),
-                    data        : {
-                        'user_id'   : user_id,
-                        'type'      : type,
-                        'start'     : start,
-                        'limit'     : limit
-                    },
-
-                    success     : function(data) {
-                        if(Flocc.Profile.TimeLine.Count(data) > 0) {
-                            $.each(data, function(i) {
-                                Flocc.Profile.TimeLine.Add(data[i]);
-                            });
-
-                            FloccThemeScroll.Done();
-                        } else {
-                            FloccThemeScroll.Finish();
-                        }
-                    },
-                    error : function(a, b, c) {
-                        console.log('Error: ' + a,b,c);
+                        $(document).on('click', '#auto-complete ul li', function() {
+                            input.val($(this).html());
+                            Flocc.Google.AutoComplete.Hide();
+                        });
+                    } else {
+                        Flocc.Google.AutoComplete.Hide();
                     }
                 });
             },
-            Add : function(row) {
-                console.log(row);
-                $('#time_line').append('<li>' + row.html + '</li>');
+            Show : function(data, position, height, width)
+            {
+                Flocc.Google.AutoComplete.Hide();
+
+                var lis     = '';
+                var style   = 'top: ' + (position.top+height) + 'px; left: ' + position.left + 'px; width: ' + width + 'px;';
+
+                for(var i in data) {
+                    var row = data[i];
+
+                    lis = lis + '<li id="' + i + '">' + row + '</li>';
+                }
+
+                $('body').append('<div id="auto-complete" style="' + style + '"></div>');
+                $('#auto-complete').append('<ul>' + lis + '</ul>');
+            },
+
+            Hide : function() {
+                $('#auto-complete').remove();
             }
         }
     },
+
+    Base64 : {
+        Encode : function(str) {
+            return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+                return String.fromCharCode('0x' + p1);
+            }));
+        }
+    }
 };

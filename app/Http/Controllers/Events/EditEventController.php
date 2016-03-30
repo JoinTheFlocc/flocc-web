@@ -10,11 +10,16 @@ use Flocc\Events\Events;
 use Flocc\Events\Members;
 use Flocc\Events\Routes;
 use Flocc\Events\TimeLine;
+use Flocc\Helpers\DateHelper;
 use Flocc\Helpers\ImageHelper;
 use Flocc\Http\Controllers\Controller;
+use Flocc\Infrastructure;
 use Flocc\Intensities;
 use Flocc\Notifications\NewNotification;
 use Flocc\Places;
+use Flocc\Tourist;
+use Flocc\TravelWays;
+use Flocc\Tribes;
 use Flocc\User;
 
 /**
@@ -134,16 +139,6 @@ class EditEventController extends Controller
             ->save();
 
             /**
-             * Powiadomienie na tablicy członkow wydarzenia
-             */
-            (new \Flocc\Profile\TimeLine\NewTimeLine())
-                ->setUserId($this->event->getMembersAndFollowersIds())
-                ->setType('new_member')
-                ->setTimeLineUserId($user_id)
-                ->setTimeLineEventId($this->event->getId())
-            ->save();
-
-            /**
              * Zmiana statusu
              */
             (new Members())->updateStatus($user_id, $id, $status);
@@ -194,6 +189,10 @@ class EditEventController extends Controller
         $activities         = new Activities();
         $budgets            = new Budgets();
         $intensities        = new Intensities();
+        $tribes             = new Tribes();
+        $travel_ways        = new TravelWays();
+        $infrastructure     = new Infrastructure();
+        $tourist            = new Tourist();
         $places             = new Places();
         $edit               = new EditEvent();
         $routes             = new Routes();
@@ -204,6 +203,7 @@ class EditEventController extends Controller
         $is_draft           = $this->event->isStatusDraft();
         $user               = $users->getById(Auth::getUserId());
         $post_routes        = [];
+        $months             = (new DateHelper())->getMonths();
 
         if($this->event->isStatusCanceled()) {
           die; // @TODO
@@ -212,10 +212,11 @@ class EditEventController extends Controller
         if(!empty($post)) {
             $edit->setData($post);
 
-            $validator  = \Validator::make($post, $edit->getValidationRules($post), $edit->getValidationMessages());
+            $validator  = \Validator::make($post, $edit->getValidationRules($post, $this->event), $edit->getValidationMessages());
             $errors     = $validator->errors();
 
             $this->event
+                ->setLastUpdateTime(time())
                 ->setTitle(\Input::get('title'))
                 ->setDescription(\Input::get('description'))
                 ->setEventFrom(\Input::get('event_from'))
@@ -223,7 +224,12 @@ class EditEventController extends Controller
                 ->setEventSpan(\Input::get('event_span'))
                 ->setUsersLimit(\Input::get('users_limit'))
                 ->setBudgetId(\Input::get('budgets'))
-                ->setIntensitiesId(\Input::get('intensities'));
+                ->setIntensitiesId(\Input::get('intensities'))
+                ->setTribeId(\Input::get('tribe_id'))
+                ->setTravelWaysId(\Input::get('travel_ways_id'))
+                ->setInfrastructureId(\Input::get('infrastructure_id'))
+                ->setTouristId(\Input::get('tourist_id'))
+            ;
 
             if(isset($post['fixed'])) {
                 if($post['fixed'] == '1') {
@@ -238,17 +244,44 @@ class EditEventController extends Controller
             }
 
             if(\Input::get('place_type') == 'place') {
-                $this->event->setPlaceId(\Input::get('place_id'));
+                $place_name     = \Input::get('place');
+                $find_place     = $places->getByName($place_name);
+
+                if($find_place === null) {
+                    $places->addNew($place_name);
+
+                    $find_place = $places->getByName($place_name);
+                }
+
+                $place_id = $find_place->getId();
+
+                $this->event->setPlaceId($place_id);
             } else {
                 $this->event->setPlaceId(null);
+            }
+
+            if(isset($post['voluntary']) and $post['voluntary'] == '1') {
+                $this->event->setVoluntaryAsTrue();
+            } else {
+                $this->event->setVoluntaryAsFalse();
+            }
+
+            if(isset($post['language_learning']) and $post['language_learning'] == '1') {
+                $this->event->setLanguageLearningAsTrue();
+            } else {
+                $this->event->setLanguageLearningAsFalse();
+            }
+
+            if(isset($post['event_month'])) {
+                $this->event->setEventMonth($post['event_month']);
             }
 
             if($errors->count() == 0) {
                 if($post['place_type'] == 'place') {
                     unset($post['route']);
                 } else {
-                    $post['place_id']   = null;
-                    $post['route']      = explode(',', substr($post['route'], 0, -1));
+                    $post['place']      = null;
+                    $post['route']      = explode(';', substr($post['route'], 0, -1));
                 }
 
                 unset($post['place_type']);
@@ -301,8 +334,16 @@ class EditEventController extends Controller
                 if(isset($post['route'])) {
                     $routes->clear($id);
 
-                    foreach($post['route'] as $place_id) {
-                        Routes::create(['event_id' => $id, 'place_id' => $place_id]);
+                    foreach($post['route'] as $place_name) {
+                        $find_place = $places->getByName($place_name);
+
+                        if($find_place === null) {
+                            $places->addNew($place_name);
+
+                            $find_place = $places->getByName($place_name);
+                        }
+
+                        Routes::create(['event_id' => $id, 'place_id' => $find_place->getId()]);
                     }
                 }
 
@@ -349,33 +390,16 @@ class EditEventController extends Controller
                     }
                 }
 
-                /**
-                 * Powiadomienie na tablicy członkow wydarzenia o edycji
-                 */
-                foreach(User::all() as $user) {
-                    $event_type = ($user->getId() === Auth::getUserId()) ? 'owner' : 'follower';
-
-                    (new \Flocc\Profile\TimeLine\NewTimeLine())
-                        ->setUserId($user->getId())
-                        ->setType(($is_draft === true) ? 'new_event' : 'edit_event')
-                        ->setTimeLineUserId(Auth::getUserId())
-                        ->setTimeLineEventId($id)
-                        ->setEventType($event_type)
-                    ->save();
-                }
-
                 if($is_draft === true) {
                     return \Redirect::to('events/' . $this->event->getSlug() . '/share');
                 }
 
                 return \Redirect::to('events/' . $this->event->getSlug());
             } else {
-                if(\Input::get('place_type') == 'place') {
-                    $this->event->setPlaceId($post['place_id']);
-                } else {
-                    foreach(explode(',', $post['route']) as $row) {
+                if(\Input::get('place_type') != 'place') {
+                    foreach(explode(';', $post['route']) as $i => $row) {
                         if(!empty($row)) {;
-                            $post_routes[$row] = $places->getById($row)->getName();
+                            $post_routes[$i] = $row;
                         }
                     }
                 }
@@ -400,11 +424,16 @@ class EditEventController extends Controller
             'activities'        => $activities->all(),
             'budgets'           => $budgets->all(),
             'intensities'       => $intensities->all(),
+            'tribes'            => $tribes->all(),
+            'travel_ways'       => $travel_ways->all(),
+            'infrastructure'    => $infrastructure->all(),
+            'tourist'           => $tourist->all(),
             'places'            => $places->all(),
             'errors'            => isset($errors) ? $errors : [],
             'post_routes'       => $post_routes,
             'post_new_activity' => isset($post_new_activity) ? $post_new_activity : null,
-            'post_activities'   => isset($post_activities) ? $post_activities : []
+            'post_activities'   => isset($post_activities) ? $post_activities : [],
+            'months'            => $months
         ]);
     }
 }

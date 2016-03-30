@@ -5,44 +5,57 @@
         <div class="row" style="margin-top:25px;">
             <div class="col-sm-4" style="margin-top:60px;">
                 @if(!Auth::guest())
-                    @if($event->isMine() === false)
-                        <div class="text-center">
-                            @if($event->canJoin())
-                                <a href="{{ URL::route('events.event.join', ['slug' => $event->getSlug(), 'type' => 'member']) }}" class="btn btn-success" style="width:32%">
-                                    Dołącz
-                                </a>
-                            @endif
-                            @if($event->canUnJoin())
-                                <a href="{{ URL::route('events.event.resign', ['slug' => $event->getSlug()]) }}" class="btn btn-danger">
-                                    Zrezygnuj
-                                </a>
-                            @endif
+                    @if(!$event->isInspiration())
+                        @if($event->isMine() === false)
+                            <div class="text-center">
+                                @if($event->canJoin())
+                                    <a href="{{ URL::route('events.event.join', ['slug' => $event->getSlug(), 'type' => 'member']) }}" class="btn btn-success" style="width:32%">
+                                        Dołącz
+                                    </a>
+                                @endif
+                                @if($event->canUnJoin())
+                                    <a href="{{ URL::route('events.event.resign', ['slug' => $event->getSlug()]) }}" class="btn btn-danger">
+                                        Zrezygnuj
+                                    </a>
+                                @endif
 
-                            @if($event->canFollow())
-                                <a href="{{ URL::route('events.event.join', ['slug' => $event->getSlug(), 'type' => 'follower']) }}" class="btn btn-primary" style="width:32%">
-                                    Obserwuj
-                                </a>
-                            @endif
-                            @if($event->canUnFollow())
-                                <a href="{{ URL::route('events.event.resign', ['slug' => $event->getSlug()]) }}" class="btn btn-danger">
-                                    Nie obserwuj
-                                </a>
-                            @endif
+                                @if($event->canFollow())
+                                    <a href="{{ URL::route('events.event.join', ['slug' => $event->getSlug(), 'type' => 'follower']) }}" class="btn btn-primary" style="width:32%">
+                                        Obserwuj
+                                    </a>
+                                @endif
+                                @if($event->canUnFollow())
+                                    <a href="{{ URL::route('events.event.resign', ['slug' => $event->getSlug()]) }}" class="btn btn-danger">
+                                        Nie obserwuj
+                                    </a>
+                                @endif
 
-                            <a href="{{ URL::route('mail.new.form', ['user_id' => $event->getUserId()]) }}" class="btn btn-default" style="width:32%">
-                                Wiadomość
-                            </a>
-                        </div><br>
+                                <a href="{{ URL::route('mail.new.form', ['user_id' => $event->getUserId()]) }}" class="btn btn-default" style="width:32%">
+                                    Wiadomość
+                                </a>
+                            </div><br>
+                        @else
+                            <div class="text-center">
+                                @if(!$event->isStatusCanceled())
+                                    <a href="{{ URL::route('events.event.cancel', ['slug' => $event->getSlug()]) }}" class="btn btn-danger" onclick="return confirm('Na pewno?');">
+                                        Odwołaj wydarzenie
+                                    </a>
+                                @endif
+                                <a href="{{ URL::route('events.edit', ['id' => $event->getId()]) }}" class="btn btn-primary">
+                                    Edytuj
+                                </a>
+                            </div><br>
+                        @endif
                     @else
                         <div class="text-center">
-                            @if(!$event->isStatusCanceled())
-                                <a href="{{ URL::route('events.event.cancel', ['slug' => $event->getSlug()]) }}" class="btn btn-danger" onclick="return confirm('Na pewno?');">
-                                    Odwołaj wydarzenie
+                            <a href="{{ URL::route('events.new', ['id' => $event->getId()]) }}" class="btn btn-primary">
+                                Załóż podobne wydarzenie
+                            </a>
+                            @if($event->isMine())
+                                <a href="{{ URL::route('events.edit', ['id' => $event->getId()]) }}" class="btn btn-primary">
+                                    Edytuj
                                 </a>
                             @endif
-                            <a href="{{ URL::route('events.edit', ['id' => $event->getId()]) }}" class="btn btn-primary">
-                                Edytuj
-                            </a>
                         </div><br>
                     @endif
                 @endif
@@ -68,11 +81,16 @@
                             @endif
                         </div>
                         <div class="col-sm-6">
-                            <strong>Organizator:</strong><br>
-                            <i class="fa fa-user"></i>
-                            <a href="{{ URL::route('profile.display', ['id' => $event->getUserId()]) }}">
-                                {{ $event->getOwner()->getProfile()->getFirstName() }} {{ $event->getOwner()->getProfile()->getLastName() }}
-                            </a>
+                            @if(!$event->isInspiration())
+                                <strong>Organizator:</strong><br>
+                                <i class="fa fa-user"></i>
+                                <a href="{{ URL::route('profile.display', ['id' => $event->getUserId()]) }}">
+                                    {{ $event->getOwner()->getProfile()->getFirstName() }} {{ $event->getOwner()->getProfile()->getLastName() }}
+                                </a>
+                            @else
+                                <strong>Proponowany miesiąc:</strong><br>
+                                {{ $event->getEventMonthName() }}
+                            @endif
                         </div>
                     </div>
                     <div class="row text-left" style="margin-top:25px;">
@@ -99,12 +117,68 @@
                         <div class="col-sm-6">
                             <strong>Budżet:</strong><br>
 
-                            {{ $event->getBudget()->getName() }}
+                            @if($event->getBudget() !== null)
+                                {{ $event->getBudget()->getName() }}
+                            @endif
                         </div>
                         <div class="col-sm-6">
                             <strong>Intensywność:</strong><br>
 
-                            {{ $event->getIntensity()->getName() }}
+                            @if($event->getIntensity() !== null)
+                                {{ $event->getIntensity()->getName() }}
+                            @endif
+                        </div>
+                    </div>
+                    <div class="row text-left" style="margin-top:25px;">
+                        <div class="col-sm-6">
+                            <strong>Jak:</strong><br>
+
+                            @if($event->getTribe() !== null)
+                                {{ $event->getTribe()->getName() }}
+                            @endif
+                        </div>
+                        <div class="col-sm-6">
+                            <strong>Sposób podróżowani:</strong><br>
+
+                            @if($event->getTravelWays() !== null)
+                                {{ $event->getTravelWays()->getName() }}
+                            @endif
+                        </div>
+                    </div>
+                    <div class="row text-left" style="margin-top:25px;">
+                        <div class="col-sm-6">
+                            <strong>Infrastruktura:</strong><br>
+
+                            @if($event->getInfrastructure() !== null)
+                                {{ $event->getInfrastructure()->getName() }}
+                            @endif
+                        </div>
+                        <div class="col-sm-6">
+                            <strong>Turystyczność:</strong><br>
+
+                            @if($event->getTourist() !== null)
+                                {{ $event->getTourist()->getName() }}
+                            @endif
+                        </div>
+                    </div>
+                    <div class="row text-left" style="margin-top:25px;">
+                        <div class="col-sm-6">
+                            <strong>Wolontariat:</strong><br>
+
+                            @if($event->isVoluntary())
+                                Tak
+                            @else
+                                Nie
+                            @endif
+                        </div>
+                        <div class="col-sm-6">
+                            <strong>Nauka języków:</strong><br>
+
+                            @if($event->isLanguageLearning())
+                                Tak
+                            @else
+                                Nie
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -115,40 +189,38 @@
                     @endforeach
                 </div>
 
-                <div class="row" style="margin-top:30px;">
-                    <div class="col-sm-6">
-                        <strong>Uczestnicy ({{ $event->getMembers()->count() }})</strong>
-
-                        <div class="well" style="margin-top:15px;">
-                            @foreach($event->getMembers() as $member)
-                                <?php $profile = $member->getUser()->getProfile(); ?>
-                                <a href="{{ URL::route('profile.display', $profile->getId()) }}" title="{{ $profile->getFirstName() }} {{ $profile->getLastName() }}">
-                                    <img src="{{ $profile->getAvatarUrl()}}" alt="{{ $profile->getFirstName() }} {{ $profile->getLastName() }}"  class="img-responsive img-thumbnail img-rounded avatar">
+                @if(!$event->isInspiration())
+                    <div class="row" style="margin-top:30px;">
+                        <div class="col-sm-6">
+                            <strong>Uczestnicy ({{ $event->getMembers()->count() }})</strong>
+                            <div class="well" style="margin-top:15px;">
+                                @foreach($event->getMembers() as $member)
+                                    <?php $profile = $member->getUser()->getProfile(); ?>
+                                    <a href="{{ URL::route('profile.display', $profile->getId()) }}" title="{{ $profile->getFirstName() }} {{ $profile->getLastName() }}">
+                                        <img src="{{ $profile->getAvatarUrl()}}" alt="{{ $profile->getFirstName() }} {{ $profile->getLastName() }}"  class="img-responsive img-thumbnail img-rounded avatar">
+                                    </a>
+                                @endforeach
+                                <br>&nbsp;<br><a href="{{ URL::route('events.event.members', ['slug' => $event->getSlug()]) }}">
+                                    Zobacz wszystkich
                                 </a>
-                            @endforeach
-
-                            <br>&nbsp;<br><a href="{{ URL::route('events.event.members', ['slug' => $event->getSlug()]) }}">
-                                Zobacz wszystkich
-                            </a>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <strong>Obserwują ({{ $event->getFollowers()->count() }})</strong>
+                            <div class="well" style="margin-top:15px;">
+                                @foreach($event->getFollowers() as $member)
+                                    <?php $profile = $member->getUser()->getProfile(); ?>
+                                    <a href="{{ URL::route('profile.display', $profile->getId()) }}" title="{{ $profile->getFirstName() }} {{ $profile->getLastName() }}">
+                                        <img src="{{ $profile->getAvatarUrl()}}" alt="{{ $profile->getFirstName() }} {{ $profile->getLastName() }}" class="img-responsive img-thumbnail img-rounded avatar">
+                                    </a>
+                                @endforeach
+                                <br>&nbsp;<br><a href="{{ URL::route('events.event.followers', ['slug' => $event->getSlug()]) }}">
+                                    Zobacz wszystkich
+                                </a>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-sm-6">
-                        <strong>Obserwują ({{ $event->getFollowers()->count() }})</strong>
-
-                        <div class="well" style="margin-top:15px;">
-                            @foreach($event->getFollowers() as $member)
-                                <?php $profile = $member->getUser()->getProfile(); ?>
-                                <a href="{{ URL::route('profile.display', $profile->getId()) }}" title="{{ $profile->getFirstName() }} {{ $profile->getLastName() }}">
-                                    <img src="{{ $profile->getAvatarUrl()}}" alt="{{ $profile->getFirstName() }} {{ $profile->getLastName() }}" class="img-responsive img-thumbnail img-rounded avatar">
-                                </a>
-                            @endforeach
-
-                            <br>&nbsp;<br><a href="{{ URL::route('events.event.followers', ['slug' => $event->getSlug()]) }}">
-                                Zobacz wszystkich
-                            </a>
-                        </div>
-                    </div>
-                </div>
+                @endif
             </div>
             <div class="col-sm-8">
                 @if($event->isStatusCanceled())
@@ -164,9 +236,14 @@
                 @endif
 
                 <ul class="nav nav-tabs" style="margin-top:58px;">
-                    <li class="active">
+                    <li class="active" tab-id="comments">
                         <a href="#">Posty</a>
                     </li>
+                    @if($event->isImIn() and !$event->isInspiration())
+                        <li tab-id="forum">
+                            <a href="#">Forum</a>
+                        </li>
+                    @endif
                     <li class="pull-right">
                         <a href="#" class="facebook_share" style="background: #3b5998;color:#fff;" facebook-url="{{ $meta_facebook->getUrl() }}" facebook-title="{{ $meta_facebook->getTitle() }}" facebook-img="{{ $meta_facebook->getImage() }}" facebook-desc="{{ $meta_facebook->getDescription() }}">
                             <i class="fa fa-facebook-official"></i>
@@ -174,31 +251,68 @@
                     </li>
                 </ul>
                 <div class="nav" style="border-left:1px solid #ddd; border-right:1px solid #ddd; border-bottom:1px solid #ddd; padding: 20px;">
-                    <div class="well">
-                        <form method="POST" action="{{ URL::route('events.comment') }}">
-                            <textarea name="comment" style="width:100%;height:50px;background: transparent; border: 0;" placeholder="Wpisz swój komentarz"></textarea><br>
-                            <input type="hidden" name="event_id" value="{{ $event->getId() }}">
-                            @if(!Auth::guest())
-                                {{ csrf_field() }}
-                                <button type="submit" class="btn btn-primary btn-block">Skomentuj</button>
-                            @else
-                                <p style="color:#ddd;text-align:center;">Prosimy się zalogować</p>
-                            @endif
-                        </form>
+                    <div id="comments" class="tab">
+                        <div class="well">
+                            <form method="POST" action="{{ URL::route('events.comment') }}">
+                                <textarea name="comment" style="width:100%;height:50px;background: transparent; border: 0;" placeholder="Wpisz swój komentarz"></textarea><br>
+                                <input type="hidden" name="event_id" value="{{ $event->getId() }}">
+                                @if(!Auth::guest())
+                                    {{ csrf_field() }}
+                                    <button type="submit" class="btn btn-primary btn-block">Skomentuj</button>
+                                @else
+                                    <p style="color:#ddd;text-align:center;">Prosimy się zalogować</p>
+                                @endif
+                            </form>
+                        </div>
+
+                        <div style="margin-top:50px;">
+                            <h2 style="margin-bottom: 25px;">Time line</h2>
+
+                            @foreach($event->getTimeLine() as $item)
+                                <div style="margin: 25px 0;">
+                                    @include('partials.events.time_line.' . $item->getType(), array('item' => $item))
+                                </div>
+                            @endforeach
+                        </div>
                     </div>
+                    @if($event->isImIn() and !$event->isInspiration())
+                        <div id="forum" style="display:none;" class="tab">
+                            <h2 style="margin-bottom: 25px;">Forum</h2>
 
-                    <div style="margin-top:50px;">
-                        <h2 style="margin-bottom: 25px;">Time line</h2>
-
-                        @foreach($event->getTimeLine() as $item)
-                            <div style="margin: 25px 0;">
-                                @include('partials.events.time_line.' . $item->getType(), array('item' => $item))
+                            <div>
+                                @include('partials.events.comments', array('comments' => $event->getComments()))
                             </div>
-                        @endforeach
-                    </div>
+
+                            <div>
+                                <h2>Nowy temat</h2><br>
+
+                                <form method="POST" action="{{ URL::route('events.comment') }}">
+                                    <textarea name="comment" style="width:100%;height:50px;background:#fff; border: 1px solid #000; border-radius:5px;" placeholder="Wpisz swój komentarz"></textarea><br>
+                                    <input type="hidden" name="event_id" value="{{ $event->getId() }}">
+                                    <input type="hidden" name="label" value="private">
+                                    {{ csrf_field() }}
+                                    <button type="submit" class="btn btn-primary btn-block">Załóż temat</button>
+                                </form>
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
         <br>&nbsp;<br>
     </div>
+
+    <script>
+        $('.nav-tabs li').click(function() {
+            var tab = $(this).attr('tab-id');
+
+            $('.nav-tabs li').removeClass('active');
+            $('.nav .tab').hide();
+
+            $('#' + tab).show();
+            $(this).addClass('active');
+
+            return false;
+        });
+    </script>
 @endsection

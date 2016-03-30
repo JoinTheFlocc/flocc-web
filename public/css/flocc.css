@@ -373,3 +373,24 @@ ul#places_route li i {
     width: 80px;
     height: 80px;
 }
+
+#auto-complete {
+    position: absolute;
+    border: 1px solid #000;
+    background: #fff;
+}
+
+#auto-complete ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+#auto-complete ul li {
+    padding: 10px;
+    cursor: pointer;
+}
+
+#auto-complete ul li:hover {
+    background: azure;
+}

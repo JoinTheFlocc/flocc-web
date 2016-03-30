@@ -5,18 +5,18 @@ namespace Flocc;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class Places
+ * Class Tourist
  *
  * @package Flocc
  */
-class Places extends Model
+class Tourist extends Model
 {
     /**
      * The database table used by the model.
      *
      * @var string
      */
-    protected $table = 'places';
+    protected $table = 'tourist';
 
     /**
      * The attributes that are mass assignable.
@@ -57,30 +57,6 @@ class Places extends Model
     }
 
     /**
-     * Set parent ID
-     *
-     * @param int|null $parent_id
-     *
-     * @return $this
-     */
-    public function setParentId($parent_id)
-    {
-        $this->parent_id = $parent_id;
-
-        return $this;
-    }
-
-    /**
-     * Get parent ID
-     *
-     * @return int|null
-     */
-    public function getParentId()
-    {
-        return $this->parent_id;
-    }
-
-    /**
      * Set name
      *
      * @param string $name
@@ -105,23 +81,11 @@ class Places extends Model
     }
 
     /**
-     * Get by ID
-     *
-     * @param int $id
-     *
-     * @return \Flocc\Places
-     */
-    public function getById($id)
-    {
-        return self::where('id', $id)->take(1)->first();
-    }
-
-    /**
-     * Get place by name
+     * Get by name
      *
      * @param string $name
      *
-     * @return false|\Flocc\Places
+     * @return \Flocc\Activities
      */
     public function getByName($name)
     {
@@ -129,18 +93,16 @@ class Places extends Model
     }
 
     /**
-     * Add new place
+     * Add new activity
      *
      * @param string $name
-     * @param null|int $parent_id
      *
-     * @return static
+     * @return int
      */
-    public function addNew($name, $parent_id = null)
+    public function addNew($name)
     {
-        return self::create([
-            'name'          => $name,
-            'parent_id'     => $parent_id
-        ]);
+        self::create(['name' => $name]);
+
+        return (int) \DB::getPdo()->lastInsertId();
     }
 }

@@ -16,8 +16,6 @@
         </div>
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="{{ URL::route('events') }}"><i class="fa fa-search fa-lg"></i> Wydarzenia</a></li>
-
                 @if (Auth::guest())
                     <li>
                       <a href="{{ URL::route('auth.register') }}"><i class="fa fa-btn fa-heart fa-lg"></i>Register</a>
@@ -26,8 +24,8 @@
                       <a href="{{ URL::route('auth.login') }}"><i class="fa fa-btn fa-sign-in fa-lg"></i>Login</a>
                     </li>
                 @else
-                    <li><a href="{{ URL::route('events', ['filters' => 'user,my']) }}"><i class="fa fa-globe"></i> Moje wydarzenia</a></li>
-                    <li><a href="{{ URL::route('events', ['filters' => 'member,my']) }}"><i class="fa fa-globe"></i> Biore udzial</a></li>
+                    <li><a href="{{ URL::route('profile.display') }}"><i class="fa fa-globe"></i> Szukam</a></li>
+                    <li><a href="{{ URL::route('events', ['filters' => 'member,my']) }}"><i class="fa fa-globe"></i> Jadę</a></li>
                     <li><a href="{{ URL::route('events', ['filters' => 'follower,my']) }}"><i class="fa fa-globe"></i> Obserwuje</a></li>
 
                       @if(Auth::user()->profile)
