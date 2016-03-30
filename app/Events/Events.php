@@ -918,7 +918,7 @@ class Events extends Model
      */
     public function getComments()
     {
-        return (new Comments())->getByEventId($this->id);
+        return (new Comments())->getByEventId($this->id, 'private');
     }
 
     /**

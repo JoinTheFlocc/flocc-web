@@ -312,19 +312,20 @@ class Comments extends Model
      * Get comments tree
      *
      * @param int $event_id
+     * @param string $label
      *
      * @return Collection
      */
-    public function getByEventId($event_id)
+    public function getByEventId($event_id, $label = 'public')
     {
         $comments = new Collection();
 
-        foreach(self::where('event_id', (int) $event_id)->whereNull('parent_id')->orderBy('last_comment_time', 'desc')->get() as $comment) {
+        foreach(self::where('event_id', (int) $event_id)->whereNull('parent_id')->where('label', $label)->orderBy('last_comment_time', 'desc')->get() as $comment) {
             $comment['childrens']           = new Collection();
             $comments[$comment->getId()]    = $comment;
         }
 
-        foreach(self::where('event_id', (int) $event_id)->whereNotNull('parent_id')->orderBy('id')->get() as $comment) {
+        foreach(self::where('event_id', (int) $event_id)->whereNotNull('parent_id')->where('label', $label)->orderBy('id')->get() as $comment) {
             if(isset($comments[$comment->getParentId()])) {
                 $comments[$comment->getParentId()]['childrens']->push($comment);
             }
