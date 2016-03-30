@@ -17,7 +17,7 @@ class Autocomplete
     private $location   = null;
     private $radius     = null;
     private $language   = 'PL';
-    private $types      = '(cities)';
+    private $types      = '(regions)';
     private $components = null;
     private $key;
     private $input;

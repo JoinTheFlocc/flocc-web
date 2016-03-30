@@ -1288,6 +1288,13 @@ class Events extends Model
         return $this->getUserDraft($user_id, $inspiration);
     }
 
+    /**
+     * Create draft from data
+     *
+     * @param array $data
+     * 
+     * @return Events
+     */
     public function createFilledDraft(array $data)
     {
         self::create($data);

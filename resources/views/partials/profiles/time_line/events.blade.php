@@ -1,6 +1,6 @@
 <ul class="events">
     @foreach($events as $event)
-        <li @if($event->isMine()) class="mine-event" style="border: 1px solid red;" @endif>
+        <li @if($event->isMine() and !$event->isInspiration()) class="mine-event" style="border: 1px solid red;" @endif>
             <h3>
                 <a href="{{ URL::route('events.event', ['slug' => $event->getSlug()]) }}">
                     {{ $event->getTitle() }}

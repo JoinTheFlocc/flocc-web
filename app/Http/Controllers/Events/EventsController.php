@@ -113,29 +113,30 @@ class EventsController extends Controller
         $user_id    = \Flocc\Auth::getUserId();
         $draft      = $events->getUserDraft($user_id);
 
-        if($draft === null) {
-            if($id !== null) {
-                $event                  = $events->getById((int) $id);
-                $event_data             = json_decode(json_encode($event), true);
+        if($draft !== null) {
+            $draft->delete();
+        }
 
-                $event_data['users_id'] = $user_id;
+        if($id !== null) {
+            $event                  = $events->getById((int) $id);
+            $event_data             = json_decode(json_encode($event), true);
 
-                unset($event_data['id'], $event_data['views'], $event_data['status'], $event_data['is_inspiration']);
+            unset($event_data['id'], $event_data['views'], $event_data['status'], $event_data['is_inspiration'], $event_data['user_id']);
 
-                $draft = $events->createFilledDraft($event_data);
+            $event_data['user_id']  = $user_id;
+            $draft                  = $events->createFilledDraft($event_data);
 
-                /**
-                 * Add activities
-                 */
-                foreach($event->getActivities() as $activity) {
-                    (new \Flocc\Events\Activities())
-                        ->setEventId($draft->getId())
-                        ->setActivityId($activity->getId())
+            /**
+             * Add activities
+             */
+            foreach($event->getActivities() as $activity) {
+                (new \Flocc\Events\Activities())
+                    ->setEventId($draft->getId())
+                    ->setActivityId($activity->getId())
                     ->save();
-                }
-            } else {
-                $draft = $events->createDraft($user_id);
             }
+        } else {
+            $draft = $events->createDraft($user_id);
         }
 
         return \Redirect::to('events/edit/' . $draft->getId());
@@ -153,9 +154,11 @@ class EventsController extends Controller
         $user_id    = \Flocc\Auth::getUserId();
         $draft      = $events->getUserDraft($user_id, true);
 
-        if($draft === null) {
-            $draft = $events->createDraft($user_id, true);
+        if($draft !== null) {
+            $draft->delete();
         }
+
+        $draft = $events->createDraft($user_id, true);
 
         return \Redirect::to('events/edit/' . $draft->getId());
     }

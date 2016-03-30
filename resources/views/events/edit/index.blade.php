@@ -215,24 +215,26 @@
                             </div>
                         </div>
 
-                        <!-- fixed -->
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Typ wydarzenia</label>
-                            <div class="col-sm-9">
-                                <div class="radio">
-                                    <label>
-                                        <input type="radio" name="fixed" value="1" @if(!$event->isStatusDraft() and $event->isFixed()) checked="checked" @endif>
-                                        Odbędzie się
-                                    </label>
-                                </div>
-                                <div class="radio">
-                                    <label>
-                                        <input type="radio" name="fixed" value="0" @if(!$event->isStatusDraft() and !$event->isFixed()) checked="checked" @endif>
-                                        Planowane
-                                    </label>
+                        @if(!$event->isInspiration())
+                            <!-- fixed -->
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Typ wydarzenia</label>
+                                <div class="col-sm-9">
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="fixed" value="1" @if(!$event->isStatusDraft() and $event->isFixed()) checked="checked" @endif>
+                                            Odbędzie się
+                                        </label>
+                                    </div>
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="fixed" value="0" @if(!$event->isStatusDraft() and !$event->isFixed()) checked="checked" @endif>
+                                            Planowane
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        @endif
 
                         <!-- tribes -->
                         <div class="form-group">

@@ -41,7 +41,6 @@ class EditEvent
             'users_limit'           => 'required|integer|min:1',
             'budgets'               => 'required',
             'intensities'           => 'required',
-            'fixed'                 => 'required',
             'place_type'            => 'required',
             'activities'            => 'required',
             'photo'                 => 'max:10000',
@@ -68,6 +67,7 @@ class EditEvent
         if($event->isInspiration()) {
             $rules['event_month']   = 'required';
         } else {
+            $rules['fixed']         = 'required';
             $rules['event_span']    = 'required|integer|min:1';
             $rules['event_from']    = 'required|date_format:Y-m-d|after:tomorrow';
             $rules['event_to']      = 'required|date_format:Y-m-d';
