@@ -28,9 +28,13 @@ class ProfilesController extends Controller
      */
     public function create()
     {
-        $user_id    = \Flocc\Auth::getUserId();
-        $users      = new User();
-        $profile    = $users->getById($user_id)->getProfile();
+        $profile = Auth::user()->getProfile();
+
+        if(empty($profile)) {
+            $profile = Profile::create([
+                'user_id' => Auth::user()->id,
+            ]);
+        }
 
         return view('profiles.create', compact('profile'));
     }
@@ -68,8 +72,7 @@ class ProfilesController extends Controller
         $profile = null;
 
         if($id === null) {
-            $user_id = \Flocc\Auth::getUserId();
-            $profile = Profile::where('user_id', $user_id)->firstOrFail();
+            $profile = Auth::user()->getProfile();
         } else {
             $profile = Profile::findOrFail($id);
         }
@@ -94,7 +97,7 @@ class ProfilesController extends Controller
 
         $events_time_lines = $events_time_lines->sortByDesc('date')->slice(0, 5);
 
-        return view('dashboard', compact('profile', 'is_mine', 'id', 'activities', 'tribes', 'events_time_lines'));
+        return view('dashboard', compact('profile', 'is_mine', 'activities', 'tribes', 'events_time_lines'));
     }
 
     /**

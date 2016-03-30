@@ -148,7 +148,6 @@ class AuthController extends Controller
         return redirect('profile/'.$authUser->getProfile()->id);
     }
 
-
     private function findOrCreateUser($providerUser, $provider)
     {
         $user = null;
