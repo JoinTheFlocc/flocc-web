@@ -1,4 +1,5 @@
 @extends('layouts.app')
+
 @section('content')
     <section id="main">
         <div class="container mainBoxA">
@@ -69,4 +70,21 @@
             </div>
         </div>
     </section>
+@endsection
+
+@section('bottomscripts')
+    <script src="/js/theme/scroll.js"></script>
+    <script>
+        $(function() {
+            Flocc.Profile.TimeLine.Init();
+            Flocc.Profile.TimeLine.Get({{ $profile->user_id }});
+            FloccThemeScroll.Init('#time_line', function(start) {
+                Flocc.Profile.TimeLine.Get({{ $profile->user_id }}, Flocc.Profile.TimeLine.GetActiveType(), start, 1);
+            });
+            Flocc.Profile.TimeLine.Tabs(function(type) {
+                Flocc.Profile.TimeLine.Init();
+                Flocc.Profile.TimeLine.Get({{ $profile->user_id }}, type);
+            });
+        });
+    </script>
 @endsection

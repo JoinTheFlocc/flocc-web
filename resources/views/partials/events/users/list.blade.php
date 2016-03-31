@@ -10,15 +10,16 @@
     </thead>
     <tbody>
     @foreach($users as $user)
+        <?php $profile = $user->getUser()->getProfile(); ?>
         <tr>
             <td class="text-center">
-                <a href="{{ URL::route('profile.display', ['id' => $user->getUserId()]) }}">
-                    <img src="{{ $user->getUser()->getProfile()->getAvatarUrl() }}">
+                <a href="{{ URL::route('profile.display', $profile->getId()) }}">
+                    <img src="{{ $profile->getAvatarUrl() }}" class="img-responsive img-thumbnail img-rounded avatar-lg">
                 </a>
             </td>
             <td>
-                <a href="{{ URL::route('profile.display', ['id' => $user->getUserId()]) }}">
-                    {{ $user->getUser()->getProfile()->getFirstName() }} {{ $user->getUser()->getProfile()->getLastName() }}
+                <a href="{{ URL::route('profile.display', $profile->getId()) }}">
+                    {{ $profile->getFirstName() }} {{ $profile->getLastName() }}
                 </a>
             </td>
             @if($tab == 'awaiting')
