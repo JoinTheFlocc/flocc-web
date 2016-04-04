@@ -87,6 +87,7 @@ class ProfilesController extends Controller
             foreach($event->getTimeLine() as $line) {
                 if($line->isMessage()) {
                     $events_time_lines->push([
+                        'id'        => $event->getId(),
                         'slug'      => $event->getSlug(),
                         'date'      => $line->getTime(),
                         'message'   => $line->getMessage()

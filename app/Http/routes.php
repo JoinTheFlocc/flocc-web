@@ -84,13 +84,13 @@ Route::get('events/edit/{id}/members', ['middleware' => 'auth', 'uses' => 'Event
 Route::get('events/edit/{id}/{user_id}/{status}', ['middleware' => 'auth', 'uses' => 'Events\EditEventController@status'])->name('events.edit.members.status');
 
 // Event
-Route::get('events/{slug}', 'Events\EventController@index')->name('events.event');
-Route::get('events/{slug}/members', 'Events\EventController@members')->name('events.event.members');
-Route::get('events/{slug}/followers', 'Events\EventController@followers')->name('events.event.followers');
-Route::get('events/{slug}/cancel', ['middleware' => 'auth', 'uses' => 'Events\EventController@cancel'])->name('events.event.cancel');
-Route::get('events/{slug}/join/{type}', ['middleware' => 'auth', 'uses' => 'Events\EventController@join'])->name('events.event.join');
-Route::get('events/{slug}/resign', ['middleware' => 'auth', 'uses' => 'Events\EventController@resign'])->name('events.event.resign');
-Route::get('events/{slug}/share', 'Events\EventController@share')->name('events.event.share');
+Route::get('events/{id}/{slug}', 'Events\EventController@index')->name('events.event');
+Route::get('events/{id}/{slug}/members', 'Events\EventController@members')->name('events.event.members');
+Route::get('events/{id}/{slug}/followers', 'Events\EventController@followers')->name('events.event.followers');
+Route::get('events/{id}/{slug}/cancel', ['middleware' => 'auth', 'uses' => 'Events\EventController@cancel'])->name('events.event.cancel');
+Route::get('events/{id}/{slug}/join/{type}', ['middleware' => 'auth', 'uses' => 'Events\EventController@join'])->name('events.event.join');
+Route::get('events/{id}/{slug}/resign', ['middleware' => 'auth', 'uses' => 'Events\EventController@resign'])->name('events.event.resign');
+Route::get('events/{id}/{slug}/share', 'Events\EventController@share')->name('events.event.share');
 
 // Google Places
 Route::get('api/google/places/auto-complete', 'Api\Google\PlacesController@autoComplete')->name('api.google.places.autocomplete');

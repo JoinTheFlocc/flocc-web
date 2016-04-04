@@ -139,7 +139,7 @@ class EventsController extends Controller
             $draft = $events->createDraft($user_id);
         }
 
-        return \Redirect::to('events/edit/' . $draft->getId());
+        return redirect()->route('events.edit', ['id' => $draft->getId()]);
     }
 
     /**
@@ -160,6 +160,6 @@ class EventsController extends Controller
 
         $draft = $events->createDraft($user_id, true);
 
-        return \Redirect::to('events/edit/' . $draft->getId());
+        return redirect()->route('events.edit', ['id' => $draft->getId()]);
     }
 }

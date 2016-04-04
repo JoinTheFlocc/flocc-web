@@ -21,14 +21,14 @@ class EventController extends Controller
      * Display event
      *
      * @param \Illuminate\Http\Request $request
-     * @param int $slug
+     * @param int $id
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index(\Illuminate\Http\Request $request, $slug)
+    public function index(\Illuminate\Http\Request $request, $id)
     {
         $events     = new Events();
-        $event      = $events->getBySlug($slug);
+        $event      = $events->getById($id);
 
         if($event === null) {
             die; // @TODO:
@@ -58,25 +58,25 @@ class EventController extends Controller
     /**
      * Members and followers list
      *
-     * @param string $slug
+     * @param int $id
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function members($slug)      { return $this->users($slug, 'members'); }
-    public function followers($slug)    { return $this->users($slug, 'followers'); }
+    public function members($id)      { return $this->users($id, 'members'); }
+    public function followers($id)    { return $this->users($id, 'followers'); }
 
     /**
      * Users list
      *
-     * @param string $slug
+     * @param int $id
      * @param string $status
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    private function users($slug, $status)
+    private function users($id, $status)
     {
         $events = new Events();
-        $event  = $events->getBySlug($slug);
+        $event  = $events->getById($id);
 
         if($event === null) {
             die; // @TODO:
@@ -96,14 +96,14 @@ class EventController extends Controller
     /**
      * Close event
      *
-     * @param string $slug
+     * @param int $id
      *
      * @return mixed
      */
-    public function cancel($slug)
+    public function cancel($id)
     {
         $events = new Events();
-        $event  = $events->getBySlug($slug);
+        $event  = $events->getById($id);
 
         if($event === null) {
             die; // @TODO:
@@ -115,25 +115,26 @@ class EventController extends Controller
 
         $event->setStatusCanceled()->save();
 
-        return \Redirect::to('events/' . $slug);
+        return redirect()->route('events.event', ['id' => $event->getId(), 'slug' => $event->getSlug()]);
     }
 
     /**
      * Join to event
      *
      * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @param string $slug
      * @param string $type
      *
      * @return mixed
      */
-    public function join(\Illuminate\Http\Request $request, $slug, $type)
+    public function join(\Illuminate\Http\Request $request, $id, $slug, $type)
     {
         $events     = new Events();
         $members    = new Members();
         $profile    = new User();
 
-        $event      = $events->getBySlug($slug);
+        $event      = $events->getById($id);
         $user_id    = (int) \Auth::user()->id;
         $user       = $profile->getById($user_id);
 
@@ -205,20 +206,20 @@ class EventController extends Controller
             }
         }
 
-        return \Redirect::to('events/' . $slug);
+        return redirect()->route('events.event', ['id' => $event->getId(), 'slug' => $event->getSlug()]);
     }
 
     /**
      * Share event
      *
-     * @param string $slug
+     * @param int $id
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function share($slug)
+    public function share($id)
     {
         $events = new Events();
-        $event  = $events->getBySlug($slug);
+        $event  = $events->getById($id);
 
         if($event === null) {
             die; // @TODO:
@@ -243,16 +244,17 @@ class EventController extends Controller
      * Resign
      *
      * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @param string $slug
      *
      * @return mixed
      */
-    public function resign(\Illuminate\Http\Request $request, $slug)
+    public function resign(\Illuminate\Http\Request $request, $id, $slug)
     {
         $events     = new Events();
         $members    = new Members();
 
-        $event      = $events->getBySlug($slug);
+        $event      = $events->getById($id);
         $member     = $members->where('event_id', $event->getId())->where('user_id', Auth::getUserId())->first();
 
         if($event === null) {
@@ -294,6 +296,6 @@ class EventController extends Controller
 
         $request->session()->flash('message', 'Wypisałeś się z wydarzenia');
 
-        return \Redirect::to('events/' . $slug);
+        return redirect()->route('events.event', ['id' => $event->getId(), 'slug' => $event->getSlug()]);
     }
 }

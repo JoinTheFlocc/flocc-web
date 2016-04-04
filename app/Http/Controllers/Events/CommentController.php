@@ -111,6 +111,6 @@ class CommentController extends Controller
             }
         }
 
-        return \Redirect::to('events/' . $event->getSlug());
+        return redirect()->route('events.event', ['id' => $event->getId(), 'slug' => $event->getSlug()]);
     }
 }

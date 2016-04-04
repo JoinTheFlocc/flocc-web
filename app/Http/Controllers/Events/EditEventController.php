@@ -171,7 +171,7 @@ class EditEventController extends Controller
             (new Members())->updateStatus($user_id, $id, 'follower');
         }
 
-        return \Redirect::to('/events/edit/' . $id . '/members');
+        return redirect()->route('events.edit.members', ['id' => $id]);
     }
 
     /**
@@ -391,10 +391,10 @@ class EditEventController extends Controller
                 }
 
                 if($is_draft === true) {
-                    return \Redirect::to('events/' . $this->event->getSlug() . '/share');
+                    return redirect()->route('events.event.share', ['id' => $this->event->getId(), 'slug' => $this->event->getSlug()]);
                 }
 
-                return \Redirect::to('events/' . $this->event->getSlug());
+                return redirect()->route('events.event', ['id' => $this->event->getId(), 'slug' => $this->event->getSlug()]);
             } else {
                 if(\Input::get('place_type') != 'place') {
                     foreach(explode(';', $post['route']) as $i => $row) {

@@ -152,13 +152,13 @@
                         <ul class="events">
                             @foreach($events as $event)
                                 <li style="@if($event->isMine()) border:1px solid red; @endif">
-                                    <a href="{{ URL::route('events.event', ['slug' => $event->getSlug()]) }}">
+                                    <a href="{{ URL::route('events.event', ['id' => $event->getId(), 'slug' => $event->getSlug()]) }}">
                                         <img src="{{ $event->getAvatarUrl() }}">
                                     </a>
 
                                     <div class="info">
                                         <h2>
-                                            <a href="{{ URL::route('events.event', ['slug' => $event->getSlug()]) }}">
+                                            <a href="{{ URL::route('events.event', ['id' => $event->getId(), 'slug' => $event->getSlug()]) }}">
                                                 {{ $event->getTitle() }}
                                             </a>
                                             @if($event->getMember() !== null)
@@ -195,7 +195,7 @@
                                                 <!-- Moje wydarzenie -->
                                                 <a href="{{ URL::route('events.edit.members', ['id' => $event->getId()]) }}"><i class="fa fa-users"></i></a>
                                                 <a href="{{ URL::route('events.edit', ['id' => $event->getId()]) }}"><i class="fa fa-pencil"></i></a>
-                                                <a href="{{ URL::route('events.event.cancel', ['slug' => $event->getSlug()]) }}" class="close_event"><i class="fa fa-times"></i></a>
+                                                <a href="{{ URL::route('events.event.cancel', ['id' => $event->getId(), 'slug' => $event->getSlug()]) }}" class="close_event"><i class="fa fa-times"></i></a>
                                             @endif
                                         </div>
                                     </div>

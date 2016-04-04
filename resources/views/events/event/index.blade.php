@@ -9,23 +9,23 @@
                         @if($event->isMine() === false)
                             <div class="text-center">
                                 @if($event->canJoin())
-                                    <a href="{{ URL::route('events.event.join', ['slug' => $event->getSlug(), 'type' => 'member']) }}" class="btn btn-success" style="width:32%">
+                                    <a href="{{ URL::route('events.event.join', ['id' => $event->getId(), 'slug' => $event->getSlug(), 'type' => 'member']) }}" class="btn btn-success" style="width:32%">
                                         Dołącz
                                     </a>
                                 @endif
                                 @if($event->canUnJoin())
-                                    <a href="{{ URL::route('events.event.resign', ['slug' => $event->getSlug()]) }}" class="btn btn-danger">
+                                    <a href="{{ URL::route('events.event.resign', ['id' => $event->getId(), 'slug' => $event->getSlug()]) }}" class="btn btn-danger">
                                         Zrezygnuj
                                     </a>
                                 @endif
 
                                 @if($event->canFollow())
-                                    <a href="{{ URL::route('events.event.join', ['slug' => $event->getSlug(), 'type' => 'follower']) }}" class="btn btn-primary" style="width:32%">
+                                    <a href="{{ URL::route('events.event.join', ['id' => $event->getId(), 'slug' => $event->getSlug(), 'type' => 'follower']) }}" class="btn btn-primary" style="width:32%">
                                         Obserwuj
                                     </a>
                                 @endif
                                 @if($event->canUnFollow())
-                                    <a href="{{ URL::route('events.event.resign', ['slug' => $event->getSlug()]) }}" class="btn btn-danger">
+                                    <a href="{{ URL::route('events.event.resign', ['id' => $event->getId(), 'slug' => $event->getSlug()]) }}" class="btn btn-danger">
                                         Nie obserwuj
                                     </a>
                                 @endif
@@ -37,7 +37,7 @@
                         @else
                             <div class="text-center">
                                 @if(!$event->isStatusCanceled())
-                                    <a href="{{ URL::route('events.event.cancel', ['slug' => $event->getSlug()]) }}" class="btn btn-danger" onclick="return confirm('Na pewno?');">
+                                    <a href="{{ URL::route('events.event.cancel', ['id' => $event->getId(), 'slug' => $event->getSlug()]) }}" class="btn btn-danger" onclick="return confirm('Na pewno?');">
                                         Odwołaj wydarzenie
                                     </a>
                                 @endif
@@ -200,7 +200,7 @@
                                         <img src="{{ $profile->getAvatarUrl()}}" alt="{{ $profile->getFirstName() }} {{ $profile->getLastName() }}"  class="img-responsive img-thumbnail img-rounded avatar">
                                     </a>
                                 @endforeach
-                                <br>&nbsp;<br><a href="{{ URL::route('events.event.members', ['slug' => $event->getSlug()]) }}">
+                                <br>&nbsp;<br><a href="{{ URL::route('events.event.members', ['id' => $event->getId(), 'slug' => $event->getSlug()]) }}">
                                     Zobacz wszystkich
                                 </a>
                             </div>
@@ -214,7 +214,7 @@
                                         <img src="{{ $profile->getAvatarUrl()}}" alt="{{ $profile->getFirstName() }} {{ $profile->getLastName() }}" class="img-responsive img-thumbnail img-rounded avatar">
                                     </a>
                                 @endforeach
-                                <br>&nbsp;<br><a href="{{ URL::route('events.event.followers', ['slug' => $event->getSlug()]) }}">
+                                <br>&nbsp;<br><a href="{{ URL::route('events.event.followers', ['id' => $event->getId(), 'slug' => $event->getSlug()]) }}">
                                     Zobacz wszystkich
                                 </a>
                             </div>

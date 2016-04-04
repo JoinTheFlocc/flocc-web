@@ -5,7 +5,7 @@
         <div>
             <h1 class="pull-left">Użytkownicy</h1>
 
-            <a href="{{ URL::route('events.event', ['slug' => $event->getSlug()]) }}" class="btn btn-primary pull-right" style="margin-top:25px;">
+            <a href="{{ URL::route('events.event', ['id' => $event->getId(), 'slug' => $event->getSlug()]) }}" class="btn btn-primary pull-right" style="margin-top:25px;">
                 Powrót do wydarzenia
             </a>
         </div>
