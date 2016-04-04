@@ -33,12 +33,11 @@
                                     <h1>Jak</h1>
 
                                     <div class="well">
-                                        <select name="tribe_id" class="form-control">
-                                            <option value="" selected="selected">Wybierz</option>
-                                            @foreach($tribes as $tribe)
-                                                <option value="{{ $tribe->getId() }}">{{ $tribe->getName() }}</option>
-                                            @endforeach
-                                        </select>
+                                        @foreach($tribes as $tribe)
+                                            <label>
+                                                <input type="checkbox" name="tribes[]" value="{{ $tribe->getId() }}">{{ $tribe->getName() }}
+                                            </label>
+                                        @endforeach
                                     </div>
                                 </div>
                                 <div class="col-lg-3" style="padding-top: 90px;">

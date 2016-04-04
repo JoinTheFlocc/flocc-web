@@ -225,7 +225,6 @@ class EditEventController extends Controller
                 ->setUsersLimit(\Input::get('users_limit'))
                 ->setBudgetId(\Input::get('budgets'))
                 ->setIntensitiesId(\Input::get('intensities'))
-                ->setTribeId(\Input::get('tribe_id'))
                 ->setTravelWaysId(\Input::get('travel_ways_id'))
                 ->setInfrastructureId(\Input::get('infrastructure_id'))
                 ->setTouristId(\Input::get('tourist_id'))
@@ -321,6 +320,17 @@ class EditEventController extends Controller
                     $file       = $request->file('photo');
 
                     $this->event->setAvatarUrl($image->uploadFile($file));
+                }
+
+                /**
+                 * Tribes
+                 */
+                $events_tribes = new \Flocc\Events\Tribes();
+
+                $events_tribes->clear($this->event->getId());
+
+                foreach(\Input::get('tribes', []) as $tribe_id) {
+                    $events_tribes->add($this->event->getId(), $tribe_id);
                 }
 
                 /**

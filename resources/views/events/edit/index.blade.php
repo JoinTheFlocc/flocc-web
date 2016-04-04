@@ -241,9 +241,14 @@
                             <label class="col-sm-3 control-label">Jak?</label>
                             <div class="col-sm-9">
                                 @foreach($tribes as $tribes_row)
-                                    <div class="radio">
+                                    <div class="checkbox">
                                         <label>
-                                            <input type="radio" name="tribe_id" value="{{ $tribes_row->getId() }}" @if($event->getTribeId() == $tribes_row->getId()) checked="checked" @endif>
+                                            <input
+                                                    type="checkbox"
+                                                    name="tribes[]"
+                                                    value="{{ $tribes_row->getId() }}"
+                                                    @if($event->isTribe($tribes_row->getId())) checked="checked" @endif
+                                            >
                                             {{ $tribes_row->getName() }}
                                         </label>
                                     </div>

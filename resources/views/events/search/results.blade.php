@@ -37,14 +37,13 @@
                             </div>
 
                             <div class="well">
-                                <strong>Jak</strong><br>&nbsp;
+                                <strong>Jak</strong><br>&nbsp;<br>
 
-                                <select name="tribe_id" class="form-control">
-                                    <option value="">Wybierz</option>
-                                    @foreach($tribes as $tribe)
-                                        <option value="{{ $tribe->getId() }}" @if(isset($form_data['tribe_id']) and $form_data['tribe_id'] == $tribe->getId()) selected="selected" @endif>{{ $tribe->getName() }}</option>
-                                    @endforeach
-                                </select>
+                                @foreach($tribes as $tribe)
+                                    <label>
+                                        <input type="checkbox" name="tribes[]" value="{{ $tribe->getId() }}" @if(isset($form_data['tribes']) and in_array($tribe->getId(), $form_data['tribes'])) checked="checked" @endif> {{ $tribe->getName() }}
+                                    </label><br>
+                                @endforeach
                             </div>
 
                             <div class="well">

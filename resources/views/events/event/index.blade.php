@@ -133,9 +133,13 @@
                         <div class="col-sm-6">
                             <strong>Jak:</strong><br>
 
-                            @if($event->getTribe() !== null)
-                                {{ $event->getTribe()->getName() }}
-                            @endif
+                            <ul>
+                                @foreach($event->getTribes() as $tribe)
+                                    <li>
+                                        {{ $tribe->getName() }}
+                                    </li>
+                                @endforeach
+                            </ul>
                         </div>
                         <div class="col-sm-6">
                             <strong>Sposób podróżowani:</strong><br>

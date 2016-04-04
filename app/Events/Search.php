@@ -144,9 +144,12 @@ class Search
         if ($this->getParam('budget_id') !== null) {
             $query = $query->where('budget_id', (int) $this->getParam('budget_id'));
         }
-
-        if ($this->getParam('tribe_id') !== null) {
-            $query = $query->where('tribe_id', (int) $this->getParam('tribe_id'));
+        
+        if(count($this->getParam('tribes', [])) > 0) {
+            $query = $query->leftjoin('events_tribes', function ($join) {
+                $join->on('events.id', '=', 'events_tribes.event_id');
+            });
+            $query = $query->whereIn('events_tribes.tribe_id', $this->getParam('tribes', []));
         }
 
         if ($this->getParam('place_id') !== null) {

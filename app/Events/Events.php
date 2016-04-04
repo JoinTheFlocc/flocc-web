@@ -27,7 +27,7 @@ class Events extends Model
      *
      * @var array
      */
-    protected $fillable = ['id', 'user_id', 'created_at', 'title', 'slug', 'description', 'event_from', 'event_to', 'event_span', 'views', 'avatar_url', 'users_limit', 'fixed', 'status', 'place_id', 'budget_id', 'intensities_id', 'tribe_id', 'travel_ways_id', 'infrastructure_id', 'tourist_id', 'voluntary', 'language_learning', 'is_inspiration', 'event_month', 'last_update_time'];
+    protected $fillable = ['id', 'user_id', 'created_at', 'title', 'slug', 'description', 'event_from', 'event_to', 'event_span', 'views', 'avatar_url', 'users_limit', 'fixed', 'status', 'place_id', 'budget_id', 'intensities_id', 'travel_ways_id', 'infrastructure_id', 'tourist_id', 'voluntary', 'language_learning', 'is_inspiration', 'event_month', 'last_update_time'];
 
     /**
      * Indicates if the model should be timestamped.
@@ -924,21 +924,29 @@ class Events extends Model
     /**
      * Get tribes
      *
-     * @return \Flocc\Tribes
+     * @return \Flocc\Events\Tribes
      */
-    public function getTribe()
+    public function getTribes()
     {
-        return $this->hasOne('Flocc\Tribes', 'id', 'tribe_id')->first();
+        return $this->hasMany('Flocc\Events\Tribes', 'event_id', 'id')->select('tribes.id', 'tribes.name')->join('tribes', 'tribes.id', '=', 'events_tribes.tribe_id')->get();
     }
 
     /**
-     * Get tribe ID
+     * Is tribe checked
      *
-     * @return null|int
+     * @param int $tribe_id
+     * 
+     * @return bool
      */
-    public function getTribeId()
+    public function isTribe($tribe_id)
     {
-        return $this->tribe_id;
+        foreach($this->getTribes() as $tribe) {
+            if((int) $tribe_id === $tribe->getId()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -1029,20 +1037,6 @@ class Events extends Model
     public function isInspiration()
     {
         return ($this->is_inspiration == '1');
-    }
-
-    /**
-     * Set tribe ID
-     *
-     * @param int $tribe_id
-     *
-     * @return $this
-     */
-    public function setTribeId($tribe_id)
-    {
-        $this->tribe_id = (int) $tribe_id;
-
-        return $this;
     }
 
     /**
