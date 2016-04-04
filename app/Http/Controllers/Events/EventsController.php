@@ -2,6 +2,7 @@
 
 namespace Flocc\Http\Controllers\Events;
 
+use Flocc\Auth;
 use Flocc\Budgets;
 use Flocc\Activities;
 use Flocc\Events\Events;
@@ -9,6 +10,7 @@ use Flocc\Events\Search;
 use Flocc\Http\Controllers\Controller;
 use Flocc\Infrastructure;
 use Flocc\Intensities;
+use Flocc\Searches;
 use Flocc\Tourist;
 use Flocc\TravelWays;
 use Flocc\Tribes;
@@ -70,6 +72,23 @@ class EventsController extends Controller
              * Inject filters to model
              */
             $search->setFilters($filters);
+
+            /**
+             * Searches history
+             */
+            if($action == 'by') {
+                $post_data = unserialize(base64_decode($filters[1]));
+
+                if(count($post_data) > 0) {
+                    (new Searches())
+                        ->setUserId(Auth::getUserId())
+                        ->setPost($post_data)
+                        ->setActivityId($search->getParam('activity_id'))
+                        ->setPlace($search->getParam('place'))
+                        ->setTribes($search->getParam('tribes'))
+                    ->save();
+                }
+            }
 
             switch($action) {
                 // Wydarzenia użytkownika

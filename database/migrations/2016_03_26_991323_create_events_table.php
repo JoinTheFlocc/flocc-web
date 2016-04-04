@@ -31,8 +31,6 @@ class CreateEventsTable extends Migration
             $table->integer('place_id')->nullable()->default(null)->unsigned();
             $table->integer('budget_id')->nullable()->default(null)->unsigned();
             $table->integer('intensities_id')->nullable()->default(null)->unsigned();
-
-            $table->integer('tribe_id')->nullable()->default(null)->unsigned();
             $table->integer('travel_ways_id')->nullable()->default(null)->unsigned();
             $table->integer('infrastructure_id')->nullable()->default(null)->unsigned();
             $table->integer('tourist_id')->nullable()->default(null)->unsigned();
@@ -42,7 +40,12 @@ class CreateEventsTable extends Migration
             $table->enum('event_month', ['1','2','3','4','5','6','7','8','9','10','11','12'])->nullable()->default(null);
             $table->integer('last_update_time')->unsigned();
 
-
+            $table
+                ->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
             $table
                 ->foreign('place_id')
                 ->references('id')
