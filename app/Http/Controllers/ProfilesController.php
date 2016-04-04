@@ -89,6 +89,7 @@ class ProfilesController extends Controller
                     $events_time_lines->push([
                         'id'        => $event->getId(),
                         'slug'      => $event->getSlug(),
+                        'event'     => $event->getTitle(),
                         'date'      => $line->getTime(),
                         'message'   => $line->getMessage()
                     ]);
