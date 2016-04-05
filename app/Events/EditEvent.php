@@ -48,6 +48,7 @@ class EditEvent
             'travel_ways_id'        => 'required',
             'infrastructure_id'     => 'required',
             'tourist_id'            => 'required',
+            'planning_id'           => 'required'
         ];
 
         if(isset($this->data['place_type'])) {
@@ -125,7 +126,8 @@ class EditEvent
             'travel_ways_id.required'       => 'Prosimy wybrać sposób podróżowania',
             'infrastructure_id.required'    => 'Prosimy wybrać infrastrukturę',
             'tourist_id.required'           => 'Prosimy wybrać turystyczność',
-            'event_month.required'          => 'Prosimy wybrać sugerowany miesiac'
+            'event_month.required'          => 'Prosimy wybrać sugerowany miesiac',
+            'planning_id.required'          => 'Prosimy wybrać planowanie'
         ];
     }
 }

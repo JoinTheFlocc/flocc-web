@@ -17,6 +17,7 @@ use Flocc\Infrastructure;
 use Flocc\Intensities;
 use Flocc\Notifications\NewNotification;
 use Flocc\Places;
+use Flocc\Plannings;
 use Flocc\Tourist;
 use Flocc\TravelWays;
 use Flocc\Tribes;
@@ -193,6 +194,7 @@ class EditEventController extends Controller
         $travel_ways        = new TravelWays();
         $infrastructure     = new Infrastructure();
         $tourist            = new Tourist();
+        $plannings          = new Plannings();
         $places             = new Places();
         $edit               = new EditEvent();
         $routes             = new Routes();
@@ -228,6 +230,7 @@ class EditEventController extends Controller
                 ->setTravelWaysId(\Input::get('travel_ways_id'))
                 ->setInfrastructureId(\Input::get('infrastructure_id'))
                 ->setTouristId(\Input::get('tourist_id'))
+                ->setPlanningId(\Input::get('planning_id'))
             ;
 
             if(isset($post['fixed'])) {
@@ -439,6 +442,7 @@ class EditEventController extends Controller
             'infrastructure'    => $infrastructure->all(),
             'tourist'           => $tourist->all(),
             'places'            => $places->all(),
+            'plannings'         => $plannings->all(),
             'errors'            => isset($errors) ? $errors : [],
             'post_routes'       => $post_routes,
             'post_new_activity' => isset($post_new_activity) ? $post_new_activity : null,

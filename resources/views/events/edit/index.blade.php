@@ -244,10 +244,10 @@
                                     <div class="checkbox">
                                         <label>
                                             <input
-                                                    type="checkbox"
-                                                    name="tribes[]"
-                                                    value="{{ $tribes_row->getId() }}"
-                                                    @if($event->isTribe($tribes_row->getId())) checked="checked" @endif
+                                                type="checkbox"
+                                                name="tribes[]"
+                                                value="{{ $tribes_row->getId() }}"
+                                                @if($event->isTribe($tribes_row->getId())) checked="checked" @endif
                                             >
                                             {{ $tribes_row->getName() }}
                                         </label>
@@ -301,7 +301,22 @@
                             </div>
                         </div>
 
-                        <!-- tourist_id -->
+                        <!-- planning_id -->
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Planowanie</label>
+                            <div class="col-sm-9">
+                                @foreach($plannings as $planning)
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="planning_id" value="{{ $planning->getId() }}" @if($event->getPlanningId() == $planning->getId()) checked="checked" @endif>
+                                            {{ $planning->getName() }}
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <!-- others -->
                         <div class="form-group">
                             <label class="col-sm-3 control-label">&nbsp;</label>
                             <div class="col-sm-9">

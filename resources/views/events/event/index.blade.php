@@ -185,6 +185,14 @@
                             @endif
                         </div>
                     </div>
+                    <div class="row text-left" style="margin-top:25px;">
+                        <div class="col-sm-6">
+                            <strong>Planowanie:</strong><br>
+
+                            {{ $event->getPlanning()->getName() }}
+                        </div>
+                        <div class="col-sm-6">&nbsp;</div>
+                    </div>
                 </div>
 
                 <div class="well">

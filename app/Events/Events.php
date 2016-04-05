@@ -27,7 +27,7 @@ class Events extends Model
      *
      * @var array
      */
-    protected $fillable = ['id', 'user_id', 'created_at', 'title', 'slug', 'description', 'event_from', 'event_to', 'event_span', 'views', 'avatar_url', 'users_limit', 'fixed', 'status', 'place_id', 'budget_id', 'intensities_id', 'travel_ways_id', 'infrastructure_id', 'tourist_id', 'voluntary', 'language_learning', 'is_inspiration', 'event_month', 'last_update_time'];
+    protected $fillable = ['id', 'user_id', 'created_at', 'title', 'slug', 'description', 'event_from', 'event_to', 'event_span', 'views', 'avatar_url', 'users_limit', 'fixed', 'status', 'place_id', 'budget_id', 'intensities_id', 'travel_ways_id', 'infrastructure_id', 'tourist_id', 'voluntary', 'language_learning', 'is_inspiration', 'event_month', 'last_update_time', 'planning_id'];
 
     /**
      * Indicates if the model should be timestamped.
@@ -980,6 +980,26 @@ class Events extends Model
     }
 
     /**
+     * Get planning ID
+     *
+     * @return null|int
+     */
+    public function getPlanningId()
+    {
+        return $this->planning_id;
+    }
+
+    /**
+     * Get plannings
+     *
+     * @return null|\Flocc\Plannings
+     */
+    public function getPlanning()
+    {
+        return $this->hasOne('Flocc\Plannings', 'id', 'planning_id')->first();
+    }
+
+    /**
      * Get travel ways
      *
      * @return \Flocc\TravelWays
@@ -1077,6 +1097,20 @@ class Events extends Model
     public function setTouristId($tourist_id)
     {
         $this->tourist_id = (int) $tourist_id;
+
+        return $this;
+    }
+
+    /**
+     * Set planning ID
+     *
+     * @param int $planning_id
+     *
+     * @return $this
+     */
+    public function setPlanningId($planning_id)
+    {
+        $this->planning_id = (int) $planning_id;
 
         return $this;
     }
