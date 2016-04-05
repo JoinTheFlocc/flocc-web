@@ -152,7 +152,7 @@ class EventsController extends Controller
                 (new \Flocc\Events\Activities())
                     ->setEventId($draft->getId())
                     ->setActivityId($activity->getId())
-                    ->save();
+                ->save();
             }
         } else {
             $draft = $events->createDraft($user_id);

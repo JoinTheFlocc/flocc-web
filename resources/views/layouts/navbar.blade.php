@@ -17,6 +17,7 @@
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
                 @if (Auth::guest())
+                    <li><a href="{{ URL::route('events') }}"><i class="fa fa-globe"></i> Wydarzenia</a></li>
                     <li>
                       <a href="{{ URL::route('auth.register') }}"><i class="fa fa-btn fa-heart fa-lg"></i>Register</a>
                     </li>
