@@ -9,6 +9,7 @@ use Flocc\Events\EditEvent;
 use Flocc\Events\Events;
 use Flocc\Events\Members;
 use Flocc\Events\Routes;
+use Flocc\Events\Scoring;
 use Flocc\Events\TimeLine;
 use Flocc\Helpers\DateHelper;
 use Flocc\Helpers\ImageHelper;
@@ -402,6 +403,19 @@ class EditEventController extends Controller
                         ->save();
                     }
                 }
+
+                /**
+                 * Update scoring
+                 *
+                 * @var $scoring \Flocc\Events\Scoring
+                 */
+                $scoring    = new Scoring();
+                $scoring    = $scoring->getByEventId($this->event->getId());
+
+                $scoring
+                    ->setActivityId($post['activities'][0])
+                    ->setTribes(\Input::get('tribes', []))
+                ->save();
 
                 if($is_draft === true) {
                     return redirect()->route('events.event.share', ['id' => $this->event->getId(), 'slug' => $this->event->getSlug()]);

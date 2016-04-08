@@ -98,7 +98,7 @@ Route::get('api/google/places/auto-complete', 'Api\Google\PlacesController@autoC
 /**
  * Set true if you want debug all queries
  */
-if(false) {
+if(0) {
     Event::listen('illuminate.query',function($query){
         var_dump($query);
     });

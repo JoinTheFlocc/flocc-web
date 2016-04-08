@@ -126,8 +126,6 @@
                             </div>
 
                             <div class="well">
-                                <strong>Turystyczność</strong><br>&nbsp;<br>
-
                                 <label>
                                     <input type="checkbox" name="voluntary" value="1" @if(isset($form_data['voluntary']) and $form_data['voluntary'] == '1') checked="checked" @endif> Wolontariat
                                 </label><br>

@@ -162,16 +162,16 @@
                             <label class="col-sm-3 control-label">Aktywność</label>
                             <div class="col-sm-9">
                                 @foreach($activities as $activity)
-                                    <div class="checkbox">
+                                    <div class="radio">
                                         <label>
-                                            <input type="checkbox" name="activities[]" value="{{ $activity->getId() }}" class="activity" @if($event->isActivity($activity->getId()) or isset($post_activities[$activity->getId()])) checked="checked" @endif>
+                                            <input type="radio" name="activities[]" value="{{ $activity->getId() }}" class="activity" @if($event->isActivity($activity->getId()) or isset($post_activities[$activity->getId()])) checked="checked" @endif>
                                             {{ $activity->getName() }}
                                         </label>
                                     </div>
                                 @endforeach
-                                <div id="newActivity" class="checkbox" @if($post_new_activity !== null) style="display:block!important;" @endif>
+                                <div id="newActivity" class="radio" @if($post_new_activity !== null) style="display:block!important;" @endif>
                                     <label>
-                                        <input type="checkbox" name="activities[]" value="new" style="margin-top: 11px;" @if($post_new_activity !== null) checked="checked" @endif>
+                                        <input type="radio" name="activities[]" value="new" style="margin-top: 11px;" @if($post_new_activity !== null) checked="checked" @endif>
                                         <input type="text" class="form-control" id="new_activities" name="new_activities" @if($post_new_activity !== null) value="{{ $post_new_activity }}" @endif>
                                     </label>
                                 </div>

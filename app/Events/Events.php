@@ -1313,7 +1313,14 @@ class Events extends Model
 
         self::create($data);
 
-        return $this->getUserDraft($user_id, $inspiration);
+        $event = $this->getUserDraft($user_id, $inspiration);
+
+        /**
+         * Create events_scoring
+         */
+        Scoring::create(['event_id' => $event->getId()]);
+
+        return $event;
     }
 
     /**
@@ -1327,7 +1334,14 @@ class Events extends Model
     {
         self::create($data);
 
-        return $this->getUserDraft($data['user_id']);
+        $event = $this->getUserDraft($data['user_id']);
+
+        /**
+         * Create events_scoring
+         */
+        Scoring::create(['event_id' => $event->getId()]);
+
+        return $event;
     }
 
     /**

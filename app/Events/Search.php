@@ -1,7 +1,8 @@
 <?php
 
 namespace Flocc\Events;
-use Flocc\Places;
+
+use Flocc\Tribes;
 
 /**
  * Class Search
@@ -115,77 +116,12 @@ class Search
     public function search()
     {
         $query      = Events::select('events.*', \DB::raw($this->getScoringFunction() . ' as scoring'));
-        $query      = $query->leftjoin('events_activities', 'events.id', '=', 'events_activities.event_id');
+        $query      = $query->leftjoin('events_scoring', 'events.id', '=', 'events_scoring.event_id');
+        $query      = $query->leftjoin('places', 'events.place_id', '=', 'places.id');
 
-        if($this->getParam('place') !== null) {
-            $this->setParam('place_id', 0);
-
-            $places = new Places();
-            $place  = $places->getByName($this->getParam('place'));
-
-            if($place !== null) {
-                $this->setParam('place_id', $place->getId());
-            }
-        }
-
-        if($this->getParam('place_id') !== null) {
-            $query = $query->leftjoin('events_routes', function ($join) {
-                $join->on('events.id', '=', 'events_routes.event_id');
-                $join->on('events_routes.place_id', '=', \DB::raw($this->getParam('place_id')));
-            });
-        }
-
-        $query = $query->where('status', 'open');
-
-        if ($this->getParam('activity_id') !== null) {
-            $query = $query->where('activity_id', (int) $this->getParam('activity_id'));
-        }
-
-        if ($this->getParam('budget_id') !== null) {
-            $query = $query->where('budget_id', (int) $this->getParam('budget_id'));
-        }
-        
-        if(count($this->getParam('tribes', [])) > 0) {
-            $query = $query->leftjoin('events_tribes', function ($join) {
-                $join->on('events.id', '=', 'events_tribes.event_id');
-            });
-            $query = $query->whereIn('events_tribes.tribe_id', $this->getParam('tribes', []));
-        }
-
-        if ($this->getParam('place_id') !== null) {
-            $query = $query->where(function($query) {
-                $query->where('events.place_id', '=', $this->getParam('place_id'));
-                $query->orWhere('events_routes.place_id', '=', $this->getParam('place_id'));
-            });
-        }
-
-        if ($this->getParam('intensities_id') !== null) {
-            $query = $query->where('intensities_id', $this->getParam('intensities_id'));
-        }
-
-        if ($this->getParam('travel_ways_id') !== null) {
-            $query = $query->where('travel_ways_id', $this->getParam('travel_ways_id'));
-        }
-
-        if ($this->getParam('infrastructure_id') !== null) {
-            $query = $query->where('infrastructure_id', $this->getParam('infrastructure_id'));
-        }
-
-        if ($this->getParam('tourist_id') !== null) {
-            $query = $query->where('tourist_id', $this->getParam('tourist_id'));
-        }
-
-        if ($this->getParam('voluntary') !== null) {
-            $query = $query->where('voluntary', '1');
-        }
-
-        if ($this->getParam('language_learning') !== null) {
-            $query = $query->where('language_learning', '1');
-        }
-
-        $query = $query->where('is_inspiration', '0');
-        $query = $query->orderBy(\DB::raw($this->getScoringFunction()), 'desc');
-        $query = $query->groupBy('events.id');
+        $query      = $query->where('is_inspiration', '0');
+        $query      = $query->orderBy(\DB::raw($this->getScoringFunction()), 'desc');
+        $query      = $query->groupBy('events.id');
         
         return $query->paginate($this->on_page);
     }
@@ -242,15 +178,65 @@ class Search
      */
     private function getScoringFunction()
     {
-        $event_from     = ($this->getParam('event_from') === null) ? date('Y-m-d') : $this->getParam('event_from');
-        $event_to       = ($this->getParam('event_to') === null) ? date('Y') . '-12-31' : $this->getParam('event_to');
-        $event_span     = ((int) $this->getParam('event_span') === 0) ? 4 : (int) $this->getParam('event_span');
+        $event_from             = ($this->getParam('event_from') === null) ? date('Y-m-d') : $this->getParam('event_from');
+        $event_to               = ($this->getParam('event_to') === null) ? date('Y') . '-12-31' : $this->getParam('event_to');
+        $event_span             = ((int) $this->getParam('event_span') === 0) ? 4 : (int) $this->getParam('event_span');
+        $u_activity_id          = $this->getParam('activity_id', 'NULL');
+        $u_tribes               = $this->getTribes();
+        $u_place                = $this->getParam('place', 'NULL');
+        $u_voluntary            = ($this->getParam('voluntary') !== null) ? '1' : 'NULL';
+        $u_language_learning    = ($this->getParam('language_learning') !== null) ? '1' : 'NULL';
+        $u_budget               = $this->getParam('budget_id', 'NULL');
+        $u_intensity            = $this->getParam('intensities_id', 'NULL');
+        $u_travel_ways          = $this->getParam('travel_ways_id', 'NULL');
+        $u_infrastructure       = $this->getParam('infrastructure_id', 'NULL');
+        $u_tourist              = $this->getParam('tourist_id', 'NULL');
+
+        if($u_tribes != 'NULL') {
+            $u_tribes = '"' . $u_tribes . '"';
+        }
+
+        if($u_place != 'NULL') {
+            $u_place = '"' . $u_place . '"';
+        }
 
         return sprintf(
-            'eventScore("%s", "%s", %d, events.event_from, events.event_to, events.event_span)',
+            'eventScore("%s", "%s", %d, events.event_from, events.event_to, events.event_span, %s, events_scoring.activity_id, %s, events_scoring.tribes, %s, places.name, %s, events.voluntary, %s, events.language_learning, %s, events.budget_id, %s, events.intensities_id, %s, events.travel_ways_id, %s, events.infrastructure_id, %s, events.tourist_id)',
             $event_from,
             $event_to,
-            $event_span
+            $event_span,
+            $u_activity_id,
+            $u_tribes,
+            $u_place,
+            $u_voluntary,
+            $u_language_learning,
+            $u_budget,
+            $u_intensity,
+            $u_travel_ways,
+            $u_infrastructure,
+            $u_tourist
         );
+    }
+
+    /**
+     * Get tribes like binary
+     *
+     * @return array|string
+     */
+    private function getTribes()
+    {
+        $all_tribes = Tribes::get();
+        $tribes     = [];
+        $tmp        = [];
+
+        foreach($this->getParam('tribes', []) as $tribe) {
+            $tmp[(int) $tribe] = (int) $tribe;
+        }
+
+        foreach($all_tribes as $tribe) {
+            $tribes[] = isset($tmp[$tribe->getId()]) ? 1 : 0;
+        }
+
+        return (count($tribes) > 0 ) ? implode('', $tribes) : 'NULL';
     }
 }
