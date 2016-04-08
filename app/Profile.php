@@ -4,6 +4,7 @@ namespace Flocc;
 
 use Flocc\Profile\TimeLine\TimeLine;
 use Flocc\User\Features;
+use Flocc\User\FreeTime;
 use Illuminate\Database\Eloquent\Model;
 
 class Profile extends Model
@@ -625,5 +626,21 @@ class Profile extends Model
     public function getFeaturesIds()
     {
         return (new Features())->getIdsByUserId($this->getUserId());
+    }
+
+    /**
+     * @return \Flocc\User\FreeTime
+     */
+    public function getFreeTime()
+    {
+        return $this->hasOne('Flocc\User\FreeTime', 'user_id', 'user_id')->join('profiles_free_time', 'free_time_id', '=', 'profiles_free_time.id')->get();
+    }
+
+    /**
+     * @return array
+     */
+    public function getFreeTimeIds()
+    {
+        return (new FreeTime())->getIdsByUserId($this->getUserId());
     }
 }

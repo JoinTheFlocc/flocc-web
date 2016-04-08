@@ -298,6 +298,20 @@
                             </div>
                         </div>
 
+                        <!-- free time -->
+                        <div class="form-group">
+                            <label class="control-label">Dzień poza pracą</label>
+                            <div>
+                                @foreach($free_time as $row)
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" name="free_time[]" value="{{ $row->getId() }}" @if(in_array($row->getId(), $profile->getFreeTimeIds())) checked="checked" @endif> {{ $row->getName() }}
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+
                         <br>
                         <div>
                             <div class="form-group">

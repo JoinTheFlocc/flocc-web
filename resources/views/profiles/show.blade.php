@@ -117,6 +117,15 @@
                                     </li>
                                 @endforeach
                             </ul>
+
+                            <h4>Dzień poza domem</h4>
+                            <ul>
+                                @foreach($profile->getFreeTime() as $free_time)
+                                    <li>
+                                        {{ $free_time->getName() }}
+                                    </li>
+                                @endforeach
+                            </ul>
                         </div>
                     </div>
                     <!-- Dashboard content -->

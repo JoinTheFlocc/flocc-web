@@ -5,6 +5,7 @@ namespace Flocc\Http\Controllers;
 use Flocc\Activities;
 use Flocc\Tribes;
 use Flocc\User\Features;
+use Flocc\User\FreeTime;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Input;
@@ -201,6 +202,7 @@ class ProfilesController extends Controller
         $emergency      = Profile\Emergency::all();
         $features_sets  = Profile\Features::where(['is_set' => '1'])->get();
         $features       = Profile\Features::where(['is_set' => '0'])->get();
+        $free_time      = Profile\FreeTime::all();
 
         if(!empty(\Input::get())) {
             $post       = \Input::get();
@@ -223,7 +225,8 @@ class ProfilesController extends Controller
                 'compromise_id'     => 'required',
                 'feelings_id'       => 'required',
                 'emergency_id'      => 'required',
-                'features'          => 'required'
+                'features'          => 'required',
+                'free_time'         => 'required'
 
             ]);
             $errors     = $validator->errors();
@@ -240,8 +243,8 @@ class ProfilesController extends Controller
                     ->setPlanningsId($post['plannings_id'])
                     ->setPlansId($post['plans_id'])
                     ->setVegetarianId($post['vegetarian_id'])
-                    ->setFlexibilityId($post['flexibility_id'])
-                    ->setPlansChangeId($post['plans_change_id'])
+                    //->setFlexibilityId($post['flexibility_id'])
+                    //->setPlansChangeId($post['plans_change_id'])
                     ->setVerbosityId($post['verbosity_id'])
                     ->setVigorId($post['vigor_id'])
                     ->setCoolId($post['cool_id'])
@@ -253,12 +256,18 @@ class ProfilesController extends Controller
                     ->setEmergencyId($post['emergency_id'])
                 ->save();
 
-                $users_features = new Features();
+                $users_features     = new Features();
+                $free_time_user     = new FreeTime();
 
                 $users_features->clear(\Flocc\Auth::getUserId());
+                $free_time_user->clear(\Flocc\Auth::getUserId());
 
                 foreach($post['features'] as $feature_id) {
                     $users_features->addNew(\Flocc\Auth::getUserId(), $feature_id);
+                }
+
+                foreach($post['free_time'] as $free_time_id) {
+                    $free_time_user->addNew(\Flocc\Auth::getUserId(), $free_time_id);
                 }
 
                 $message = "Successfully updated";
@@ -271,7 +280,7 @@ class ProfilesController extends Controller
             'flexibility', 'plans_change', 'verbosity', 'vigor',
             'cool', 'rules', 'opinions', 'tolerance', 'compromise',
             'feelings', 'emergency', 'features', 'features_sets',
-            'errors'
+            'errors', 'free_time'
         ));
     }
 }
