@@ -90,7 +90,7 @@ class DatabaseSeeder extends Seeder
     private function execute(array $data)
     {
         /**
-         * Users
+         * User
          */
         foreach($data as $user) {
             $profile        = $user['profile'];

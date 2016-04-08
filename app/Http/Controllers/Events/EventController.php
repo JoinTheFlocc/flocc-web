@@ -66,7 +66,7 @@ class EventController extends Controller
     public function followers($id)    { return $this->users($id, 'followers'); }
 
     /**
-     * Users list
+     * User list
      *
      * @param int $id
      * @param string $status

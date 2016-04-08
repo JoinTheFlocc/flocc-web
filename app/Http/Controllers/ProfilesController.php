@@ -4,6 +4,7 @@ namespace Flocc\Http\Controllers;
 
 use Flocc\Activities;
 use Flocc\Tribes;
+use Flocc\User\Features;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Input;
@@ -11,11 +12,7 @@ use Validator;
 use Auth;
 use URL;
 use Response;
-
 use Flocc\Http\Requests;
-use Flocc\Http\Controllers\Controller;
-
-use Flocc\User;
 use Flocc\Profile;
 use Flocc\Helpers\ImageHelper;
 
@@ -69,8 +66,6 @@ class ProfilesController extends Controller
      */
     public function show($id = null)
     {
-        $profile = null;
-
         if($id === null) {
             $profile = Auth::user()->getProfile();
         } else {
@@ -78,28 +73,33 @@ class ProfilesController extends Controller
         }
 
         $is_mine            = ($profile->user_id == \Flocc\Auth::getUserId());
-        $activities         = (new Activities())->get();
-        $tribes             = (new Tribes())->get();
 
-        $events_time_lines  = new Collection();
+        if($is_mine === true) {
+            $activities         = (new Activities())->get();
+            $tribes             = (new Tribes())->get();
 
-        foreach($profile->getTimeLine()->getLatestUpdatedEvents() as $event) {
-            foreach($event->getTimeLine() as $line) {
-                if($line->isMessage()) {
-                    $events_time_lines->push([
-                        'id'        => $event->getId(),
-                        'slug'      => $event->getSlug(),
-                        'event'     => $event->getTitle(),
-                        'date'      => $line->getTime(),
-                        'message'   => $line->getMessage()
-                    ]);
+            $events_time_lines  = new Collection();
+
+            foreach($profile->getTimeLine()->getLatestUpdatedEvents() as $event) {
+                foreach($event->getTimeLine() as $line) {
+                    if($line->isMessage()) {
+                        $events_time_lines->push([
+                            'id'        => $event->getId(),
+                            'slug'      => $event->getSlug(),
+                            'event'     => $event->getTitle(),
+                            'date'      => $line->getTime(),
+                            'message'   => $line->getMessage()
+                        ]);
+                    }
                 }
             }
+
+            $events_time_lines = $events_time_lines->sortByDesc('date')->slice(0, 5);
+
+            return view('dashboard', compact('profile', 'is_mine', 'activities', 'tribes', 'events_time_lines'));
+        } else {
+            return view('profiles.show', compact('profile', 'is_mine', 'id'));
         }
-
-        $events_time_lines = $events_time_lines->sortByDesc('date')->slice(0, 5);
-
-        return view('dashboard', compact('profile', 'is_mine', 'activities', 'tribes', 'events_time_lines'));
     }
 
     /**
@@ -168,5 +168,110 @@ class ProfilesController extends Controller
                 return view('profiles.edit', compact('profile'))->withErrors('error', 'Upload failed');
             }
         }
+    }
+
+    /**
+     * Update settings
+     *
+     * @param int $id
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function editSettings($id)
+    {
+        $profile        = Profile::findOrFail($id);
+
+        $partying       = Profile\Partying::all();
+        $alcohol        = Profile\Alcohol::all();
+        $smoking        = Profile\Smoking::all();
+        $imprecation    = Profile\Imprecation::all();
+        $plannings      = Profile\Plannings::all();
+        $plans          = Profile\Plans::all();
+        $vegetarian     = Profile\Vegetarian::all();
+        $flexibility    = Profile\Flexibility::all();
+        $plans_change   = Profile\PlansChange::all();
+        $verbosity      = Profile\Verbosity::all();
+        $vigor          = Profile\Vigor::all();
+        $cool           = Profile\Cool::all();
+        $rules          = Profile\Rules::all();
+        $opinions       = Profile\Opinions::all();
+        $tolerance      = Profile\Tolerance::all();
+        $compromise     = Profile\Compromise::all();
+        $feelings       = Profile\Feelings::all();
+        $emergency      = Profile\Emergency::all();
+        $features_sets  = Profile\Features::where(['is_set' => '1'])->get();
+        $features       = Profile\Features::where(['is_set' => '0'])->get();
+
+        if(!empty(\Input::get())) {
+            $post       = \Input::get();
+            $validator  = \Validator::make($post, [
+                'partying_id'       => 'required',
+                'alcohol_id'        => 'required',
+                'smoking_id'        => 'required',
+                'imprecation_id'    => 'required',
+                'plannings_id'      => 'required',
+                'plans_id'          => 'required',
+                'vegetarian_id'     => 'required',
+                //'flexibility_id'    => 'required',
+                //'plans_change_id'   => 'required',
+                'verbosity_id'      => 'required',
+                'vigor_id'          => 'required',
+                'cool_id'           => 'required',
+                'rules_id'          => 'required',
+                'opinions_id'       => 'required',
+                'tolerance_id'      => 'required',
+                'compromise_id'     => 'required',
+                'feelings_id'       => 'required',
+                'emergency_id'      => 'required',
+                'features'          => 'required'
+
+            ]);
+            $errors     = $validator->errors();
+
+            if($errors->count() == 0) {
+                /**
+                 * @var $profile \Flocc\Profile
+                 */
+                $profile
+                    ->setPartyingId($post['partying_id'])
+                    ->setAlcoholId($post['alcohol_id'])
+                    ->setSmokingId($post['smoking_id'])
+                    ->setImprecationId($post['imprecation_id'])
+                    ->setPlanningsId($post['plannings_id'])
+                    ->setPlansId($post['plans_id'])
+                    ->setVegetarianId($post['vegetarian_id'])
+                    ->setFlexibilityId($post['flexibility_id'])
+                    ->setPlansChangeId($post['plans_change_id'])
+                    ->setVerbosityId($post['verbosity_id'])
+                    ->setVigorId($post['vigor_id'])
+                    ->setCoolId($post['cool_id'])
+                    ->setRulesId($post['rules_id'])
+                    ->setOpinionsId($post['opinions_id'])
+                    ->setToleranceId($post['tolerance_id'])
+                    ->setCompromiseId($post['compromise_id'])
+                    ->setFeelingsId($post['feelings_id'])
+                    ->setEmergencyId($post['emergency_id'])
+                ->save();
+
+                $users_features = new Features();
+
+                $users_features->clear(\Flocc\Auth::getUserId());
+
+                foreach($post['features'] as $feature_id) {
+                    $users_features->addNew(\Flocc\Auth::getUserId(), $feature_id);
+                }
+
+                $message = "Successfully updated";
+            }
+        }
+
+        return view('profiles.edit.settings', compact(
+            'message', 'profile', 'partying', 'alcohol', 'smoking',
+            'imprecation', 'plannings', 'plans', 'vegetarian',
+            'flexibility', 'plans_change', 'verbosity', 'vigor',
+            'cool', 'rules', 'opinions', 'tolerance', 'compromise',
+            'feelings', 'emergency', 'features', 'features_sets',
+            'errors'
+        ));
     }
 }

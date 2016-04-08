@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 /**
- * Class Users
+ * Class User
  *
  * @package Flocc\Mail
  */
