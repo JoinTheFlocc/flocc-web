@@ -5,6 +5,15 @@
         <div class="container mainBoxA">
             <div class="contentBox">
                 <div class="row">
+                    <div class="col-md-12 text-right">
+                        <a href="{{ URL::route('profile.edit', ['id' => $profile->getUserId()]) }}" class="btn btn-default">
+                            Edytuj profil
+                        </a>
+                        <a href="{{ URL::route('profile.edit.settings', ['id' => $profile->getUserId()]) }}" class="btn btn-default">
+                            Ustawienia profilu
+                        </a>
+                    </div>
+                    <div class="clearfix"></div>
                     <div class="col-md-12">
                         <form method="post" action="{{ URL::route('events') }}">
                             {{ csrf_field() }}
