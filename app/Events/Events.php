@@ -6,6 +6,7 @@ use Flocc\Auth;
 use Flocc\Helpers\DateHelper;
 use Flocc\Notifications\NewNotification;
 use Flocc\Url;
+use Flocc\User;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -1483,5 +1484,105 @@ class Events extends Model
     public function getLatestUpdatedTime($limit = 5, $is_inspiration = false)
     {
         return self::where('status', 'open')->where('is_inspiration', ($is_inspiration ? '1' : '0'))->orderBy('last_update_time', 'desc')->limit($limit)->get();
+    }
+
+    /**
+     * Get users scoring
+     *
+     * @param int $user_id
+     *
+     * @return int
+     */
+    public function getUsersScoring($user_id)
+    {
+        $points = $x = 0;
+
+        /**
+         * @var $user \Flocc\Profile
+         */
+        $user   = (new User())->getById($user_id)->getProfile();
+
+        /**
+         * @var $owner \Flocc\Profile
+         */
+        $owner  = (new User())->getById($this->getUserId())->getProfile();
+
+        /** X */
+        if($user->getPartyingId() !== null)     { ++$x; }
+        if($user->getAlcoholId() !== null)      { ++$x; }
+        if($user->getSmokingId() !== null)      { ++$x; }
+        if($user->getImprecationId() !== null)  { ++$x; }
+        if(count($user->getFeaturesIds()) > 0)  { ++$x; }
+
+        /** Imprezowanie */
+        $user_partying_id       = $user->getPartyingId();
+        $owner_partying_id      = $owner->getPartyingId();
+
+        if($user->getPartyingId() !== null) {
+            if($user_partying_id === $owner_partying_id) {
+                $points += 1/$x;
+            }
+
+            if($user_partying_id-1 === $owner_partying_id or $user_partying_id+1 === $owner_partying_id) {
+                $points += 0.5/$x;
+            }
+        }
+
+        /** Alkohol */
+        $user_alcohol_id    = $user->getAlcoholId();
+        $owner_alcohol_id   = $owner->getAlcoholId();
+
+        if($user->getAlcoholId() !== null) {
+            if($user_alcohol_id === $owner_alcohol_id) {
+                $points += 1/$x;
+
+            }
+            if($user_alcohol_id-1 === $owner_alcohol_id or $user_alcohol_id+1 === $owner_alcohol_id) {
+                $points += 0.5/$x;
+            }
+        }
+
+        /** Palenie */
+        if($user->getSmokingId() !== null) {
+            if($user->getSmokingId() === $owner->getSmokingId()) {
+                $points += 1/$x;
+            }
+        }
+
+        /** Przeklinanie */
+        if($user->getImprecationId() !== null) {
+            if($user->getImprecationId() === $owner->getImprecationId()) {
+                $points += 1/$x;
+            }
+        }
+
+        /** Wegetarianizm */
+        if($user->getVegetarianId() !== null) {
+            if($user->getVegetarianId() === $owner->getVegetarianId()) {
+                $points += 1/$x;
+            }
+        }
+
+        /** Dzień poza pracą */
+        if(count($user->getFeaturesIds()) > 0) {
+            $user_features      = $user->getFeaturesIds();
+            $owner_features     = $owner->getFeaturesIds();
+
+            foreach($user_features as $user_features_id) {
+                if(isset($owner_features[$user_features_id])) {
+                    $points += (1/count($user_features))/$x;
+                }
+            }
+        }
+
+        if($points < 0) {
+            $points = 0;
+        }
+
+        if($points > 1) {
+            $points = 1;
+        }
+
+        return $points*100;
     }
 }

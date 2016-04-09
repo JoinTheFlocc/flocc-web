@@ -51,7 +51,8 @@ class EventController extends Controller
         return view('events.event.index', [
             'event'             => $event,
             'meta_facebook'     => $meta_data,
-            'message'           => $request->session()->get('message')
+            'message'           => $request->session()->get('message'),
+            'user_id'           => Auth::getUserId()
         ]);
     }
 

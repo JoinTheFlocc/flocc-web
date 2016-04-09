@@ -65,6 +65,14 @@
                     <img src="{{ $event->getAvatarUrl() }}" style="width:300px;"><br>&nbsp;<br>
                     <p>{{ $event->getDescription() }}</p><br>
 
+                    @if(!$event->isMine())
+                        <div class="well" style="background:green;color:#fff;">
+                            Twoje dopasowanie do wydarzenia:<br>
+
+                            <strong style="font-size:50px;">{{ $event->getUsersScoring($user_id) }}%</strong>
+                        </div>
+                    @endif
+
                     <div class="row text-left">
                         <div class="col-sm-6">
                             <strong>Miejsce:</strong><br>
