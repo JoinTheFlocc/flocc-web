@@ -16,7 +16,7 @@ class CreateSearchesTable extends Migration
         {
             $table->increments('id')->unsigned();
             $table->timestamp('time')->useCurrent();
-            $table->integer('user_id')->unsigned();
+            $table->integer('user_id')->unsigned()->nullable()->default(null);
             $table->integer('activity_id')->nullable()->default(null)->unsigned();
             $table->text('place')->nullable()->default(null);
             $table->text('tribes')->nullable()->default(null);
