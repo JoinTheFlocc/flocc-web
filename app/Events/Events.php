@@ -1524,11 +1524,11 @@ class Events extends Model
 
         if($user->getPartyingId() !== null) {
             if($user_partying_id === $owner_partying_id) {
-                $points += 1/$x;
+                $points += 1;
             }
 
             if($user_partying_id-1 === $owner_partying_id or $user_partying_id+1 === $owner_partying_id) {
-                $points += 0.5/$x;
+                $points += 0.5;
             }
         }
 
@@ -1538,32 +1538,32 @@ class Events extends Model
 
         if($user->getAlcoholId() !== null) {
             if($user_alcohol_id === $owner_alcohol_id) {
-                $points += 1/$x;
+                $points += 1;
 
             }
             if($user_alcohol_id-1 === $owner_alcohol_id or $user_alcohol_id+1 === $owner_alcohol_id) {
-                $points += 0.5/$x;
+                $points += 0.5;
             }
         }
 
         /** Palenie */
         if($user->getSmokingId() !== null) {
             if($user->getSmokingId() === $owner->getSmokingId()) {
-                $points += 1/$x;
+                $points += 1;
             }
         }
 
         /** Przeklinanie */
         if($user->getImprecationId() !== null) {
             if($user->getImprecationId() === $owner->getImprecationId()) {
-                $points += 1/$x;
+                $points += 1;
             }
         }
 
         /** Wegetarianizm */
         if($user->getVegetarianId() !== null) {
             if($user->getVegetarianId() === $owner->getVegetarianId()) {
-                $points += 1/$x;
+                $points += 1;
             }
         }
 
@@ -1574,10 +1574,12 @@ class Events extends Model
 
             foreach($user_features as $user_features_id) {
                 if(isset($owner_features[$user_features_id])) {
-                    $points += (1/count($user_features))/$x;
+                    $points += 1/count($user_features);
                 }
             }
         }
+
+        $points = $points/$x;
 
         if($points < 0) {
             $points = 0;
@@ -1587,6 +1589,6 @@ class Events extends Model
             $points = 1;
         }
 
-        return $points*100;
+        return round(($points/$x)*100);
     }
 }
