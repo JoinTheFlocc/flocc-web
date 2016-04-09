@@ -22,7 +22,7 @@ class Profile extends Model
      */
     public function getId()
     {
-        return (int) $this->id;
+        return $this->id;
     }
 
     /**
@@ -32,7 +32,7 @@ class Profile extends Model
      */
     public function getUserId()
     {
-        return (int) $this->user_id;
+        return $this->user_id;
     }
 
     /**
@@ -115,7 +115,7 @@ class Profile extends Model
      */
     public function setPartyingId($partying_id)
     {
-        $this->partying_id = (int) $partying_id;
+        $this->partying_id = $partying_id;
 
         return $this;
     }
@@ -125,7 +125,7 @@ class Profile extends Model
      */
     public function getPartyingId()
     {
-        return (int) $this->partying_id;
+        return $this->partying_id;
     }
 
     /**
@@ -143,7 +143,7 @@ class Profile extends Model
      */
     public function setAlcoholId($alcohol_id)
     {
-        $this->alcohol_id = (int) $alcohol_id;
+        $this->alcohol_id = $alcohol_id;
 
         return $this;
     }
@@ -153,7 +153,7 @@ class Profile extends Model
      */
     public function getAlcoholId()
     {
-        return (int) $this->alcohol_id;
+        return $this->alcohol_id;
     }
 
     /**
@@ -171,7 +171,7 @@ class Profile extends Model
      */
     public function setSmokingId($smoking_id)
     {
-        $this->smoking_id = (int) $smoking_id;
+        $this->smoking_id = $smoking_id;
 
         return $this;
     }
@@ -181,7 +181,7 @@ class Profile extends Model
      */
     public function getSmokingId()
     {
-        return (int) $this->smoking_id;
+        return $this->smoking_id;
     }
 
     /**
@@ -199,7 +199,7 @@ class Profile extends Model
      */
     public function setImprecationId($imprecation_id)
     {
-        $this->imprecation_id = (int) $imprecation_id;
+        $this->imprecation_id = $imprecation_id;
 
         return $this;
     }
@@ -209,7 +209,7 @@ class Profile extends Model
      */
     public function getImprecationId()
     {
-        return (int) $this->imprecation_id;
+        return $this->imprecation_id;
     }
 
     /**
@@ -227,7 +227,7 @@ class Profile extends Model
      */
     public function setPlanningsId($plannings_id)
     {
-        $this->plannings_id = (int) $plannings_id;
+        $this->plannings_id = $plannings_id;
 
         return $this;
     }
@@ -237,7 +237,7 @@ class Profile extends Model
      */
     public function getPlanningsId()
     {
-        return (int) $this->plannings_id;
+        return $this->plannings_id;
     }
 
     /**
@@ -255,7 +255,7 @@ class Profile extends Model
      */
     public function setPlansId($plans_id)
     {
-        $this->plans_id = (int) $plans_id;
+        $this->plans_id = $plans_id;
 
         return $this;
     }
@@ -265,7 +265,7 @@ class Profile extends Model
      */
     public function getPlansId()
     {
-        return (int) $this->plans_id;
+        return $this->plans_id;
     }
 
     /**
@@ -283,7 +283,7 @@ class Profile extends Model
      */
     public function setVegetarianId($vegetarian_id)
     {
-        $this->vegetarian_id = (int) $vegetarian_id;
+        $this->vegetarian_id = $vegetarian_id;
 
         return $this;
     }
@@ -293,7 +293,7 @@ class Profile extends Model
      */
     public function getVegetarianId()
     {
-        return (int) $this->vegetarian_id;
+        return $this->vegetarian_id;
     }
 
     /**
@@ -311,7 +311,7 @@ class Profile extends Model
      */
     public function setFlexibilityId($flexibility_id)
     {
-        $this->flexibility_id = (int) $flexibility_id;
+        $this->flexibility_id = $flexibility_id;
 
         return $this;
     }
@@ -321,7 +321,7 @@ class Profile extends Model
      */
     public function getFlexibilityId()
     {
-        return (int) $this->flexibility_id;
+        return $this->flexibility_id;
     }
 
     /**
@@ -339,7 +339,7 @@ class Profile extends Model
      */
     public function setPlansChangeId($plans_change_id)
     {
-        $this->plans_change_id = (int) $plans_change_id;
+        $this->plans_change_id = $plans_change_id;
 
         return $this;
     }
@@ -349,7 +349,7 @@ class Profile extends Model
      */
     public function getPlansChangeId()
     {
-        return (int) $this->plans_change_id;
+        return $this->plans_change_id;
     }
 
     /**
@@ -367,7 +367,7 @@ class Profile extends Model
      */
     public function setVerbosityId($verbosity_id)
     {
-        $this->verbosity_id = (int) $verbosity_id;
+        $this->verbosity_id = $verbosity_id;
 
         return $this;
     }
@@ -377,7 +377,7 @@ class Profile extends Model
      */
     public function getVerbosityId()
     {
-        return (int) $this->verbosity_id;
+        return $this->verbosity_id;
     }
 
     /**
@@ -395,7 +395,7 @@ class Profile extends Model
      */
     public function setVigorId($vigor_id)
     {
-        $this->vigor_id = (int) $vigor_id;
+        $this->vigor_id = $vigor_id;
 
         return $this;
     }
@@ -405,7 +405,7 @@ class Profile extends Model
      */
     public function getVigorId()
     {
-        return (int) $this->vigor_id;
+        return $this->vigor_id;
     }
 
     /**
@@ -423,7 +423,7 @@ class Profile extends Model
      */
     public function setCoolId($cool_id)
     {
-        $this->cool_id = (int) $cool_id;
+        $this->cool_id = $cool_id;
 
         return $this;
     }
@@ -433,7 +433,7 @@ class Profile extends Model
      */
     public function getCoolId()
     {
-        return (int) $this->cool_id;
+        return $this->cool_id;
     }
 
     /**
@@ -451,7 +451,7 @@ class Profile extends Model
      */
     public function setRulesId($rules_id)
     {
-        $this->rules_id = (int) $rules_id;
+        $this->rules_id = $rules_id;
 
         return $this;
     }
@@ -461,7 +461,7 @@ class Profile extends Model
      */
     public function getRulesId()
     {
-        return (int) $this->rules_id;
+        return $this->rules_id;
     }
 
     /**
@@ -479,7 +479,7 @@ class Profile extends Model
      */
     public function setOpinionsId($opinions_id)
     {
-        $this->opinions_id = (int) $opinions_id;
+        $this->opinions_id = $opinions_id;
 
         return $this;
     }
@@ -489,7 +489,7 @@ class Profile extends Model
      */
     public function getOpinionsId()
     {
-        return (int) $this->opinions_id;
+        return $this->opinions_id;
     }
 
     /**
@@ -507,7 +507,7 @@ class Profile extends Model
      */
     public function setToleranceId($tolerance_id)
     {
-        $this->tolerance_id = (int) $tolerance_id;
+        $this->tolerance_id = $tolerance_id;
 
         return $this;
     }
@@ -517,7 +517,7 @@ class Profile extends Model
      */
     public function getToleranceId()
     {
-        return (int) $this->tolerance_id;
+        return $this->tolerance_id;
     }
 
     /**
@@ -535,7 +535,7 @@ class Profile extends Model
      */
     public function setCompromiseId($compromise_id)
     {
-        $this->compromise_id = (int) $compromise_id;
+        $this->compromise_id = $compromise_id;
 
         return $this;
     }
@@ -545,7 +545,7 @@ class Profile extends Model
      */
     public function getCompromiseId()
     {
-        return (int) $this->compromise_id;
+        return $this->compromise_id;
     }
 
     /**
@@ -563,7 +563,7 @@ class Profile extends Model
      */
     public function setFeelingsId($feelings_id)
     {
-        $this->feelings_id = (int) $feelings_id;
+        $this->feelings_id = $feelings_id;
 
         return $this;
     }
@@ -573,7 +573,7 @@ class Profile extends Model
      */
     public function getFeelingsId()
     {
-        return (int) $this->feelings_id;
+        return $this->feelings_id;
     }
 
     /**
@@ -591,7 +591,7 @@ class Profile extends Model
      */
     public function setEmergencyId($emergency_id)
     {
-        $this->emergency_id = (int) $emergency_id;
+        $this->emergency_id = $emergency_id;
 
         return $this;
     }
@@ -601,7 +601,7 @@ class Profile extends Model
      */
     public function getEmergencyId()
     {
-        return (int) $this->emergency_id;
+        return $this->emergency_id;
     }
 
     /**
