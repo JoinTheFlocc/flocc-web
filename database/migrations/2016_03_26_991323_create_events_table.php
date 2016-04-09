@@ -63,11 +63,6 @@ class CreateEventsTable extends Migration
                 ->on('intensities')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
-            $table->foreign('tribe_id')
-                ->references('id')
-                ->on('tribes')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
             $table->foreign('travel_ways_id')
                 ->references('id')
                 ->on('travel_ways')

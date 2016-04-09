@@ -33,7 +33,12 @@ class DatabaseSeeder extends Seeder
                         'budget_id'         => rand(1, 3),
                         'intensities_id'    => rand(1, 3),
                         'status'            => 'open',
-                        'users_limit'       => 5
+                        'users_limit'       => 5,
+                        'scoring'           => [
+                            'activity_id'   => 1,
+                            'tribes'        => '101010',
+                            'place'         => 'Polska'
+                        ]
                     ]
                 ]
             ],
@@ -60,7 +65,12 @@ class DatabaseSeeder extends Seeder
                         'budget_id'         => rand(1, 3),
                         'intensities_id'    => rand(1, 3),
                         'status'            => 'open',
-                        'users_limit'       => 1
+                        'users_limit'       => 1,
+                        'scoring'           => [
+                            'activity_id'   => 1,
+                            'tribes'        => '101010',
+                            'place'         => 'Polska'
+                        ]
                     ]
                 ]
             ]
@@ -77,7 +87,7 @@ class DatabaseSeeder extends Seeder
         Model::unguard();
 
         $this->setForeignKeyCheck(false);
-        $this->clearTables(['users', 'profiles', 'events', 'events_activities', 'events_comments', 'events_members', 'events_messages', 'events_routes', 'events_time_line']);
+        $this->clearTables(['users', 'profiles', 'events', 'events_activities', 'events_comments', 'events_members', 'events_messages', 'events_routes', 'events_time_line', 'events_scoring']);
         $this->execute($this->data);
         $this->setForeignKeyCheck(true);
 
@@ -112,6 +122,10 @@ class DatabaseSeeder extends Seeder
              * User events
              */
             foreach($events as $event) {
+                $scoring = $event['scoring'];
+
+                unset($event['scoring']);
+
                 $event['user_id'] = $user_id;
 
                 $event = \Flocc\Events\Events::create($event);
@@ -129,6 +143,13 @@ class DatabaseSeeder extends Seeder
                     'user_id'       => $user_id,
                     'status'        => 'member'
                 ]);
+
+                /**
+                 * Add scoring
+                 */
+                $scoring['event_id'] = $event->getId();
+
+                \Flocc\Events\Scoring::create([$scoring]);
             }
 
             /**
