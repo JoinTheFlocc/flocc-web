@@ -65,7 +65,7 @@
                     <img src="{{ $event->getAvatarUrl() }}" style="width:300px;"><br>&nbsp;<br>
                     <p>{{ $event->getDescription() }}</p><br>
 
-                    @if(!$event->isMine() and !Auth::guest())
+                    @if(!$event->isMine() and !Auth::guest() and !$event->isInspiration())
                         <div class="well" style="background:green;color:#fff;">
                             Twoje dopasowanie do wydarzenia:<br>
 
