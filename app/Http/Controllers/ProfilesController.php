@@ -180,6 +180,9 @@ class ProfilesController extends Controller
      */
     public function editSettings($id)
     {
+        /**
+         * @var $profile \Flocc\Profile
+         */
         $profile        = Profile::findOrFail($id);
 
         $partying       = Profile\Partying::all();
@@ -206,72 +209,99 @@ class ProfilesController extends Controller
 
         if(!empty(\Input::get())) {
             $post       = \Input::get();
-            $validator  = \Validator::make($post, [
-                'partying_id'       => 'required',
-                'alcohol_id'        => 'required',
-                'smoking_id'        => 'required',
-                'imprecation_id'    => 'required',
-                'plannings_id'      => 'required',
-                'plans_id'          => 'required',
-                'vegetarian_id'     => 'required',
-                //'flexibility_id'    => 'required',
-                //'plans_change_id'   => 'required',
-                'verbosity_id'      => 'required',
-                'vigor_id'          => 'required',
-                'cool_id'           => 'required',
-                'rules_id'          => 'required',
-                'opinions_id'       => 'required',
-                'tolerance_id'      => 'required',
-                'compromise_id'     => 'required',
-                'feelings_id'       => 'required',
-                'emergency_id'      => 'required',
-                'features'          => 'required',
-                'free_time'         => 'required'
 
-            ]);
-            $errors     = $validator->errors();
+            if(isset($post['partying_id'])) {
+                $profile->setPartyingId($post['partying_id']);
+            }
 
-            if($errors->count() == 0) {
-                /**
-                 * @var $profile \Flocc\Profile
-                 */
-                $profile
-                    ->setPartyingId($post['partying_id'])
-                    ->setAlcoholId($post['alcohol_id'])
-                    ->setSmokingId($post['smoking_id'])
-                    ->setImprecationId($post['imprecation_id'])
-                    ->setPlanningsId($post['plannings_id'])
-                    ->setPlansId($post['plans_id'])
-                    ->setVegetarianId($post['vegetarian_id'])
-                    //->setFlexibilityId($post['flexibility_id'])
-                    //->setPlansChangeId($post['plans_change_id'])
-                    ->setVerbosityId($post['verbosity_id'])
-                    ->setVigorId($post['vigor_id'])
-                    ->setCoolId($post['cool_id'])
-                    ->setRulesId($post['rules_id'])
-                    ->setOpinionsId($post['opinions_id'])
-                    ->setToleranceId($post['tolerance_id'])
-                    ->setCompromiseId($post['compromise_id'])
-                    ->setFeelingsId($post['feelings_id'])
-                    ->setEmergencyId($post['emergency_id'])
-                ->save();
+            if(isset($post['alcohol_id'])) {
+                $profile->setAlcoholId($post['alcohol_id']);
+            }
 
-                $users_features     = new Features();
-                $free_time_user     = new FreeTime();
+            if(isset($post['smoking_id'])) {
+                $profile->setSmokingId($post['smoking_id']);
+            }
 
-                $users_features->clear(\Flocc\Auth::getUserId());
-                $free_time_user->clear(\Flocc\Auth::getUserId());
+            if(isset($post['imprecation_id'])) {
+                $profile->setImprecationId($post['imprecation_id']);
+            }
 
+            if(isset($post['imprecation_id'])) {
+                $profile->setImprecationId($post['imprecation_id']);
+            }
+
+            if(isset($post['plannings_id'])) {
+                $profile->setPlanningsId($post['plannings_id']);
+            }
+
+            if(isset($post['plans_id'])) {
+                $profile->setPlansId($post['plans_id']);
+            }
+
+            if(isset($post['vegetarian_id'])) {
+                $profile->setVegetarianId($post['vegetarian_id']);
+            }
+
+            if(isset($post['verbosity_id'])) {
+                $profile->setVerbosityId($post['verbosity_id']);
+            }
+
+            if(isset($post['vigor_id'])) {
+                $profile->setVigorId($post['vigor_id']);
+            }
+
+            if(isset($post['cool_id'])) {
+                $profile->setCoolId($post['cool_id']);
+            }
+
+            if(isset($post['rules_id'])) {
+                $profile->setRulesId($post['rules_id']);
+            }
+
+            if(isset($post['opinions_id'])) {
+                $profile->setOpinionsId($post['opinions_id']);
+            }
+
+            if(isset($post['tolerance_id'])) {
+                $profile->setToleranceId($post['tolerance_id']);
+            }
+
+            if(isset($post['compromise_id'])) {
+                $profile->setCompromiseId($post['compromise_id']);
+            }
+
+            if(isset($post['feelings_id'])) {
+                $profile->setFeelingsId($post['feelings_id']);
+            }
+
+            if(isset($post['emergency_id'])) {
+                $profile->setEmergencyId($post['emergency_id']);
+            }
+
+            //->setFlexibilityId($post['flexibility_id'])
+            //->setPlansChangeId($post['plans_change_id'])
+
+            $profile->save();
+
+            $users_features     = new Features();
+            $free_time_user     = new FreeTime();
+
+            $users_features->clear(\Flocc\Auth::getUserId());
+            $free_time_user->clear(\Flocc\Auth::getUserId());
+
+            if(isset($post['features'])) {
                 foreach($post['features'] as $feature_id) {
                     $users_features->addNew(\Flocc\Auth::getUserId(), $feature_id);
                 }
+            }
 
+            if(isset($post['free_time'])) {
                 foreach($post['free_time'] as $free_time_id) {
                     $free_time_user->addNew(\Flocc\Auth::getUserId(), $free_time_id);
                 }
-
-                $message = "Successfully updated";
             }
+
+            $message = "Successfully updated";
         }
 
         return view('profiles.edit.settings', compact(
