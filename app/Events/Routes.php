@@ -126,4 +126,29 @@ class Routes extends Model
     {
         return self::where('event_id', $event_id)->delete();
     }
+
+    /**
+     * Get by event ID
+     *
+     * @param int $event_id
+     *
+     * @return \Flocc\Events\Routes
+     */
+    public function getByEventId($event_id)
+    {
+        return self::where('event_id', (int) $event_id)->get();
+    }
+
+    /**
+     * Add new route
+     *
+     * @param int $event_id
+     * @param int $place_id
+     *
+     * @return static
+     */
+    public function addNew($event_id, $place_id)
+    {
+        return self::create(['event_id' => $event_id, 'place_id' => $place_id]);
+    }
 }

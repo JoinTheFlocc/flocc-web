@@ -108,7 +108,7 @@
                                 <div class="col-sm-6">
                                     <div class="radio">
                                         <label>
-                                            <input type="radio" class="place_type" name="place_type" value="route" @if(!$event->isPlace() and !$event->isStatusDraft()) checked="checked" @endif>
+                                            <input type="radio" class="place_type" name="place_type" value="route" @if(!$event->isPlace() and $event->getRoutes()->count() > 0) checked="checked" @endif>
                                             Trasa
                                         </label>
                                     </div>
@@ -379,19 +379,19 @@
             @if($event->isPlace())
                 FloccThemeEventsEdit.Places.Place().Init();
             @else
-                @if(!$event->isStatusDraft())
-                    @if(count($post_routes))
-                        @foreach($post_routes as $id => $name)
-                            FloccThemeEventsEdit.Places.Route.Add({{ $id }}, "{{ $name }}");
-                        @endforeach
-                    @else
-                        @foreach($event->getRoutes() as $place)
-                            FloccThemeEventsEdit.Places.Route.Add({{ $place->getId() }}, "{{ $place->getName() }}");
-                        @endforeach
-                    @endif
+                @if(count($post_routes) > 0)
+                    @foreach($post_routes as $id => $name)
+                        FloccThemeEventsEdit.Places.Route.Add({{ $id }}, "{{ $name }}");
+                    @endforeach
+                @endif
+
+                @if($event->getRoutes()->count() > 0)
+                    @foreach($event->getRoutes() as $place)
+                        FloccThemeEventsEdit.Places.Route.Add({{ $place->getId() }}, "{{ $place->getName() }}");
+                    @endforeach
+                @endif
 
                 FloccThemeEventsEdit.Places.Route.Init();
-                @endif
             @endif
         });
     </script>

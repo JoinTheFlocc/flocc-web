@@ -6,6 +6,7 @@ use Flocc\Auth;
 use Flocc\Budgets;
 use Flocc\Activities;
 use Flocc\Events\Events;
+use Flocc\Events\Routes;
 use Flocc\Events\Scoring;
 use Flocc\Events\Search;
 use Flocc\Http\Controllers\Controller;
@@ -157,6 +158,18 @@ class EventsController extends Controller
                     ->setEventId($draft->getId())
                     ->setActivityId($activity->getId())
                 ->save();
+            }
+
+            /**
+             * Route
+             */
+            if($event->getPlaceId() !== null) {
+                $routes         = new Routes();
+                $event_route    = $routes->getByEventId($event->getId());
+
+                foreach($event_route as $route) {
+                    $routes->addNew($draft->getId(), $route->getPlaceId());
+                }
             }
         } else {
             $draft = $events->createDraft($user_id);
