@@ -6,6 +6,7 @@ use Flocc\Auth;
 use Flocc\Budgets;
 use Flocc\Activities;
 use Flocc\Events\Events;
+use Flocc\Events\Scoring;
 use Flocc\Events\Search;
 use Flocc\Http\Controllers\Controller;
 use Flocc\Infrastructure;
@@ -133,7 +134,10 @@ class EventsController extends Controller
         $draft      = $events->getUserDraft($user_id);
 
         if($draft !== null) {
+            $scoring = (new Scoring())->getByEventId($draft->getId());
+
             $draft->delete();
+            $scoring->delete();
         }
 
         if($id !== null) {
