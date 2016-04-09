@@ -56,13 +56,13 @@ class Searches extends Model
     /**
      * Set user ID
      *
-     * @param int $user_id
+     * @param int|null $user_id
      *
      * @return $this
      */
     public function setUserId($user_id)
     {
-        $this->user_id = (int) $user_id;
+        $this->user_id = $user_id;
 
         return $this;
     }
@@ -70,11 +70,11 @@ class Searches extends Model
     /**
      * Get user ID
      *
-     * @return int
+     * @return int|null
      */
     public function getUserId()
     {
-        return (int) $this->user_id;
+        return $this->user_id;
     }
 
     /**

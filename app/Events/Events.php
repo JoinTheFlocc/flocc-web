@@ -1579,8 +1579,6 @@ class Events extends Model
             }
         }
 
-        $points = $points/$x;
-
         if($points < 0) {
             $points = 0;
         }
@@ -1589,6 +1587,10 @@ class Events extends Model
             $points = 1;
         }
 
-        return round(($points/$x)*100);
+        if($points > 0) {
+            return round(($points/$x)*100);
+        }
+
+        return 0;
     }
 }
