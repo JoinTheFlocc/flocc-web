@@ -1497,6 +1497,10 @@ class Events extends Model
     {
         $points = $x = 0;
 
+        if($user_id === null) {
+            return $points;
+        }
+
         /**
          * @var $user \Flocc\Profile
          */
