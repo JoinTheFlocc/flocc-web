@@ -412,10 +412,18 @@ class EditEventController extends Controller
                 $scoring    = new Scoring();
                 $scoring    = $scoring->getByEventId($this->event->getId());
 
-                $scoring
+                $scoring = $scoring
                     ->setActivityId($post['activities'][0])
                     ->setTribes(\Input::get('tribes', []))
-                ->save();
+                ;
+
+                if(\Input::get('place_type') != 'place') {
+                    $scoring = $scoring->setRoute(implode(' > ', $post['route']))->setPlace(null);
+                } else {
+                    $scoring = $scoring->setPlace(\Input::get('place'))->setRoute(null);
+                }
+
+                $scoring->save();
 
                 if($is_draft === true) {
                     return redirect()->route('events.event.share', ['id' => $this->event->getId(), 'slug' => $this->event->getSlug()]);

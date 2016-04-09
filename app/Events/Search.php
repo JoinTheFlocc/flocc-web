@@ -117,7 +117,6 @@ class Search
     {
         $query      = Events::select('events.*', \DB::raw($this->getScoringFunction() . ' as scoring'));
         $query      = $query->leftjoin('events_scoring', 'events.id', '=', 'events_scoring.event_id');
-        $query      = $query->leftjoin('places', 'events.place_id', '=', 'places.id');
 
         $query      = $query->where('is_inspiration', '0');
         $query      = $query->orderBy(\DB::raw($this->getScoringFunction()), 'desc');
@@ -201,7 +200,7 @@ class Search
         }
 
         return sprintf(
-            'eventScore("%s", "%s", %d, events.event_from, events.event_to, events.event_span, %s, events_scoring.activity_id, %s, events_scoring.tribes, %s, places.name, %s, events.voluntary, %s, events.language_learning, %s, events.budget_id, %s, events.intensities_id, %s, events.travel_ways_id, %s, events.infrastructure_id, %s, events.tourist_id)',
+            'eventScore("%s", "%s", %d, events.event_from, events.event_to, events.event_span, %s, events_scoring.activity_id, %s, events_scoring.tribes, %s, events_scoring.place, events_scoring.route, %s, events.voluntary, %s, events.language_learning, %s, events.budget_id, %s, events.intensities_id, %s, events.travel_ways_id, %s, events.infrastructure_id, %s, events.tourist_id)',
             $event_from,
             $event_to,
             $event_span,

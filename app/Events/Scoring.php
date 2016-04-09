@@ -119,6 +119,34 @@ class Scoring extends Model
     }
 
     /**
+     * Set place name
+     *
+     * @param string $place
+     * 
+     * @return $this
+     */
+    public function setPlace($place)
+    {
+        $this->place = $place;
+
+        return $this;
+    }
+
+    /**
+     * Set route
+     *
+     * @param string $route
+     *
+     * @return $this
+     */
+    public function setRoute($route)
+    {
+        $this->route = $route;
+
+        return $this;
+    }
+
+    /**
      * Get scoring by event ID
      *
      * @param int $event_id
