@@ -118,6 +118,7 @@ class Search
         $query      = Events::select('events.*', \DB::raw($this->getScoringFunction() . ' as scoring'));
         $query      = $query->leftjoin('events_scoring', 'events.id', '=', 'events_scoring.event_id');
 
+        $query      = $query->where('status', 'open');
         $query      = $query->where('is_inspiration', '0');
         $query      = $query->orderBy(\DB::raw($this->getScoringFunction()), 'desc');
         $query      = $query->groupBy('events.id');
