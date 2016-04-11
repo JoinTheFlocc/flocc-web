@@ -339,6 +339,13 @@ class EditEventController extends Controller
                 }
 
                 /**
+                 * Set status as open
+                 */
+                if((int) $post['users_limit'] > $old_users_limit) {
+                    $this->event->setStatusOpen();
+                }
+
+                /**
                  * Save event
                  */
                 $this->event->save();
