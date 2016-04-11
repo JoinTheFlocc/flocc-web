@@ -52,6 +52,7 @@ class EventController extends Controller
             'event'             => $event,
             'meta_facebook'     => $meta_data,
             'message'           => $request->session()->get('message'),
+            'comments_label'    => $request->session()->get('comments_label', 'public'),
             'user_id'           => Auth::getUserId()
         ]);
     }

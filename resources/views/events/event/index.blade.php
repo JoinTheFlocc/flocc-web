@@ -256,11 +256,11 @@
                 @endif
 
                 <ul class="nav nav-tabs" style="margin-top:58px;">
-                    <li class="active" tab-id="comments">
+                    <li @if($comments_label == 'public') class="active" @endif tab-id="comments">
                         <a href="#">Posty</a>
                     </li>
                     @if($event->isImIn() and !$event->isInspiration())
-                        <li tab-id="forum">
+                        <li @if($comments_label == 'private') class="active" @endif tab-id="forum">
                             <a href="#">Forum</a>
                         </li>
                     @endif
@@ -271,7 +271,8 @@
                     </li>
                 </ul>
                 <div class="nav" style="border-left:1px solid #ddd; border-right:1px solid #ddd; border-bottom:1px solid #ddd; padding: 20px;">
-                    <div id="comments" class="tab">
+
+                    <div id="comments" class="tab" @if($comments_label == 'private') style="display: none;" @endif>
                         <div class="well">
                             <form method="POST" action="{{ URL::route('events.comment') }}">
                                 <textarea name="comment" style="width:100%;height:50px;background: transparent; border: 0;" placeholder="Wpisz swój komentarz"></textarea><br>
@@ -296,7 +297,7 @@
                         </div>
                     </div>
                     @if($event->isImIn() and !$event->isInspiration())
-                        <div id="forum" style="display:none;" class="tab">
+                        <div id="forum" @if($comments_label == 'public') style="display:none;" @endif class="tab">
                             <h2 style="margin-bottom: 25px;">Forum</h2>
 
                             <div>
