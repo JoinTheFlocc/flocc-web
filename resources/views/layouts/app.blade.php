@@ -36,8 +36,8 @@
    		}(document, 'script', 'facebook-jssdk'));
 	</script>
 
-	<script src="/js/jquery-2.2.0.min.js"></script>
-	<script src="/js/bootstrap.min.js"></script>
+	<script src="/js/jquery-2.2.0.min.js?v={{ time() }}"></script>
+	<script src="/js/bootstrap.min.js?v={{ time() }}"></script>
 
 	@if(isset($meta_facebook))
 		<meta property="og:url"           content="{{ $meta_facebook->getUrl() }}" />
