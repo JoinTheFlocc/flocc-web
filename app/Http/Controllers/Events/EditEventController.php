@@ -469,7 +469,8 @@ class EditEventController extends Controller
             'post_routes'       => $post_routes,
             'post_new_activity' => isset($post_new_activity) ? $post_new_activity : null,
             'post_activities'   => isset($post_activities) ? $post_activities : [],
-            'months'            => $months
+            'months'            => $months,
+            'post'              => $post
         ]);
     }
 }

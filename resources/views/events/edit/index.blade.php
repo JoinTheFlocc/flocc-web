@@ -247,7 +247,7 @@
                                                 type="checkbox"
                                                 name="tribes[]"
                                                 value="{{ $tribes_row->getId() }}"
-                                                @if($event->isTribe($tribes_row->getId())) checked="checked" @endif
+                                                @if($event->isTribe($tribes_row->getId()) or (isset($post['tribes']) and in_array($tribes_row->getId(), $post['tribes']))) checked="checked" @endif
                                             >
                                             {{ $tribes_row->getName() }}
                                         </label>
