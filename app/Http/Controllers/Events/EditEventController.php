@@ -398,7 +398,7 @@ class EditEventController extends Controller
                             ->setUserId($member->getUserId())
                             ->setUniqueKey('events.update.' . $id . '.' . date('d-m-Y'))
                             ->setTypeId('events.update')
-                            ->setCallback('/events/' . $this->event->getSlug())
+                            ->setCallback('/events/' . $this->event->getId() . '/' . $this->event->getSlug())
                             ->addVariable('event', $this->event->getTitle())
                         ->save();
                     }
