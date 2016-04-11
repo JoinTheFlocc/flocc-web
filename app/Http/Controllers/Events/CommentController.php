@@ -77,7 +77,7 @@ class CommentController extends Controller
                             ->setUserId($member->getUserId())
                             ->setUniqueKey('events.comment.' . $event->getId() . '.' . md5($comment))
                             ->setTypeId('events.comment')
-                            ->setCallback('/events/' . $event->getSlug())
+                            ->setCallback('/events/' . $event->getId() . '/' . $event->getSlug())
                             ->addVariable('user', $user->getFirstName() . ' ' . $user->getLastName())
                             ->addVariable('event', $event->getTitle())
                             ->save();
@@ -105,10 +105,10 @@ class CommentController extends Controller
                                 ->setUserId($member->getUserId())
                                 ->setUniqueKey('events.comment.' . $event->getId() . '.' . md5($comment))
                                 ->setTypeId('events.comment')
-                                ->setCallback('/events/' . $event->getSlug())
+                                ->setCallback('/events/' . $event->getId() . '/' . $event->getSlug())
                                 ->addVariable('user', $user->getFirstName() . ' ' . $user->getLastName())
                                 ->addVariable('event', $event->getTitle())
-                                ->save();
+                            ->save();
                         }
                     }
                 }

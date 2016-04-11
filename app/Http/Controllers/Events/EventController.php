@@ -191,7 +191,7 @@ class EventController extends Controller
                             ->setMessage($user_name . ' zaczął obserwować to wydarzenie')
                         ->save();
 
-                        $notification->setCallback('/events/' . $event->getSlug());
+                        $notification->setCallback('/events/' . $event->getId() . '/' . $event->getSlug());
                         $request->session()->flash('message', 'Obserwujesz to wydarzenie');
                         break;
                     case 'member':

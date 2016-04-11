@@ -113,7 +113,7 @@ class EditEventController extends Controller
                     ->setUserId($member->getUserId())
                     ->setUniqueKey('events.members.new.' . $id . '.' . $user_id)
                     ->setTypeId('events.members.new')
-                    ->setCallback('/events/' . $this->event->getSlug())
+                    ->setCallback('/events/' . $event->getId() . '/' . $event->getSlug())
                     ->addVariable('user', $user->getFirstName() . ' ' . $user->getLastName())
                     ->addVariable('event', $this->event->getTitle())
                 ->save();
@@ -126,7 +126,7 @@ class EditEventController extends Controller
                 ->setUserId($user_id)
                 ->setUniqueKey('events.members.accept.' . $id)
                 ->setTypeId('events.members.accept')
-                ->setCallback('/events/' . $this->event->getSlug())
+                ->setCallback('/events/' . $event->getId() . '/' . $event->getSlug())
                 ->addVariable('event', $this->event->getTitle())
             ->save();
 
@@ -158,7 +158,7 @@ class EditEventController extends Controller
                     (new NewNotification())
                         ->setUserId($member->getUserId())
                         ->setUniqueKey('events.limit.' . $this->event->getId())
-                        ->setCallback('/events/' . $this->event->getSlug())
+                        ->setCallback('/events/' . $event->getId() . '/' . $event->getSlug())
                         ->setTypeId('events.limit')
                         ->addVariable('event', $this->event->getTitle())
                     ->save();

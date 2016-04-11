@@ -1421,7 +1421,7 @@ class Events extends Model
                 (new NewNotification())
                     ->setUserId($member->getUserId())
                     ->setUniqueKey('events.starting.' . $event->getId())
-                    ->setCallback('/events/' . $event->getSlug())
+                    ->setCallback('/events/' . $event->getId() . '/' . $event->getSlug())
                     ->setTypeId('events.starting')
                     ->addVariable('event', $event->getTitle())
                 ->save();
@@ -1439,7 +1439,7 @@ class Events extends Model
                 (new NewNotification())
                     ->setUserId($member->getUserId())
                     ->setUniqueKey('events.ending.' . $event->getId())
-                    ->setCallback('/events/' . $event->getSlug())
+                    ->setCallback('/events/' . $event->getId() . '/' . $event->getSlug())
                     ->setTypeId('events.ending')
                     ->addVariable('event', $event->getTitle())
                 ->save();
