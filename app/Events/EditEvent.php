@@ -38,7 +38,7 @@ class EditEvent
         $rules      = [
             'title'                 => 'required',
             'description'           => 'required',
-            'users_limit'           => 'required|integer|min:1',
+            'users_limit'           => 'required|integer',
             'budgets'               => 'required',
             'intensities'           => 'required',
             'place_type'            => 'required',
@@ -89,6 +89,12 @@ class EditEvent
             }
         }
 
+        if($event->getMembers()->count() > 0) {
+            $rules['users_limit'] .= '|min:' . $event->getMembers()->count();
+        } else {
+            $rules['users_limit'] .= '|min:1';
+        }
+
         return $rules;
     }
 
@@ -112,7 +118,7 @@ class EditEvent
             'event_span.min'                => 'Ilość dni musi być większa od 0',
             'event_span.max'                => 'Ilość dni nie może być większa niż podany zakres dat',
             'users_limit.required'          => 'Prosimy podać ilu osób może się zapisać',
-            'users_limit.min'               => 'Limit członków musi być większy od 0',
+            'users_limit.min'               => 'Prosimy podać poprawną liczbę członków',
             'budgets.required'              => 'Prosimy wybrać budżet',
             'intensities.required'          => 'Prosimy wybrać intensywność',
             'fixed.required'                => 'Prosimy wybrać typ wydarzenia',
