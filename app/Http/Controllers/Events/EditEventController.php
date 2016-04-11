@@ -413,7 +413,7 @@ class EditEventController extends Controller
                 $scoring    = $scoring->getByEventId($this->event->getId());
 
                 $scoring = $scoring
-                    ->setActivityId($post['activities'][0])
+                    ->setActivityId(reset($post['activities']))
                     ->setTribes(\Input::get('tribes', []))
                 ;
 
