@@ -207,6 +207,7 @@ class EditEventController extends Controller
         $user               = $users->getById(Auth::getUserId());
         $post_routes        = [];
         $months             = (new DateHelper())->getMonths();
+        $old_users_limit    = $this->event->getUsersLimit();
 
         if($this->event->isStatusCanceled()) {
           die; // @TODO
@@ -389,6 +390,15 @@ class EditEventController extends Controller
                     (new Members())->addNew($id, Auth::getUserId(), 'member');
                 } else {
                     /**
+                     * Notification if users limits is higher
+                     */
+                    if((int) $post['users_limit'] > $old_users_limit) {
+                        $notification_type_id = 'events.update.users_limit';
+                    } else {
+                        $notification_type_id = 'events.update';
+                    }
+
+                    /**
                      * Notification
                      *
                      * @var $member \Flocc\Events\Members
@@ -397,9 +407,10 @@ class EditEventController extends Controller
                         (new NewNotification())
                             ->setUserId($member->getUserId())
                             ->setUniqueKey('events.update.' . $id . '.' . date('d-m-Y'))
-                            ->setTypeId('events.update')
+                            ->setTypeId($notification_type_id)
                             ->setCallback('/events/' . $this->event->getId() . '/' . $this->event->getSlug())
                             ->addVariable('event', $this->event->getTitle())
+                            ->addVariable('users_limit', $post['users_limit'])
                         ->save();
                     }
                 }

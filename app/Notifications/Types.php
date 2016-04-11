@@ -42,6 +42,6 @@ class Types extends Model
      */
     public function isTypeExists($type_id)
     {
-        return (self::where('type_id', (int) $type_id)->take(1)->first() === false) ? false : true;
+        return (self::where('type_id', $type_id)->take(1)->first() === false) ? false : true;
     }
 }
