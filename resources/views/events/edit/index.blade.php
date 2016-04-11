@@ -108,7 +108,7 @@
                                 <div class="col-sm-6">
                                     <div class="radio">
                                         <label>
-                                            <input type="radio" class="place_type" name="place_type" value="route" @if(!$event->isPlace() and $event->getRoutes()->count() > 0) checked="checked" @endif>
+                                            <input type="radio" class="place_type" name="place_type" value="route" @if((!$event->isPlace() and $event->getRoutes()->count() > 0) or (isset($post['place_type']) and $post['place_type'] == 'route')) checked="checked" @endif>
                                             Trasa
                                         </label>
                                     </div>
