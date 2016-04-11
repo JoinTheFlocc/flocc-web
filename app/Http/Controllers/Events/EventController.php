@@ -263,7 +263,7 @@ class EventController extends Controller
         }
 
         if($member->status == 'member') {
-            $ids = [$event->getUserId()];
+            $ids = [];
 
             foreach($event->getMembers() as $user) {
                 if($user->getUserId() !== Auth::getUserId()) {
@@ -280,14 +280,28 @@ class EventController extends Controller
                 (new NewNotification())
                     ->setUserId($user_id)
                     ->setUniqueKey('events.resign.' . Auth::getUserId())
-                    ->setCallback('/events/' . $event->getSlug())
+                    ->setCallback('/events/' . $event->getId() . '/' . $event->getSlug())
                     ->setTypeId('events.resign')
                     ->addVariable('user', $user->getFirstName() . ' ' . $user->getLastName())
                     ->addVariable('event', $event->getTitle())
                 ->save();
             }
 
-            // Reopen event
+            /**
+             * Notification to owner
+             */
+            (new NewNotification())
+                ->setUserId($event->getUserId())
+                ->setUniqueKey('events.reopen.' . $event->getId())
+                ->setCallback('/events/' . $event->getId() . '/' . $event->getSlug())
+                ->setTypeId('events.reopen')
+                ->addVariable('user', $user->getFirstName() . ' ' . $user->getLastName())
+                ->addVariable('event', $event->getTitle())
+            ->save();
+
+            /**
+             * Reopen event
+             */
             if($event->isStatusClose()) {
                 $event->setStatusOpen()->save();
             }
