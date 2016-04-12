@@ -234,7 +234,24 @@ class AuthController extends Controller
 
     public function authenticated(Request $request, User $user)
     {
+        (new User\Logs())
+            ->setUserId($user->id)
+            ->setTypeUsersLogin()
+        ->save();
+
         $profile = Profile::where('user_id', $user->id)->first();
         return redirect('/profile/'. $profile->id);
+    }
+
+    public function getLogout()
+    {
+        (new User\Logs())
+            ->setUserId(\Flocc\Auth::getUserId())
+            ->setTypeUsersLogout()
+        ->save();
+
+        Auth::logout();
+
+        return redirect('/auth/login');
     }
 }

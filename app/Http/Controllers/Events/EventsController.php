@@ -16,6 +16,7 @@ use Flocc\Searches;
 use Flocc\Tourist;
 use Flocc\TravelWays;
 use Flocc\Tribes;
+use Flocc\User\Logs;
 
 /**
  * Class EventsController
@@ -88,6 +89,17 @@ class EventsController extends Controller
                         ->setActivityId($search->getParam('activity_id'))
                         ->setPlace($search->getParam('place'))
                         ->setTribes($search->getParam('tribes'))
+                    ->save();
+
+                    $searches_id = \DB::getPdo()->lastInsertId();
+
+                    /**
+                     * Save user log
+                     */
+                    (new Logs())
+                        ->setUserId(Auth::getUserId())
+                        ->setTypeEventsSearch()
+                        ->setSearchId($searches_id)
                     ->save();
                 }
             }

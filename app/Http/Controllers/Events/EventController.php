@@ -48,6 +48,15 @@ class EventController extends Controller
          */
         $events->updateViews($event->getId(), $event->getViews()+1);
 
+        /**
+         * Save user log
+         */
+        (new User\Logs())
+            ->setUserId(Auth::getUserId())
+            ->setTypeEventsDisplay()
+            ->setEventId($event->getId())
+        ->save();
+
         return view('events.event.index', [
             'event'             => $event,
             'meta_facebook'     => $meta_data,

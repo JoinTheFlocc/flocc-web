@@ -444,6 +444,15 @@ class EditEventController extends Controller
                 $scoring->save();
 
                 if($is_draft === true) {
+                    /**
+                     * Save user log
+                     */
+                    (new User\Logs())
+                        ->setUserId(Auth::getUserId())
+                        ->setTypeEventsCreate()
+                        ->setEventId($this->event->getId())
+                    ->save();
+
                     return redirect()->route('events.event.share', ['id' => $this->event->getId(), 'slug' => $this->event->getSlug()]);
                 }
 
