@@ -34,6 +34,13 @@ class Notifications extends Model
     public $timestamps = false;
 
     /**
+     * Primary key
+     *
+     * @var string
+     */
+    protected $primaryKey = 'notification_id';
+
+    /**
      * Get user notifications
      *
      * @param int $user_id
@@ -111,7 +118,6 @@ class Notifications extends Model
     {
         $notification = self::where('notification_id', (int) $id)
             ->where('user_id', (int) $user_id)
-            ->where('is_read', '0')
             ->join('notifications_types', 'notifications.type_id', '=', 'notifications_types.type_id')
             ->take(1)
         ->first();
@@ -206,5 +212,17 @@ class Notifications extends Model
     public function markAsRead($unique_key, $user_id)
     {
         return (self::where('unique_key', md5($unique_key))->where('user_id', (int) $user_id)->update(['is_read' => '1']) == 1);
+    }
+
+    /**
+     * Get notification by ID
+     *
+     * @param int $id
+     *
+     * @return self
+     */
+    public function getById($id)
+    {
+        return self::where('notification_id', (int) $id)->take(1)->first();
     }
 }

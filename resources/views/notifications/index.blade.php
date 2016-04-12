@@ -20,11 +20,18 @@
             @endif
             @if(count($data) > 0)
                 @foreach($data as $row)
-                    <div>
-                        <a href="{{ URL::route('notifications.callback', ['id' => $row->notification_id]) }}" style="display:block;border:1px dotted #000;padding:10px;">
-                            {{ $row->name }}
-                            <span class="pull-right">{{ $row->sent_time }}</span>
-                        </a>
+                    <div class="row" @if($row->is_read == '0') style="background: #ffa3a7" @endif>
+                        <div class="col-md-11">
+                            <a href="{{ URL::route('notifications.callback', ['id' => $row->notification_id]) }}" style="display:block;border:1px dotted #000;padding:10px;">
+                                {{ $row->name }}
+                                <span class="pull-right">{{ $row->sent_time }}</span>
+                            </a>
+                        </div>
+                        <div class="col-md-1" style="padding-top: 5px;px;">
+                            <a href="{{ URL::route('notifications.delete', ['id' => $row->notification_id]) }}" class="btn btn-danger">
+                                <i class="fa fa-close"></i>
+                            </a>
+                        </div>
                     </div>
                 @endforeach
             @else

@@ -2,6 +2,7 @@
 
 namespace Flocc\Http\Controllers\Notifications;
 
+use Flocc\Auth;
 use Flocc\Http\Controllers\Controller;
 use Flocc\Notifications\Notifications;
 
@@ -16,10 +17,11 @@ class NotificationsController extends Controller
      *  Get notifications JSON
      *
      * @param null|string $type
+     * @param bool $only_unread
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getNotifications($type = null)
+    public function getNotifications($type = null, $only_unread = true)
     {
         /**
          * Notification type
@@ -32,7 +34,7 @@ class NotificationsController extends Controller
 
         if(\Auth::user()) {
             $notifications  = new Notifications();
-            $data           = $notifications->getByUserId(\Auth::user()->id, true, $type);
+            $data           = $notifications->getByUserId(\Auth::user()->id, $only_unread, $type);
 
             return response()->json($data->toArray());
         }
@@ -48,7 +50,7 @@ class NotificationsController extends Controller
     public function index()
     {
         return view('notifications.index', [
-            'data' => $this->getNotifications()->getData()
+            'data' => $this->getNotifications(null, false)->getData()
         ]);
     }
 
@@ -64,5 +66,19 @@ class NotificationsController extends Controller
         $notifications = new Notifications();
 
         return $notifications->doCallback($id, \Auth::user()->id);
+    }
+
+    public function delete($id)
+    {
+        $notifications  = new Notifications();
+        $notification   = $notifications->getById($id);
+
+        if($notification) {
+            if($notification->user_id === Auth::getUserId()) {
+                $notification->delete();
+            }
+        }
+
+        return \Redirect::to('notifications');
     }
 }
