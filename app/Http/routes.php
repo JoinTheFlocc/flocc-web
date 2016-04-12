@@ -97,6 +97,9 @@ Route::get('events/{id}/{slug}/share', 'Events\EventController@share')->name('ev
 // Google Places
 Route::get('api/google/places/auto-complete', 'Api\Google\PlacesController@autoComplete')->name('api.google.places.autocomplete');
 
+// Cron
+Route::get('cron/{schedule}', 'Cron\CronController@execute');
+
 /**
  * Set true if you want debug all queries
  */

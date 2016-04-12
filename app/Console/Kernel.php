@@ -2,7 +2,6 @@
 
 namespace Flocc\Console;
 
-use Flocc\Events\Events;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -25,13 +24,6 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        /**
-         * Close events
-         */
-        $schedule->call(function () { return (new Events())->closeAfterDate(date('Y-m-d')); })->dailyAt('01:00');
-        $schedule->call(function () { return (new Events())->sendStartingAndEndingEventsNotifications(); })->dailyAt('01:00');
-
-        $schedule->command('inspire')
-                 ->hourly();
+        // $schedule->command('inspire')->hourly();
     }
 }

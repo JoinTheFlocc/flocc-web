@@ -1372,13 +1372,19 @@ class Events extends Model
     /**
      * Close events by date to
      *
-     * @param string $date
+     * @param string|null $date
      *
      * @return bool
      */
-    public function closeAfterDate($date)
+    public function closeAfterDate($date = null)
     {
-        return (self::where('event_to', '>', $date)->update(['status' => 'close']) == 1);
+        if($date === null) {
+            $date = date('Y-m-d');
+        }
+
+        self::where('event_to', '>', $date)->update(['status' => 'close']);
+
+        return true;
     }
 
     /**
@@ -1407,6 +1413,8 @@ class Events extends Model
 
     /**
      * Send notifications to starting & ending events
+     *
+     * @return bool
      */
     public function sendStartingAndEndingEventsNotifications()
     {
@@ -1445,6 +1453,8 @@ class Events extends Model
                 ->save();
             }
         }
+
+        return true;
     }
 
     /**
