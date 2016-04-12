@@ -203,11 +203,11 @@ class EditEventController extends Controller
         $users              = new User();
 
         $post               = \Input::get();
+        $old_event          = clone $this->event;
         $is_draft           = $this->event->isStatusDraft();
         $user               = $users->getById(Auth::getUserId());
         $post_routes        = [];
         $months             = (new DateHelper())->getMonths();
-        $old_users_limit    = $this->event->getUsersLimit();
 
         if($this->event->isStatusCanceled()) {
           die; // @TODO
@@ -341,7 +341,7 @@ class EditEventController extends Controller
                 /**
                  * Set status as open
                  */
-                if((int) $post['users_limit'] > $old_users_limit) {
+                if((int) $post['users_limit'] > $old_event->getUsersLimit()) {
                     $this->event->setStatusOpen();
                 }
 
@@ -399,10 +399,21 @@ class EditEventController extends Controller
                     /**
                      * Notification if users limits is higher
                      */
-                    if((int) $post['users_limit'] > $old_users_limit) {
+                    if((int) $post['users_limit'] > $old_event->getUsersLimit()) {
                         $notification_type_id = 'events.update.users_limit';
                     } else {
                         $notification_type_id = 'events.update';
+                    }
+
+                    /**
+                     * Update event date
+                     */
+                    if(
+                        $post['event_from'] !== $old_event->getEventFrom()
+                        or $post['event_to'] !== $old_event->getEventTo()
+                        or (int) $post['event_span'] !== $old_event->getEventSpan()
+                    ) {
+                        $notification_type_id = 'events.update.date';
                     }
 
                     /**
@@ -418,6 +429,9 @@ class EditEventController extends Controller
                             ->setCallback('/events/' . $this->event->getId() . '/' . $this->event->getSlug())
                             ->addVariable('event', $this->event->getTitle())
                             ->addVariable('users_limit', $post['users_limit'])
+                            ->addVariable('event_from', $post['event_from'])
+                            ->addVariable('event_to', $post['event_to'])
+                            ->addVariable('event_span', (int) $post['event_span'])
                         ->save();
                     }
                 }

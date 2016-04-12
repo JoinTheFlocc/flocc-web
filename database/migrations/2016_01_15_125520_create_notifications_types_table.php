@@ -14,7 +14,7 @@ class CreateNotificationsTypesTable extends Migration
     {
         Schema::create('notifications_types', function(Blueprint $table) {
             $table->string('type_id', 50);
-            $table->string('name', 100);
+            $table->string('name', 150);
             $table->enum('action', ['redirect'])->default('redirect');
             $table->primary('type_id');
         });
@@ -36,5 +36,6 @@ class CreateNotificationsTypesTable extends Migration
         DB::table('notifications_types')->insert(['type_id' => 'events.update.users_limit', 'name' => '{{ $event }} zwiększyło limit uczestników do {{ $users_limit }}', 'action' => 'redirect']);
         DB::table('notifications_types')->insert(['type_id' => 'events.reopen', 'name' => '{{ $user }} wypisał się z wydarzenia {{ $event }}, jest ono otwarte', 'action' => 'redirect']);
         DB::table('notifications_types')->insert(['type_id' => 'events.cancel', 'name' => 'Wydarzenie {{ $event }} zostało anulowane', 'action' => 'redirect']);
+        DB::table('notifications_types')->insert(['type_id' => 'events.update.date', 'name' => 'Wydarzenie {{ $event }} ma nową datę {{ $event_from }}-{{ $event_to }} i będzie trwać {{ $event_span }} dni', 'action' => 'redirect']);
     }
 }
