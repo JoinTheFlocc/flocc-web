@@ -3,6 +3,7 @@
     <tr>
         <th>&nbsp;</th>
         <th>Imię i nazwisko</th>
+        <th>Dopasowanie</th>
         @if($tab != 'followers')
             <th class="text-center">Opcje</th>
         @endif
@@ -21,6 +22,11 @@
                 <a href="{{ URL::route('profile.display', $profile->getId()) }}">
                     {{ $profile->getFirstName() }} {{ $profile->getLastName() }}
                 </a>
+            </td>
+            <td>
+                <span class="btn btn-success">
+                    {{ $profile->getEventScoring($event->getId()) }}%
+                </span>
             </td>
             @if($tab == 'awaiting')
                 <td class="text-center">

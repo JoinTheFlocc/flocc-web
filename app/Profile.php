@@ -2,6 +2,7 @@
 
 namespace Flocc;
 
+use Flocc\Events\Events;
 use Flocc\Profile\TimeLine\TimeLine;
 use Flocc\User\Features;
 use Flocc\User\FreeTime;
@@ -642,5 +643,17 @@ class Profile extends Model
     public function getFreeTimeIds()
     {
         return (new FreeTime())->getIdsByUserId($this->getUserId());
+    }
+
+    /**
+     * Get user scoring to event
+     *
+     * @param int $event_id
+     *
+     * @return int
+     */
+    public function getEventScoring($event_id)
+    {
+        return (new Events())->getById($event_id)->getUsersScoring($this->getUserId());
     }
 }
