@@ -35,5 +35,6 @@ class CreateNotificationsTypesTable extends Migration
         DB::table('notifications_types')->insert(['type_id' => 'events.ending', 'name' => 'Wydarzenie {{ $event }} skończyło się dzisiaj', 'action' => 'redirect']);
         DB::table('notifications_types')->insert(['type_id' => 'events.update.users_limit', 'name' => '{{ $event }} zwiększyło limit uczestników do {{ $users_limit }}', 'action' => 'redirect']);
         DB::table('notifications_types')->insert(['type_id' => 'events.reopen', 'name' => '{{ $user }} wypisał się z wydarzenia {{ $event }}, jest ono otwarte', 'action' => 'redirect']);
+        DB::table('notifications_types')->insert(['type_id' => 'events.cancel', 'name' => 'Wydarzenie {{ $event }} zostało anulowane', 'action' => 'redirect']);
     }
 }

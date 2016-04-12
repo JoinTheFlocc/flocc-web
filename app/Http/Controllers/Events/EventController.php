@@ -124,6 +124,21 @@ class EventController extends Controller
             die; // @TODO:
         }
 
+        /**
+         * Notification to members and followers
+         *
+         * @var \Flocc\Events\Members $member
+         */
+        foreach($event->getMembersAndFollowers() as $member) {
+            (new NewNotification())
+                ->setUserId($member->getUserId())
+                ->setUniqueKey('events.cancel.' . $id)
+                ->setTypeId('events.cancel')
+                ->setCallback('/events/' . $event->getId() . '/' . $event->getSlug())
+                ->addVariable('event', $event->getTitle())
+            ->save();
+        }
+
         $event->setStatusCanceled()->save();
 
         return redirect()->route('events.event', ['id' => $event->getId(), 'slug' => $event->getSlug()]);
