@@ -141,7 +141,7 @@ class AuthController extends Controller
         } catch (Exception $e) {
             return redirect('auth.login')->with('error', 'Social login failed');
         }
-
+        
         $authUser = $this->findOrCreateUser($user, $provider);
         Auth::login($authUser);
 
@@ -240,7 +240,11 @@ class AuthController extends Controller
         ->save();
 
         $profile = Profile::where('user_id', $user->id)->first();
-        return redirect('/profile/'. $profile->id);
+        if ($profile !== null) {
+            return redirect('/profile/'. $profile->id);
+        } else {
+            return redirect('/profile/create');
+        }
     }
 
     public function getLogout()
