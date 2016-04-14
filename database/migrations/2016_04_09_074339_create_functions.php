@@ -188,7 +188,7 @@ class CreateFunctions extends Migration
             
             /** Miejsce **/
             IF __u_place IS NOT NULL THEN
-                IF __u_place = __w_place THEN
+                IF __u_place = __w_place OR __w_place LIKE CONCAT(\'%,\', __u_place) THEN
                     SET points = points + (1*2.0);
                 END IF;
             END IF;
