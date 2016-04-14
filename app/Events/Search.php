@@ -2,6 +2,7 @@
 
 namespace Flocc\Events;
 
+use Flocc\Auth;
 use Flocc\Tribes;
 
 /**
@@ -120,6 +121,11 @@ class Search
 
         $query      = $query->where('status', 'open');
         $query      = $query->where('is_inspiration', '0');
+
+        if(Auth::getUserId() !== null) {
+            $query  = $query->where('user_id', '<>', Auth::getUserId());
+        }
+
         $query      = $query->orderBy(\DB::raw($this->getScoringFunction()), 'desc');
         $query      = $query->groupBy('events.id');
         

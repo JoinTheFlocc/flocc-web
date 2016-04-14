@@ -1480,7 +1480,7 @@ class Events extends Model
      */
     public function getLatestEvents($limit = 5, $is_inspiration = false)
     {
-        return self::where('status', 'open')->where('is_inspiration', ($is_inspiration ? '1' : '0'))->orderBy('created_at', 'desc')->limit($limit)->get();
+        return self::where('status', 'open')->where('is_inspiration', ($is_inspiration ? '1' : '0'))->where('user_id', '<>', Auth::getUserId())->orderBy('created_at', 'desc')->limit($limit)->get();
     }
 
     /**
@@ -1493,7 +1493,7 @@ class Events extends Model
      */
     public function getLatestUpdatedTime($limit = 5, $is_inspiration = false)
     {
-        return self::where('status', 'open')->where('is_inspiration', ($is_inspiration ? '1' : '0'))->orderBy('last_update_time', 'desc')->limit($limit)->get();
+        return self::where('status', 'open')->where('is_inspiration', ($is_inspiration ? '1' : '0'))->where('user_id', '<>', Auth::getUserId())->orderBy('last_update_time', 'desc')->limit($limit)->get();
     }
 
     /**
