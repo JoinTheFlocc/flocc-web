@@ -3,7 +3,12 @@
 @section('content')
     <div class="container">
         <div class="row" style="margin:80px 0;">
-            <h1 style="margin-bottom: 50px;">Członkowie wydarzenia</h1>
+            <h1 style="margin-bottom: 15px;">Członkowie wydarzenia</h1>
+            <h2 style="margin-bottom: 70px;">
+                <a href="{{ URL::route('events.event', ['id' => $event->getId(), 'slug' => $event->getSlug()]) }}">
+                    {{ $event->getTitle() }}
+                </a>
+            </h2>
 
             <ul class="nav nav-tabs">
                 @if($event->getAwaitingRequests()->count() > 0)
