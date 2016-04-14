@@ -1,0 +1,124 @@
+<?php
+
+namespace Flocc\User\Floccs;
+
+use Flocc\Auth;
+use Flocc\User;
+use Illuminate\Database\Eloquent\Model;
+
+/**
+ * Class Floccs
+ *
+ * @package Flocc\User\Floccs
+ */
+class Floccs extends Model
+{
+    /**
+     * The database table used by the model.
+     *
+     * @var string
+     */
+    protected $table = 'users_floccs';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['id', 'user_id', 'time', 'activity_id', 'place', 'tribes'];
+
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
+    /**
+     * Get ID
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Get place
+     *
+     * @return string|null
+     */
+    public function getPlace()
+    {
+        return $this->place;
+    }
+
+    /**
+     * Get activity ID
+     *
+     * @return int|null
+     */
+    public function getActivityId()
+    {
+        return $this->activity_id;
+    }
+
+    /**
+     * Get activity name
+     *
+     * @return string|null
+     */
+    public function getActivityName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Get floccs members
+     *
+     * @param int|null $activity_id
+     * @param string|null $place
+     * @param int $limit
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getMembers($activity_id, $place, $limit = 5)
+    {
+        $users = self::select('user_id')->where('user_id', '<>', Auth::getUserId());
+
+        if($activity_id !== null) {
+            $users->where('activity_id', $activity_id);
+        }
+
+        if($place !== null) {
+            $users->where('place', $place);
+        }
+
+        $users->take($limit);
+        $users->groupBy('user_id');
+
+        return User::whereIn('id', $users->get())->get();
+    }
+
+    /**
+     * Get most popular floccs
+     *
+     * @param int $limit
+     *
+     * @return \Flocc\User\Floccs\Floccs
+     */
+    public function getPopular($limit = 1)
+    {
+        $find = self::select('users_floccs.id', 'activity_id', 'name', 'place')
+            ->whereNotNull('activity_id')
+            ->whereNotNull('place')
+            ->leftjoin('activities', 'activities.id', '=', 'activity_id')
+            ->groupBy(\DB::raw('CONCAT(activity_id, place)'))
+            ->orderBy(\DB::raw('count(*)'), 'desc')
+            ->take($limit)
+        ->get();
+
+        return $find;
+    }
+}

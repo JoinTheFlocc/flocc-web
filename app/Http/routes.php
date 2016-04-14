@@ -103,7 +103,7 @@ Route::get('cron/{schedule}', 'Cron\CronController@execute');
 /**
  * Set true if you want debug all queries
  */
-if(0) {
+if(false) {
     Event::listen('illuminate.query',function($query){
         var_dump($query);
     });

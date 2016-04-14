@@ -63,6 +63,15 @@
                         </div>
                         <hr>
 
+                        @if($flocc !== null)
+                            <h1>Znalezione stado</h1>
+                            <div>
+                                {{ $flocc->getActivityName() }} | {{ $flocc->getPlace() }}<br>
+                                {{ $flocc->getMembers()->count() }} członków
+                            </div>
+                            <hr>
+                        @endif
+
                         <h2>Inspiracje</h2>
                         <div>
                             @include('partials.profiles.time_line.events', array('events' => $profile->getTimeLine()->getInspirations()))

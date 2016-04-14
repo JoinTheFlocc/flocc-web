@@ -102,6 +102,16 @@ class Searches extends Model
     }
 
     /**
+     * Get activity name
+     * 
+     * @return string|null
+     */
+    public function getActivityName()
+    {
+        return $this->name;
+    }
+
+    /**
      * Set place
      *
      * @param string|null $place

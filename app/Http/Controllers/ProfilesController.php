@@ -5,6 +5,8 @@ namespace Flocc\Http\Controllers;
 use Flocc\Activities;
 use Flocc\Tribes;
 use Flocc\User\Features;
+use Flocc\User\Floccs\Floccs;
+use Flocc\User\Floccs\Search;
 use Flocc\User\FreeTime;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
@@ -97,7 +99,9 @@ class ProfilesController extends Controller
 
             $events_time_lines = $events_time_lines->sortByDesc('date')->slice(0, 5);
 
-            return view('dashboard', compact('profile', 'is_mine', 'activities', 'tribes', 'events_time_lines'));
+            $flocc = (new Search())->getFloccs(\Flocc\Auth::getUserId())->first();
+
+            return view('dashboard', compact('profile', 'is_mine', 'activities', 'tribes', 'events_time_lines', 'flocc'));
         } else {
             return view('profiles.show', compact('profile', 'is_mine', 'id'));
         }
