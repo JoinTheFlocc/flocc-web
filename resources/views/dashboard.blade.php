@@ -14,6 +14,15 @@
                         </a>
                     </div>
                     <div class="clearfix"></div>
+
+                    @if (isset($message))
+                        <div class="flash-message" style="margin-top: 115px;">
+                            <p class="alert alert-success">
+                                <i class="fa fa-info"></i> {{ $message }}
+                            </p>
+                        </div>
+                    @endif
+
                     <div class="col-md-12">
                         <form method="post" action="{{ URL::route('events') }}">
                             {{ csrf_field() }}
@@ -90,18 +99,11 @@
 @endsection
 
 @section('bottomscripts')
-    <script src="/js/theme/scroll.js"></script>
-    <script>
-        $(function() {
-            Flocc.Profile.TimeLine.Init();
-            Flocc.Profile.TimeLine.Get({{ $profile->user_id }});
-            FloccThemeScroll.Init('#time_line', function(start) {
-                Flocc.Profile.TimeLine.Get({{ $profile->user_id }}, Flocc.Profile.TimeLine.GetActiveType(), start, 1);
-            });
-            Flocc.Profile.TimeLine.Tabs(function(type) {
-                Flocc.Profile.TimeLine.Init();
-                Flocc.Profile.TimeLine.Get({{ $profile->user_id }}, type);
-            });
-        });
-    </script>
+    @if($show_modal === true)
+        @include('partials.modals.floccs')
+
+        <script>
+            Flocc.Modals.Show('#floccsModal');
+        </script>
+    @endif
 @endsection

@@ -45,6 +45,64 @@ class Floccs extends Model
     }
 
     /**
+     * Set user ID
+     *
+     * @param int|null $user_id
+     *
+     * @return $this
+     */
+    public function setUserId($user_id)
+    {
+        $this->user_id = (int) $user_id;
+
+        return $this;
+    }
+
+    /**
+     * Set activity ID
+     *
+     * @param int|null $activity_id
+     *
+     * @return $this
+     */
+    public function setActivityId($activity_id)
+    {
+        $activity_id = (int) $activity_id;
+
+        $this->activity_id = ($activity_id === 0) ? null : $activity_id;
+
+        return $this;
+    }
+
+    /**
+     * Set place
+     *
+     * @param string|null $place
+     *
+     * @return $this
+     */
+    public function setPlace($place)
+    {
+        $this->place = empty($place) ? null : $place;
+
+        return $this;
+    }
+
+    /**
+     * Set tribes
+     *
+     * @param array $tribes
+     * 
+     * @return $this
+     */
+    public function setTribes(array $tribes)
+    {
+        $this->tribes = empty($tribes) ? null : implode(',', $tribes);
+
+        return $this;
+    }
+
+    /**
      * Get place
      *
      * @return string|null
@@ -120,5 +178,17 @@ class Floccs extends Model
         ->get();
 
         return $find;
+    }
+
+    /**
+     * Get by user ID
+     *
+     * @param int $user_id
+     *
+     * @return \Flocc\User\Floccs\Floccs|null
+     */
+    public function getByUserId($user_id)
+    {
+        return self::where('user_id', (int) $user_id)->take(1)->first();
     }
 }

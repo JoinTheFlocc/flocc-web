@@ -8,6 +8,7 @@ use Flocc\User\Features;
 use Flocc\User\Floccs\Floccs;
 use Flocc\User\Floccs\Search;
 use Flocc\User\FreeTime;
+use Flocc\User\Settings;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Input;
@@ -63,11 +64,12 @@ class ProfilesController extends Controller
     /**
      * Display the specified resource.
      *
+     * @param \Illuminate\Http\Request $request
      * @param int|null $id
      *
      * @return \Illuminate\Http\Response
      */
-    public function show($id = null)
+    public function show(\Illuminate\Http\Request $request, $id = null)
     {
         if($id === null) {
             $profile = Auth::user()->getProfile();
@@ -82,6 +84,7 @@ class ProfilesController extends Controller
             $tribes             = (new Tribes())->get();
 
             $events_time_lines  = new Collection();
+            $users_settings     = new Settings();
 
             foreach($profile->getTimeLine()->getLatestUpdatedEvents() as $event) {
                 foreach($event->getTimeLine() as $line) {
@@ -99,9 +102,11 @@ class ProfilesController extends Controller
 
             $events_time_lines = $events_time_lines->sortByDesc('date')->slice(0, 5);
 
-            $flocc = (new Search())->getFloccs(\Flocc\Auth::getUserId())->first();
+            $flocc      = (new Search())->getFloccs(\Flocc\Auth::getUserId())->first();
+            $message    = $request->session()->get('message');
+            $show_modal = ($users_settings->get(\Flocc\Auth::getUserId(), 'profile.floccs.modal') === null) ? true : false;
 
-            return view('dashboard', compact('profile', 'is_mine', 'activities', 'tribes', 'events_time_lines', 'flocc'));
+            return view('dashboard', compact('profile', 'is_mine', 'activities', 'tribes', 'events_time_lines', 'flocc', 'message', 'show_modal'));
         } else {
             return view('profiles.show', compact('profile', 'is_mine', 'id'));
         }
@@ -316,5 +321,53 @@ class ProfilesController extends Controller
             'feelings', 'emergency', 'features', 'features_sets',
             'errors', 'free_time'
         ));
+    }
+
+    /**
+     * Update user floccs
+     *
+     * @param Request $request
+     */
+    public function editFloccs(\Illuminate\Http\Request $request)
+    {
+        $user_id        = \Flocc\Auth::getUserId();
+        $users_floccs   = new Floccs();
+        $users_settings = new Settings();
+        $user_flocc     = $users_floccs->getByUserId($user_id);
+
+        $flocc          = ($user_flocc === null) ? $users_floccs : $user_flocc;
+        $activity_id    = \Input::get('activity_id', null);
+        $place          = \Input::get('place', '');
+        $tribes         = (array) \Input::get('tribes', []);
+
+        $flocc
+            ->setUserId($user_id)
+            ->setActivityId($activity_id)
+            ->setPlace($place)
+            ->setTribes($tribes)
+        ->save();
+
+        $users_settings->set($user_id, 'profile.floccs.modal', '1');
+
+        $request->session()->flash('message', 'Ustawienia zostały zapisane');
+
+        return redirect()->route('profile.my');
+    }
+
+    /**
+     * Hide user floccs modal
+     *
+     * @param Request $request
+     */
+    public function editFloccsCancel(\Illuminate\Http\Request $request)
+    {
+        $user_id        = \Flocc\Auth::getUserId();
+        $users_settings = new Settings();
+
+        $users_settings->set($user_id, 'profile.floccs.modal', '1');
+
+        $request->session()->flash('message', 'Ustawienia zostały zapisane');
+
+        return redirect()->route('profile.my');
     }
 }

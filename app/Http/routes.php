@@ -44,6 +44,8 @@ Route::get('profile/{id}/edit', 'ProfilesController@edit')->name('profile.edit')
 Route::match(['get', 'post'], 'profile/{id}/edit/settings', 'ProfilesController@editSettings')->name('profile.edit.settings')->where('id', '[0-9]+');
 Route::patch('profile/{id}/update', 'ProfilesController@update')->name('profile.update')->where('id', '[0-9]+');
 Route::get('profile/{id?}', 'ProfilesController@show')->name('profile.display')->where('id', '[0-9]+');
+Route::post('profile/edit/floccs', 'ProfilesController@editFloccs')->name('profile.edit.floccs');
+Route::get('profile/edit/floccs/cancel', 'ProfilesController@editFloccsCancel')->name('profile.edit.floccs.cancel');
 
 // Settings
 Route::get('settings/account', function() {

@@ -173,11 +173,49 @@ var Flocc = {
         }
     },
 
+    /**
+     * Base64
+     */
     Base64 : {
         Encode : function(str) {
             return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
                 return String.fromCharCode('0x' + p1);
             }));
+        }
+    },
+
+    /**
+     * Modals
+     */
+    Modals : {
+        __show_callback : null,
+        __close_callback : null,
+
+        setShowCallback : function(callback) {
+            Flocc.Modals.__show_callback = callback;
+
+            return Flocc.Modals;
+        },
+
+        setCloseCallback : function(callback) {
+            Flocc.Modals.__close_callback = callback;
+
+            return Flocc.Modals;
+        },
+        Show : function(modal) {
+            $(modal).modal('show');
+
+            if(Flocc.Modals.__show_callback != null) {
+                $(modal).on('show.bs.modal', function (e) {
+                    Flocc.Modals.__show_callback();
+                });
+            }
+
+            if(Flocc.Modals.__close_callback != null) {
+                $(modal).on('hidden.bs.modal', function (e) {
+                    Flocc.Modals.__close_callback();
+                });
+            }
         }
     }
 };
