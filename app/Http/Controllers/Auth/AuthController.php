@@ -240,6 +240,23 @@ class AuthController extends Controller
         ->save();
 
         $profile = Profile::where('user_id', $user->id)->first();
+
+        /**
+         * Sprawdzanie flocca
+         */
+        $users          = new User();
+        $users_floccs   = new User\Floccs\Floccs();
+        $users_settings = new User\Settings();
+
+        $user           = $users->getById($user->id);
+        $flocc          = $users_floccs->getByUserIdOrEmail($user->id, $user->getEmail());
+
+        if($flocc !== null) {
+            if($flocc->getActivityId() === null and $flocc->getPlace() === null) {
+                $users_settings->remove($user->id, 'profile.floccs.modal');
+            }
+        }
+
         return redirect('/profile/'. $profile->id);
     }
 
