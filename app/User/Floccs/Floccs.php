@@ -192,10 +192,17 @@ class Floccs extends Model
      */
     public function getPopular($limit = 1)
     {
-        $find = self::select('users_floccs.id', 'activity_id', 'name', 'place')
+        $user_id    = Auth::getUserId();
+        $find       = self::select('users_floccs.id', 'activity_id', 'activities.name', 'place')
+            ->leftjoin('activities', 'activities.id', '=', 'activity_id')
+            ->leftjoin('users_floccs_settings', function($join) use($user_id) {
+                $join->on('users_floccs_settings.flocc_id', '=', 'users_floccs.id');
+                $join->on('users_floccs_settings.user_id', '=', \DB::raw($user_id));
+                $join->on('users_floccs_settings.name', '=', \DB::raw('"hide_flocc"'));
+            })
             ->whereNotNull('activity_id')
             ->whereNotNull('place')
-            ->leftjoin('activities', 'activities.id', '=', 'activity_id')
+            ->whereNull('users_floccs_settings.value')
             ->groupBy(\DB::raw('CONCAT(activity_id, place)'))
             ->orderBy(\DB::raw('count(*)'), 'desc')
             ->take($limit)
