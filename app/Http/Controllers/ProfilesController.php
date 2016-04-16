@@ -85,7 +85,13 @@ class ProfilesController extends Controller
             $tribes             = (new Tribes())->get();
 
             $events_time_lines  = new Collection();
+
+            $users              = new User();
             $users_settings     = new Settings();
+            $users_floccs       = new Floccs();
+            $user               = $users->getById($profile->user_id);
+
+            $user_flocc         = $users_floccs->getByUserIdOrEmail($profile->user_id, $user->getEmail());
 
             foreach($profile->getTimeLine()->getLatestUpdatedEvents() as $event) {
                 foreach($event->getTimeLine() as $line) {
@@ -107,7 +113,7 @@ class ProfilesController extends Controller
             $message    = $request->session()->get('message');
             $show_modal = ($users_settings->get(\Flocc\Auth::getUserId(), 'profile.floccs.modal') === null) ? true : false;
 
-            return view('dashboard', compact('profile', 'is_mine', 'activities', 'tribes', 'events_time_lines', 'flocc', 'message', 'show_modal'));
+            return view('dashboard', compact('profile', 'is_mine', 'activities', 'tribes', 'events_time_lines', 'flocc', 'message', 'show_modal', 'user_flocc'));
         } else {
             return view('profiles.show', compact('profile', 'is_mine', 'id'));
         }

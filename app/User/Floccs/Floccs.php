@@ -147,6 +147,16 @@ class Floccs extends Model
     }
 
     /**
+     * Get tribes
+     * 
+     * @return array
+     */
+    public function getTribes()
+    {
+        return ($this->tribes === null) ? [] : explode(',', $this->tribes);
+    }
+
+    /**
      * Get floccs members
      *
      * @param int|null $activity_id

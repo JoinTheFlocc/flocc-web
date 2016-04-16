@@ -15,7 +15,7 @@
                             <select name="activity_id" class="form-control">
                                 <option value="" selected="selected">Wybierz</option>
                                 @foreach($activities as $activity)
-                                    <option value="{{ $activity->getId() }}">{{ $activity->getName() }}</option>
+                                    <option value="{{ $activity->getId() }}" @if($user_flocc !== null and $user_flocc->getActivityId() === $activity->getId()) selected="selected" @endif>{{ $activity->getName() }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -25,7 +25,7 @@
                         <strong>Gdzie</strong>
 
                         <div>
-                            <input type="text" name="place" class="form-control place_auto_complete" autocomplete="off">
+                            <input type="text" name="place" class="form-control place_auto_complete" autocomplete="off" @if($user_flocc !== null) value="{{ $user_flocc->getPlace() }}" @endif>
                         </div>
                     </div><br>
 
@@ -35,7 +35,7 @@
                         <div>
                             @foreach($tribes as $tribe)
                                 <label style="margin-right: 10px;">
-                                    <input type="checkbox" name="tribes[]" value="{{ $tribe->getId() }}"> {{ $tribe->getName() }}
+                                    <input type="checkbox" name="tribes[]" value="{{ $tribe->getId() }}" @if($user_flocc !== null and in_array($tribe->getId(), $user_flocc->getTribes())) checked="checked" @endif> {{ $tribe->getName() }}
                                 </label>
                             @endforeach
                         </div>
