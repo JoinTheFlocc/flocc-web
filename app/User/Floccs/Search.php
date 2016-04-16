@@ -24,7 +24,7 @@ class Search
         $data      = ['activities' => [], 'places' => [], 'both' => []];
 
         $floccs    = Floccs::where('user_id', $user_id)->leftjoin('activities', 'users_floccs.activity_id', '=', 'activities.id')->get();
-        $searches  = Searches::where('user_id', $user_id)->leftjoin('activities', 'searches.activity_id', '=', 'activities.id')->get();
+        $searches  = Searches::where('user_id', $user_id)->where(\DB::raw('DATEDIFF(now(), time)'), '<=', 30)->leftjoin('activities', 'searches.activity_id', '=', 'activities.id')->get();
 
         foreach([$floccs, $searches] as $object) {
             foreach($object as $row) {
