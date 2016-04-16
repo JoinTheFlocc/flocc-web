@@ -25,7 +25,7 @@ class Floccs extends Model
      *
      * @var array
      */
-    protected $fillable = ['id', 'user_id', 'time', 'activity_id', 'place', 'tribes'];
+    protected $fillable = ['id', 'user_id', 'email', 'time', 'activity_id', 'place', 'tribes'];
 
     /**
      * Indicates if the model should be timestamped.
@@ -54,6 +54,20 @@ class Floccs extends Model
     public function setUserId($user_id)
     {
         $this->user_id = (int) $user_id;
+
+        return $this;
+    }
+
+    /**
+     * Set user email
+     *
+     * @param string $email
+     *
+     * @return $this
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
 
         return $this;
     }
@@ -187,8 +201,8 @@ class Floccs extends Model
      *
      * @return \Flocc\User\Floccs\Floccs|null
      */
-    public function getByUserId($user_id)
+    public function getByUserIdOrEmail($user_id, $email)
     {
-        return self::where('user_id', (int) $user_id)->take(1)->first();
+        return self::where('user_id', (int) $user_id)->orWhere('email', $email)->take(1)->first();
     }
 }

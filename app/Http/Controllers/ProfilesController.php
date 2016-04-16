@@ -4,6 +4,7 @@ namespace Flocc\Http\Controllers;
 
 use Flocc\Activities;
 use Flocc\Tribes;
+use Flocc\User;
 use Flocc\User\Features;
 use Flocc\User\Floccs\Floccs;
 use Flocc\User\Floccs\Search;
@@ -331,9 +332,11 @@ class ProfilesController extends Controller
     public function editFloccs(\Illuminate\Http\Request $request)
     {
         $user_id        = \Flocc\Auth::getUserId();
+        $users          = new User();
         $users_floccs   = new Floccs();
         $users_settings = new Settings();
-        $user_flocc     = $users_floccs->getByUserId($user_id);
+        $user           = $users->getById($user_id);
+        $user_flocc     = $users_floccs->getByUserIdOrEmail($user_id, $user->getEmail());
 
         $flocc          = ($user_flocc === null) ? $users_floccs : $user_flocc;
         $activity_id    = \Input::get('activity_id', null);
@@ -342,6 +345,7 @@ class ProfilesController extends Controller
 
         $flocc
             ->setUserId($user_id)
+            ->setEmail($user->getEmail())
             ->setActivityId($activity_id)
             ->setPlace($place)
             ->setTribes($tribes)
