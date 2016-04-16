@@ -76,7 +76,11 @@
                             <h1>Znalezione stado</h1>
                             <div>
                                 {{ $flocc->getActivityName() }} | {{ $flocc->getPlace() }}<br>
-                                {{ $flocc->getMembers()->count() }} członków
+                                {{ $flocc->getMembers()->count() }} członków<br>
+
+                                <a href="{{ URL::route('profile.edit.floccs.hide', ['id' => $flocc->getId()]) }}" class="btn btn-danger btn-sm">
+                                    <i class="fa fa-times"></i>
+                                </a>
                             </div>
                             <hr>
                         @endif

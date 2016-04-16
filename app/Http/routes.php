@@ -46,6 +46,7 @@ Route::patch('profile/{id}/update', 'ProfilesController@update')->name('profile.
 Route::get('profile/{id?}', 'ProfilesController@show')->name('profile.display')->where('id', '[0-9]+');
 Route::post('profile/edit/floccs', 'ProfilesController@editFloccs')->name('profile.edit.floccs');
 Route::get('profile/edit/floccs/cancel', 'ProfilesController@editFloccsCancel')->name('profile.edit.floccs.cancel');
+Route::get('profile/edit/floccs/hide/{id}', 'ProfilesController@editFloccsHide')->name('profile.edit.floccs.hide');
 
 // Settings
 Route::get('settings/account', function() {

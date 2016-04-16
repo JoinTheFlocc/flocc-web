@@ -380,4 +380,23 @@ class ProfilesController extends Controller
 
         return redirect()->route('profile.my');
     }
+
+    /**
+     * Ukrywanie flocca
+     *
+     * @param int $id
+     */
+    public function editFloccsHide($id)
+    {
+        $settings = new User\Floccs\Settings();
+
+        $settings
+            ->setUserId(\Flocc\Auth::getUserId())
+            ->setFloccId($id)
+            ->setName('hide_flocc')
+            ->setValue('1')
+        ->save();
+
+        return redirect()->route('profile.my');
+    }
 }
