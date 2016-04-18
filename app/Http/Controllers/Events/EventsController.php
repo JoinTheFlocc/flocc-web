@@ -96,11 +96,13 @@ class EventsController extends Controller
                     /**
                      * Save user log
                      */
-                    (new Logs())
-                        ->setUserId(Auth::getUserId())
-                        ->setTypeEventsSearch()
-                        ->setSearchId($searches_id)
-                    ->save();
+                    if(Auth::getUserId() !== null) {
+                        (new Logs())
+                            ->setUserId(Auth::getUserId())
+                            ->setTypeEventsSearch()
+                            ->setSearchId($searches_id)
+                        ->save();
+                    }
                 }
             }
 
