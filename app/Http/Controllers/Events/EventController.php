@@ -51,11 +51,13 @@ class EventController extends Controller
         /**
          * Save user log
          */
-        (new User\Logs())
-            ->setUserId(Auth::getUserId())
-            ->setTypeEventsDisplay()
-            ->setEventId($event->getId())
-        ->save();
+        if(Auth::getUserId() !== null) {
+            (new User\Logs())
+                ->setUserId(Auth::getUserId())
+                ->setTypeEventsDisplay()
+                ->setEventId($event->getId())
+            ->save();
+        }
 
         return view('events.event.index', [
             'event'             => $event,
