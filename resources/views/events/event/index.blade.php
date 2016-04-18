@@ -197,7 +197,9 @@
                         <div class="col-sm-6">
                             <strong>Planowanie:</strong><br>
 
-                            {{ $event->getPlanning()->getName() }}
+                            @if($event->getPlanning() !== null)
+                                {{ $event->getPlanning()->getName() }}
+                            @endif
                         </div>
                         <div class="col-sm-6">&nbsp;</div>
                     </div>

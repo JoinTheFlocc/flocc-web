@@ -37,7 +37,7 @@ class DatabaseSeeder extends Seeder
                         'scoring'           => [
                             'activity_id'   => 1,
                             'tribes'        => '101010',
-                            'place'         => 'Polska'
+                            'place'         => 'Warszawa, Polska'
                         ]
                     ]
                 ]
@@ -69,7 +69,7 @@ class DatabaseSeeder extends Seeder
                         'scoring'           => [
                             'activity_id'   => 1,
                             'tribes'        => '101010',
-                            'place'         => 'Polska'
+                            'place'         => 'Zakopane, Polska'
                         ]
                     ]
                 ]
