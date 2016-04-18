@@ -19,7 +19,13 @@ class Auth extends Model
     public static function getUserId()
     {
         if(\Auth::user() !== null) {
-            return (int) \Auth::user()->id;
+            $user_id = (int) \Auth::user()->id;
+
+            if($user_id === 0) {
+                return null;
+            }
+
+            return $user_id;
         }
 
         return null;
