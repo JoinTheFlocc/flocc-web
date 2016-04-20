@@ -1593,12 +1593,14 @@ class Events extends Model
             $points = 0;
         }
 
-        if($points > 1) {
-            $points = 1;
-        }
-
         if($points > 0) {
-            return round(($points/$x)*100);
+            $result = round(($points/$x)*100);
+
+            if($result > 100) {
+                $result = 100;
+            }
+
+            return $result;
         }
 
         return 0;
