@@ -12,7 +12,10 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    $activities     = (new Flocc\Activities())->get();
+    $tribes         = (new Flocc\Tribes())->get();
+    $events         = (new Flocc\Events\Events())->getLatestEvents(10);
+    return view('welcome', compact('activities', 'tribes', 'events'));
 });
 
 // Authentication
@@ -75,7 +78,7 @@ Route::get('notifications/{id}', ['middleware' => 'auth', 'uses' => 'Notificatio
 Route::get('notifications/get/{type?}', ['middleware' => 'auth', 'uses' => 'Notifications\NotificationsController@getNotifications'])->name('notifications.get');
 
 // Events
-Route::match(['get', 'post'], 'search/{filters?}', ['middleware' => 'auth', 'uses' => 'Events\EventsController@index'])->name('events');
+Route::match(['get', 'post'], 'search/{filters?}', ['uses' => 'Events\EventsController@index'])->name('events');
 Route::get('events/new/{id?}', ['middleware' => 'auth', 'uses' => 'Events\EventsController@newEvent'])->name('events.new')->where('id', '[0-9]+');
 Route::get('events/new/inspiration', ['middleware' => 'auth', 'uses' => 'Events\EventsController@newInspirationEvent'])->name('events.new.inspiration');
 Route::post('events/comment', ['middleware' => 'auth', 'uses' => 'Events\CommentController@save'])->name('events.comment');

@@ -1,32 +1,39 @@
-<ul class="events">
-    @foreach($events as $event)
-        <li @if($event->isMine() and !$event->isInspiration()) class="mine-event" style="border: 1px solid red;" @endif>
-            <h3>
+{{-- */$i = 0;/*--}}
+@foreach($events as $event)
+    {{-- */$i++;/*--}}
+    @if($i == 3)
+        @include('partials.profiles.time_line.inspiration', array('inspiration' => $inspiration[0]))
+    @endif
+<li class="col-md-3">
+    <div class="event-block">
+        <div class="event-img">
+            <img src="{{ $event->getAvatarUrl() }}"/>
+            <div style="position: relative; margin-top: -55px; margin-left:200px;">
+                <img src="{{ $event->getOwner()->getProfile()->getAvatarUrl() }}" class="img-thumbnail img-circle" style="width:80px;"/>
+            </div>
+        </div>
+        <div class="event-info">
+            <h2>
                 <a href="{{ URL::route('events.event', ['slug' => $event->getSlug()]) }}">
                     {{ $event->getTitle() }}
                 </a>
-            </h3>
-            <div class="event-photo">
-                <img src="{{ $event->getAvatarUrl() }}">
+            </h2>
+            <div class="well">
+                <p>Organizator: {{ $event->getOwner()->getProfile()->getFirstName() }} {{ $event->getOwner()->getProfile()->getLastName() }}</p>
+                <p><i class="fa fa-btn fa-users"></i> <strong>{{ $event->getMembers()->count() }}</strong> |
+                <i class="fa fa-btn fa-binoculars"></i> <strong>{{ $event->getFollowers()->count() }}</strong> |
+                <i class="fa fa-btn fa-comments"></i> <strong>{{ $event->getComments()->count() }}</strong>
+                </p>
+                <p><i class="fa fa-btn fa-calendar"></i> {{ $event->getEventFrom() }}-{{ $event->getEventTo() }} ({{ $event->getEventSpan() }} dni)</p>
+                <p>
+                @if($event->isPlace())
+                    <i class="fa fa-btn fa-map-marker"></i> <strong>{{ $event->getPlace()->getName() }}</strong>
+                @else
+                    <i class="fa fa-btn fa-map-signs"></i> <strong>@foreach($event->getRoutes() as $place) {{ $place->getName() }} > @endforeach</strong>
+                @endif
+                </p>
             </div>
-            <div class="event-footer">
-                <div class="event-place">
-                    @if($event->isPlace())
-                        {{ $event->getPlace()->getName() }}
-                    @else
-                        @foreach($event->getRoutes() as $place)
-                            {{ $place->getName() }} >
-                        @endforeach
-                    @endif
-                </div>
-                <div class="event-date">
-                    @if(!$event->isInspiration())
-                        {{ $event->getEventFrom() }}-{{ $event->getEventTo() }}
-                    @else
-                        {{ $event->getEventMonthName() }}
-                    @endif
-                </div>
-            </div>
-        </li>
-    @endforeach
-</ul>
+        </div>
+    </li>
+</li>
+@endforeach

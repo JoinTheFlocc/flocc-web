@@ -19,10 +19,16 @@ body {
     padding-top: 48px;
     color: lightblue;
 }
+.intro-over a,
+.intro-over a:hover,
+.intro-over a:visited {
+    color: lightblue;
+}
+
 .intro-heading {
     color:ivory;
     text-align: center;
-    padding: 60px;
+    padding: 40px;
 }
 .intro-welcome {
     padding-top: 30px;
@@ -68,8 +74,11 @@ body {
     margin-bottom: -100px;
 }
 .mainBoxA {
-    padding-top: 40px;
     height: 100%;
+    margin: 0;
+    padding: 0;
+    padding-top: 80px;
+
 }
 .carousel-caption {
     top: 40px;
@@ -78,7 +87,8 @@ body {
 .carousel-caption > h1,
 .intro-heading > h1 {
     font-size: 8em;
-    font-family: 'Pacifico';
+    font-family: 'Signika';
+    font-weight:800;
     text-shadow: 0.1em 0.1em 0.1em black;
     color: ivory;
 }
@@ -93,7 +103,6 @@ body {
 .navbar {
     color:royalblue;
     background-color:white;
-    .font-weight: 400;
     border-bottom: 1px solid lightblue;
 }
 
@@ -114,7 +123,7 @@ body {
 .navbar .navbar-nav > li > a,
 .navbar .navbar-nav > .active > a
 {
-    color:royalblue;
+    color:#263238;
     margin-top: 2px;
     padding-top: 20px;
     font-size: 14px;
@@ -124,7 +133,7 @@ body {
 .navbar .navbar-nav > .active > a:hover
 {
     background-color: white;
-    color:cornflowerblue;
+    color:#00c176;
 }
 
 .navbar .navbar-nav > li > a:focus,
@@ -231,6 +240,10 @@ body {
 .legal > a {
     color: ivory;
 }
+.events-box {
+    padding-top: 20px;
+    background-color: #dddddd;
+}
 
 ul.events {
     list-style-type: none;
@@ -240,31 +253,69 @@ ul.events {
 
 ul.events li {
     display: block;
-    width: 100%;
-    border: 1px solid #9d9d9d;
-    border-radius: 5px;
-    padding: 20px 10px;
-    margin-bottom: 5px;
+    height: 460px;
+    margin: 0;
+    padding: 0;
+}
+
+.event-block {
+    padding: 0px;
+    margin: 4px 8px;
+    background-color: #ffffff;
 }
 
 ul.events li h2 {
     display: block;
-    margin: 0px auto;
     font-size: 18px;
-    color: #000;
-    margin-bottom: 20px;
+    margin-bottom: 12px;
 }
 
-ul.events li img {
-    display: block;
-    float: left;
-    border-radius: 5px;
-    width: 100px;
-    margin-right: 15px;
+ul.events li .event-img img {
+    width: 100%;
 }
 
-ul.events li .info {
-    float: left;
+ul.events li .event-info {
+    color: #232832;
+    margin-top: -15px;
+    margin-bottom: 0px;
+    padding: 10px;
+    padding-bottom: 0px;
+}
+
+ul.events li .event-info h2 a,
+ul.events li .event-info h2 a:hover,
+ul.events li .event-info h2 a:visited {
+    color: #ff6d00;
+}
+
+.event-block-inverse {
+    padding: 0px;
+    margin: 4px 8px;
+    background-color: #ff6d00;
+}
+
+.event-info-inverse {
+    background-color: #ff6d00;
+    color: #232832;
+    margin-top: -15px;
+    margin-bottom: 0px;
+    padding: 10px;
+    padding-bottom: 0px;
+}
+
+.event-info-inverse .well {
+    padding: 0;
+    margin: 0;
+    border: 0;
+    color: #ffffff;
+    background-color: #ff6d00;
+    padding-bottom: 10px;
+}
+
+.event-info-inverse h2 a,
+.event-info-inverse h2 a:hover,
+.event-info-inverse h2 a:visited {
+    color: #ffffff;
 }
 
 ul.events li .buttons {
@@ -282,6 +333,13 @@ ul.events li .buttons a {
 ul.events li .buttons a.close_event {
     border: 1px solid red;
     color: red;
+}
+
+ul.events li .event-info .well {
+    background-color: inherit;
+    color: #232832;
+    border: 0;
+    padding: 5px;
 }
 
 ul#places_route {
@@ -393,4 +451,22 @@ ul#places_route li i {
 
 #auto-complete ul li:hover {
     background: azure;
+}
+
+.flocc-search {
+    background-color: rgba(38, 50, 56, 0.8);
+    padding: 10px 20px;
+    border-radius: 8px;
+}
+.flocc-search p {
+    color: #4caf50;
+    color: #00c176;
+    text-transform: uppercase;
+    font-size: 18px;
+    font-weight: 400;
+}
+.flocc-search .well {
+    background-color: #ff6d00;
+    border-color: #ff6d00;
+    padding: 2px;
 }

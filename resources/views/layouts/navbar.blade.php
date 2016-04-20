@@ -18,10 +18,10 @@
             <ul class="nav navbar-nav navbar-right">
                 @if (Auth::guest())
                     <li>
-                      <a href="{{ URL::route('auth.register') }}"><i class="fa fa-btn fa-heart fa-lg"></i>Register</a>
+                      <a href="{{ URL::route('auth.register') }}"><i class="fa fa-btn fa-heart fa-lg"></i>Rejestracja</a>
                     </li>
                     <li>
-                      <a href="{{ URL::route('auth.login') }}"><i class="fa fa-btn fa-sign-in fa-lg"></i>Login</a>
+                      <a href="{{ URL::route('auth.login') }}"><i class="fa fa-btn fa-sign-in fa-lg"></i>Logowanie</a>
                     </li>
                 @else
                     <li><a href="{{ URL::route('profile.display') }}"><i class="fa fa-globe"></i> Szukam</a></li>

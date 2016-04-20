@@ -2,73 +2,86 @@
 
 @section('content')
     <section id="main">
-        <div class="container mainBoxA">
-            <div class="contentBox">
-                <div class="row">
-                    <div class="col-md-12">
-                        <form method="post" action="{{ URL::route('events') }}">
-                            {{ csrf_field() }}
-
-                            <div class="row" style="margin:80px 0;">
-                                <div class="col-lg-3">
-                                    <h1>Co</h1>
-
-                                    <div class="well">
-                                        <select name="activity_id" class="form-control">
-                                            <option value="" selected="selected">Wybierz</option>
-                                            @foreach($activities as $activity)
-                                                <option value="{{ $activity->getId() }}">{{ $activity->getName() }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3">
-                                    <h1>Gdzie</h1>
-
-                                    <div class="well">
-                                        <input type="text" name="place" class="form-control place_auto_complete" autocomplete="off">
-                                    </div>
-                                </div>
-                                <div class="col-lg-3">
-                                    <h1>Jak</h1>
-
-                                    <div class="well">
-                                        <select name="tribe_id" class="form-control">
-                                            <option value="" selected="selected">Wybierz</option>
-                                            @foreach($tribes as $tribe)
-                                                <option value="{{ $tribe->getId() }}">{{ $tribe->getName() }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3" style="padding-top: 90px;">
-                                    <button type="submit" class="btn btn-success btn-block">Szukaj</button>
-                                </div>
-                            </div>
-                        </form>
+        <div class="container-fluid mainBoxA">
+        <div class="container flocc-search">
+            {!! Form::open(['route' => 'events', 'class' => 'form-horizontal']) !!}
+            <div class="row">
+                <div class="col-md-3">
+                    <p>Co</p>
+                    <div class="well">
+                        <select name="activity_id" class="form-control">
+                            <option value="" selected="selected">Wybierz</option>
+                            @foreach($activities as $activity)
+                                <option value="{{ $activity->getId() }}">{{ $activity->getName() }}</option>
+                            @endforeach
+                        </select>
                     </div>
-                    <!-- Dashboard content -->
-                    <div class="col-md-12">
-                        <h1>Kiedy Cię nie było</h1>
-                        <div>
-                            @include('partials.profiles.time_line.events_time_line', array('lines' => $events_time_lines))
+                </div>
+                <div class="col-md-3">
+                    <p>Gdzie</p>
+                    <div class="well">
+                        <input type="text" name="place" class="form-control place_auto_complete" autocomplete="off">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>Jak</p>
                         </div>
-                        <hr>
-
-                        <h2>Inspiracje</h2>
-                        <div>
-                            @include('partials.profiles.time_line.events', array('events' => $profile->getTimeLine()->getInspirations()))
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="well">
+                                <select name="tribe_id" class="form-control">
+                                    <option value="" selected="selected">Wybierz</option>
+                                    @foreach($tribes as $tribe)
+                                        <option value="{{ $tribe->getId() }}">{{ $tribe->getName() }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
-                        <hr>
-
-                        <h2>Wydarzenia</h2>
-                        <div>
-                            @include('partials.profiles.time_line.events', array('events' => $profile->getTimeLine()->getEvents()))
+                    </div>
+                </div>
+                <div class="col-md-3 text-center">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>&nbsp;</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-success btn"><i class="fa fa-btn fa-search"></i> Szukaj</button>
                         </div>
                     </div>
                 </div>
             </div>
+            {!! Form::close() !!}
         </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12" style="
+                height: 12px;
+                margin-top: 18px;
+                color: #00c176;
+                text-transform: uppercase;
+                font-size: 18px;
+                font-weight: 400;">
+                    <p></p>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid events-box">
+            <div class="container">
+            <div class="row">
+                <ul class="events">
+                    @include('partials.profiles.time_line.events_time_line', array('lines' => $events_time_lines))
+                    @include('partials.profiles.time_line.events', array('events' => $profile->getTimeLine()->getEvents(), 'inspiration' => $profile->getTimeLine()->getInspirations()))
+                </ul>
+                <br/>
+            </div>
+            </div>
+        </div>
+    </div>
     </section>
 @endsection
 
