@@ -149,6 +149,11 @@ body {
     color:aliceblue;
 }
 
+.navbar-nav > li.dropdown > a
+{
+    padding: 2px;
+}
+
 .fa-btn {
     margin-right: 6px;
 }

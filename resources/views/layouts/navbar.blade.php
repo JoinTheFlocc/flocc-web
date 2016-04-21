@@ -43,9 +43,17 @@
                           <i class="fa fa-btn fa-lg fa-flag"></i> <span class="label label-danger" id="notificationsCount" style="display:none">0</span>
                         </a>
                       </li>
-                      <li>
-                        <a href="{{ URL::route('auth.logout') }}"><i class="fa fa-btn fa-sign-out fa-lg"></i>Logout</a>
-                      </li>
+<li class="dropdown">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+    <img src="{{ Auth::user()->getProfile()->getAvatarUrl() }}" class="img-thumbnail img-rounded" style="width:60px;"/>
+</a>
+    <ul class="dropdown-menu">
+        <li><a href="{{ URL::route('profile.edit', ['id' => Auth::id()])}}"><i class="fa fa-cog"></i> Konto</a></li>
+        <li class="divider"></li>
+        <li><a href="{{ URL::route('auth.logout') }}"><i class="fa fa-sign-out"></i> Logout</a></li>
+    </ul>
+</li>
+                    </li>
                 @endif
             </ul>
         </div>
