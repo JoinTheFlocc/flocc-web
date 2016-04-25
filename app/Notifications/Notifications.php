@@ -2,6 +2,8 @@
 
 namespace Flocc\Notifications;
 
+use Flocc\Auth;
+use Flocc\User\Settings;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -184,6 +186,8 @@ class Notifications extends Model
              * Save variables
              */
             if($info === true) {
+                (new Settings())->remove($notification->getUserId(), 'notifications.check_count');
+
                 foreach($notification->getVariables() as $name => $value) {
                     $variable                       = new Variables();
 
@@ -224,5 +228,18 @@ class Notifications extends Model
     public function getById($id)
     {
         return self::where('notification_id', (int) $id)->take(1)->first();
+    }
+
+    /**
+     * Check notifications count?
+     *
+     * @return bool
+     */
+    public static function checkNotificationsCount()
+    {
+        $users_settings     = new Settings();
+        $value              = $users_settings->get(Auth::getUserId(), 'notifications.check_count');
+
+        return ($value === null);
     }
 }

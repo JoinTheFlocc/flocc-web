@@ -30,6 +30,12 @@
     Flocc.Config.Set('notifications.url', '{{ URL::route('notifications.get') }}');
     Flocc.Config.Set('social.facebook.app_id', '178041392343208');
 
+    @if(\Flocc\Notifications\Notifications::checkNotificationsCount() === true)
+        Flocc.Config.Set('notifications.check', true);
+    @else
+        Flocc.Config.Set('notifications.check', false);
+    @endif
+
     Flocc.Notification.Initialize();
     Flocc.Google.AutoComplete.Initialize();
 </script>

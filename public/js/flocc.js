@@ -67,9 +67,11 @@ var Flocc = {
             clearInterval(Flocc.Notification.__interval);
         },
         Get : function() {
-            Flocc.Responses.Json(Flocc.Config.Get('notifications.url'), {}, function(data) {
-                FloccThemeNotifications.Initialize(data);
-            });
+            if(Flocc.Config.Get('notifications.check')) {
+                Flocc.Responses.Json(Flocc.Config.Get('notifications.url'), {}, function(data) {
+                    FloccThemeNotifications.Initialize(data);
+                });
+            }
         },
 
         Mail : {

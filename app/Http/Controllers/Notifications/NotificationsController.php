@@ -5,6 +5,7 @@ namespace Flocc\Http\Controllers\Notifications;
 use Flocc\Auth;
 use Flocc\Http\Controllers\Controller;
 use Flocc\Notifications\Notifications;
+use Flocc\User\Settings;
 
 /**
  * Class NotificationsController
@@ -49,6 +50,10 @@ class NotificationsController extends Controller
      */
     public function index()
     {
+        $users_settings = new Settings();
+
+        $users_settings->set(\Auth::user()->id, 'notifications.check_count', 1);
+
         return view('notifications.index', [
             'data' => $this->getNotifications(null, false)->getData()
         ]);
