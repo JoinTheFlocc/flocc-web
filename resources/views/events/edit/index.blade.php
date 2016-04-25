@@ -385,7 +385,7 @@
                     @endforeach
                 @endif
 
-                @if($event->getRoutes()->count() > 0)
+                @if($event->getRoutes()->count() > 0 and count($post_routes) == 0)
                     @foreach($event->getRoutes() as $place)
                         FloccThemeEventsEdit.Places.Route.Add({{ $place->getId() }}, "{{ $place->getName() }}");
                     @endforeach
