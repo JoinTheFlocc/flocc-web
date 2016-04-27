@@ -85,7 +85,28 @@ class Search
         $find->whereNotNull('users_floccs.id');
         $find->whereNull('users_floccs_settings.value');
 
-        return $find->get();
+        $find = $find->get();
+
+        if($find->count() === 0) {
+            /**
+             * Get from searches
+             */
+            $find = Searches::select('searches.id', 'searches.activity_id', 'activities.name', 'searches.place')->where('searches.user_id', '<>', $user_id);
+
+            $find->leftjoin('activities', 'searches.activity_id', '=', 'activities.id');
+
+            if($activity_id !== null) {
+                $find->where('activity_id', $activity_id);
+            }
+
+            if($activity_id !== null) {
+                $find->where('place', $place);
+            }
+
+            $find = $find->get();
+        }
+
+        return $find;
     }
 
     /**
